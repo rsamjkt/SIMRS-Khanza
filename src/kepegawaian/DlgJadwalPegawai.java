@@ -26,6 +26,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -392,8 +393,22 @@ public class DlgJadwalPegawai extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnSimpanActionPerformed
+        if(isAfter25th()){
+            return; // Mencegah proses penyimpanan
+        }
         
-        for(i=0;i<tabMode.getRowCount();i++){ 
+        for(i = 0; i < tabMode.getRowCount(); i++){ 
+            for(int col = 5; col <= 35; col++){
+                int day = col -4;
+                String jadwal = tabMode.getValueAt(i, col).toString();
+                if(day < 10 || day > 29){
+                    if(!jadwal.trim().isEmpty()){
+                        JOptionPane.showMessageDialog(null, "Maaf, tidak bisa menyimpan jadwal untuk tanggal di luar 10-25!");
+                        return; // Batalkan proses penyimpanan
+                    }
+                }
+            }
+            // Proses penyimpanan data ke database
             Sequel.menyimpan2("jadwal_pegawai","?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?", 34,
                 new String[]{
                     tabMode.getValueAt(i,1).toString(),
@@ -403,40 +418,77 @@ public class DlgJadwalPegawai extends javax.swing.JDialog {
                     tabMode.getValueAt(i,6).toString(),
                     tabMode.getValueAt(i,7).toString(),
                     tabMode.getValueAt(i,8).toString(),
-                    tabMode.getValueAt(i,9).toString(),tabMode.getValueAt(i,10).toString(),
-                    tabMode.getValueAt(i,11).toString(),tabMode.getValueAt(i,12).toString(),tabMode.getValueAt(i,13).toString(),
-                    tabMode.getValueAt(i,14).toString(),tabMode.getValueAt(i,15).toString(),tabMode.getValueAt(i,16).toString(),
-                    tabMode.getValueAt(i,17).toString(),tabMode.getValueAt(i,18).toString(),tabMode.getValueAt(i,19).toString(),
-                    tabMode.getValueAt(i,20).toString(),tabMode.getValueAt(i,21).toString(),tabMode.getValueAt(i,22).toString(),
-                    tabMode.getValueAt(i,23).toString(),tabMode.getValueAt(i,24).toString(),tabMode.getValueAt(i,25).toString(),
-                    tabMode.getValueAt(i,26).toString(),tabMode.getValueAt(i,27).toString(),tabMode.getValueAt(i,28).toString(),
-                    tabMode.getValueAt(i,29).toString(),tabMode.getValueAt(i,30).toString(),tabMode.getValueAt(i,31).toString(),
-                    tabMode.getValueAt(i,32).toString(),tabMode.getValueAt(i,33).toString(),tabMode.getValueAt(i,34).toString(),
+                    tabMode.getValueAt(i,9).toString(),
+                    tabMode.getValueAt(i,10).toString(),
+                    tabMode.getValueAt(i,11).toString(),
+                    tabMode.getValueAt(i,12).toString(),
+                    tabMode.getValueAt(i,13).toString(),
+                    tabMode.getValueAt(i,14).toString(),
+                    tabMode.getValueAt(i,15).toString(),
+                    tabMode.getValueAt(i,16).toString(),
+                    tabMode.getValueAt(i,17).toString(),
+                    tabMode.getValueAt(i,18).toString(),
+                    tabMode.getValueAt(i,19).toString(),
+                    tabMode.getValueAt(i,20).toString(),
+                    tabMode.getValueAt(i,21).toString(),
+                    tabMode.getValueAt(i,22).toString(),
+                    tabMode.getValueAt(i,23).toString(),
+                    tabMode.getValueAt(i,24).toString(),
+                    tabMode.getValueAt(i,25).toString(),
+                    tabMode.getValueAt(i,26).toString(),
+                    tabMode.getValueAt(i,27).toString(),
+                    tabMode.getValueAt(i,28).toString(),
+                    tabMode.getValueAt(i,29).toString(),
+                    tabMode.getValueAt(i,30).toString(),
+                    tabMode.getValueAt(i,31).toString(),
+                    tabMode.getValueAt(i,32).toString(),
+                    tabMode.getValueAt(i,33).toString(),
+                    tabMode.getValueAt(i,34).toString(),
                     tabMode.getValueAt(i,35).toString()
                 },
-                "id=? and tahun=? and bulan=?","h1=?,h2=?,h3=?,h4=?,h5=?,h6=?,h7=?,h8=?,h9=?,h10=?,h11=?,h12=?,h13=?,h14=?,"+
-                "h15=?,h16=?,h17=?,h18=?,h19=?,h20=?,h21=?,h22=?,h23=?,h24=?,h25=?,h26=?,h27=?,h28=?,h29=?,h30=?,h31=?",34,
+                "id=? and tahun=? and bulan=?", "h1=?,h2=?,h3=?,h4=?,h5=?,h6=?,h7=?,h8=?,h9=?,h10=?,h11=?,h12=?,h13=?,h14=?,"+
+                "h15=?,h16=?,h17=?,h18=?,h19=?,h20=?,h21=?,h22=?,h23=?,h24=?,h25=?,h26=?,h27=?,h28=?,h29=?,h30=?,h31=?", 34,
                 new String[]{
                     tabMode.getValueAt(i,5).toString(),
                     tabMode.getValueAt(i,6).toString(),
                     tabMode.getValueAt(i,7).toString(),
                     tabMode.getValueAt(i,8).toString(),
-                    tabMode.getValueAt(i,9).toString(),tabMode.getValueAt(i,10).toString(),
-                    tabMode.getValueAt(i,11).toString(),tabMode.getValueAt(i,12).toString(),tabMode.getValueAt(i,13).toString(),
-                    tabMode.getValueAt(i,14).toString(),tabMode.getValueAt(i,15).toString(),tabMode.getValueAt(i,16).toString(),
-                    tabMode.getValueAt(i,17).toString(),tabMode.getValueAt(i,18).toString(),tabMode.getValueAt(i,19).toString(),
-                    tabMode.getValueAt(i,20).toString(),tabMode.getValueAt(i,21).toString(),tabMode.getValueAt(i,22).toString(),
-                    tabMode.getValueAt(i,23).toString(),tabMode.getValueAt(i,24).toString(),tabMode.getValueAt(i,25).toString(),
-                    tabMode.getValueAt(i,26).toString(),tabMode.getValueAt(i,27).toString(),tabMode.getValueAt(i,28).toString(),
-                    tabMode.getValueAt(i,29).toString(),tabMode.getValueAt(i,30).toString(),tabMode.getValueAt(i,31).toString(),
-                    tabMode.getValueAt(i,32).toString(),tabMode.getValueAt(i,33).toString(),tabMode.getValueAt(i,34).toString(),
-                    tabMode.getValueAt(i,35).toString(),tabMode.getValueAt(i,1).toString(),ThnCari.getSelectedItem().toString(),
+                    tabMode.getValueAt(i,9).toString(),
+                    tabMode.getValueAt(i,10).toString(),
+                    tabMode.getValueAt(i,11).toString(),
+                    tabMode.getValueAt(i,12).toString(),
+                    tabMode.getValueAt(i,13).toString(),
+                    tabMode.getValueAt(i,14).toString(),
+                    tabMode.getValueAt(i,15).toString(),
+                    tabMode.getValueAt(i,16).toString(),
+                    tabMode.getValueAt(i,17).toString(),
+                    tabMode.getValueAt(i,18).toString(),
+                    tabMode.getValueAt(i,19).toString(),
+                    tabMode.getValueAt(i,20).toString(),
+                    tabMode.getValueAt(i,21).toString(),
+                    tabMode.getValueAt(i,22).toString(),
+                    tabMode.getValueAt(i,23).toString(),
+                    tabMode.getValueAt(i,24).toString(),
+                    tabMode.getValueAt(i,25).toString(),
+                    tabMode.getValueAt(i,26).toString(),
+                    tabMode.getValueAt(i,27).toString(),
+                    tabMode.getValueAt(i,28).toString(),
+                    tabMode.getValueAt(i,29).toString(),
+                    tabMode.getValueAt(i,30).toString(),
+                    tabMode.getValueAt(i,31).toString(),
+                    tabMode.getValueAt(i,32).toString(),
+                    tabMode.getValueAt(i,33).toString(),
+                    tabMode.getValueAt(i,34).toString(),
+                    tabMode.getValueAt(i,35).toString(),
+                    tabMode.getValueAt(i,1).toString(),
+                    ThnCari.getSelectedItem().toString(),
                     BlnCari.getSelectedItem().toString()
                 });            
-        } 
-        
-        JOptionPane.showMessageDialog(null,"Proses selesai...!!!!");
-        tampil();
+    } 
+
+    JOptionPane.showMessageDialog(null, "Proses selesai...!!!!");
+    tampil();
+
 }//GEN-LAST:event_BtnSimpanActionPerformed
 
     private void BtnSimpanKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnSimpanKeyPressed
@@ -632,14 +684,33 @@ public class DlgJadwalPegawai extends javax.swing.JDialog {
     }//GEN-LAST:event_formWindowOpened
 
     private void tbJadwalKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbJadwalKeyPressed
-        if(tabMode.getRowCount()!=0){
-            if(evt.getKeyCode()==KeyEvent.VK_SPACE){
-                jammasuk.isCek();
-                jammasuk.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight());
-                jammasuk.setLocationRelativeTo(internalFrame1);
-                jammasuk.setVisible(true);
-            }else if(evt.getKeyCode()==KeyEvent.VK_DELETE){
-                tabMode.setValueAt("",tbJadwal.getSelectedRow(),tbJadwal.getSelectedColumn());
+        if(tabMode.getRowCount() != 0){
+            if(evt.getKeyCode() == KeyEvent.VK_SPACE){
+                if(isAfter25th()){
+                    return; // Mencegah membuka dialog input jadwal
+                }
+                int selectedColumn = tbJadwal.getSelectedColumn();
+                // Kolom 5 hingga 35 correspond ke hari 1 hingga 31
+                if(selectedColumn >= 5 && selectedColumn <= 35){
+                    int day = selectedColumn - 4; // Kolom 5 adalah hari 1
+                    if(cekTanggal(day)){
+                        jammasuk.isCek();
+                        jammasuk.setSize(internalFrame1.getWidth()-20, internalFrame1.getHeight());
+                        jammasuk.setLocationRelativeTo(internalFrame1);
+                        jammasuk.setVisible(true);
+                    }
+                }
+            } else if(evt.getKeyCode() == KeyEvent.VK_DELETE){
+                if(isAfter25th()){
+                    return; // Mencegah menghapus entri
+                }
+                int selectedColumn = tbJadwal.getSelectedColumn();
+                if(selectedColumn >=5 && selectedColumn <=35){
+                    int day = selectedColumn -4;
+                    if(cekTanggal(day)){
+                        tabMode.setValueAt("", tbJadwal.getSelectedRow(), selectedColumn);
+                    }
+                }
             }
         }
     }//GEN-LAST:event_tbJadwalKeyPressed
@@ -662,7 +733,15 @@ public class DlgJadwalPegawai extends javax.swing.JDialog {
             tampil();
         }
     }//GEN-LAST:event_DepartemenItemStateChanged
-
+public boolean isAfter25th(){
+        Calendar cal = Calendar.getInstance();
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        if(day > 29){
+            JOptionPane.showMessageDialog(null, "Maaf, input jadwal tidak diizinkan setelah tanggal 29 setiap bulannya!");
+            return true;
+        }
+        return false;
+    }
     /**
     * @param args the command line arguments
     */
@@ -875,10 +954,23 @@ public class DlgJadwalPegawai extends javax.swing.JDialog {
         }
         LCount.setText(""+tabMode.getRowCount());
     }
+    public boolean cekTanggal(int day){
+        if(day < 10 || day > 29){
+            JOptionPane.showMessageDialog(null, "Maaf, input jadwal hanya diizinkan untuk tanggal 10 sampai 29 setiap bulannya!");
+            return false;
+        }
+        return true;
+    }
+
     
     public void isCek(){
-        BtnSimpan.setEnabled(akses.getjadwal_pegawai());
-        BtnHapus.setEnabled(akses.getjadwal_pegawai());
+        if(isAfter25th()){
+            BtnSimpan.setEnabled(false);
+            BtnHapus.setEnabled(false);
+        } else {
+            BtnSimpan.setEnabled(akses.getjadwal_pegawai());
+            BtnHapus.setEnabled(akses.getjadwal_pegawai());
+        }
     }
     
     String konversi(int year, int month, int day){
