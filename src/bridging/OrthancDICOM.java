@@ -53,7 +53,7 @@ import javax.swing.SwingUtilities;
 public class OrthancDICOM extends javax.swing.JDialog {
     private final JFXPanel jfxPanel = new JFXPanel();
     private WebEngine engine;
-    private String urlpanggil="",norawat="",series="";
+    private String urlpanggil="",norawat="",series="",no_rawat="";
     private final JPanel panel = new JPanel(new BorderLayout());
     private final JLabel lblStatus = new JLabel();
 
@@ -336,7 +336,7 @@ public class OrthancDICOM extends javax.swing.JDialog {
     }//GEN-LAST:event_BtnKeluarKeyPressed
 
     private void BtnPngActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPngActionPerformed
-        orthanc.AmbilPng(norawat,series);
+        orthanc.AmbilPng(norawat,series,no_rawat);
     }//GEN-LAST:event_BtnPngActionPerformed
 
     private void BtnDcmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnDcmActionPerformed
@@ -377,9 +377,14 @@ public class OrthancDICOM extends javax.swing.JDialog {
     private widget.InternalFrame internalFrame1;
     // End of variables declaration//GEN-END:variables
 
-    public void setJudul(String Judul,String NoRawat,String Series){
+    public void setJudul(String Judul,String NoRawat,String Series,String norawatslash){
         norawat=NoRawat;
         series=Series;
+        no_rawat=norawatslash;
         internalFrame1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 245, 235)), Judul, javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(70,70,70))); 
     }
+
+    public void setJudul(String string, String replaceAll, String toString) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+}
 }
