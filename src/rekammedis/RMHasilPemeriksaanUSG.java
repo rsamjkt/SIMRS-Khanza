@@ -1719,7 +1719,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
     }//GEN-LAST:event_TanggalKeyPressed
 
     private void MnPenilaianMedisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnPenilaianMedisActionPerformed
-        usg = "http://"+koneksiDB.HOSTHYBRIDWEB()+":"+koneksiDB.PORTWEB()+"/"+koneksiDB.HYBRIDWEB()+"/radiologi/"+Sequel.cariIsi("select lokasi_gambar from gambar_radiologi where no_rawat='"+TNoRw.getText()+"'")+"";
+        usg = "http://"+koneksiDB.CLOUDFLARER2HOST()+Sequel.cariIsi("select lokasi_gambar from gambar_radiologi where no_rawat='"+TNoRw.getText()+"'")+"";
         
         if(tbObat.getSelectedRow()>-1){
             Map<String, Object> param = new HashMap<>();
@@ -1967,7 +1967,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
                     }
                     
                     // Gunakan generatePresignedUrl yang sudah ada
-                    String urlHasil = "https://katalia.rsam.my.id/" + rs.getString("lokasi_gambar");
+                    String urlHasil = koneksiDB.CLOUDFLARER2HOST() +"/"+ rs.getString("lokasi_gambar");
                     System.out.println("Generated S3 URL: " + urlHasil);
 
                     JSONObject jsonRequest = new JSONObject();
@@ -2426,73 +2426,128 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
     }
 
     private void panggilPhoto() {
-    if(FormPhoto.isVisible()==true){
+    if (FormPhoto.isVisible() == true) {
         try {
-            ps=koneksi.prepareStatement("select gambar_radiologi.lokasi_gambar from gambar_radiologi where gambar_radiologi.no_rawat=?");
+            ps = koneksi.prepareStatement("SELECT gambar_radiologi.lokasi_gambar FROM gambar_radiologi WHERE gambar_radiologi.no_rawat=?");
             try {
-                ps.setString(1,tbObat.getValueAt(tbObat.getSelectedRow(),0).toString());
-                rs=ps.executeQuery();
-                if(rs.next()){
-                    if(rs.getString("lokasi_gambar").equals("")||rs.getString("lokasi_gambar").equals("-")){
+                ps.setString(1, tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString());
+                rs = ps.executeQuery();
+                if (rs.next()) {
+                    if (rs.getString("lokasi_gambar").equals("") || rs.getString("lokasi_gambar").equals("-")) {
                         LoadHTML2.setText("<html><body><center><br><br><font face='tahoma' size='2' color='#434343'>Kosong</font></center></body></html>");
-                    }else{
+                    } else {
                         String objectKey = rs.getString("lokasi_gambar");
-                        String presignedUrl = generatePresignedUrl("katalia.rsam.my.id", objectKey);
+                        String presignedUrl = generatePresignedUrl(objectKey);
                         LoadHTML2.setText("<html><body><center><a href='" + presignedUrl + 
                             "'><img src='" + presignedUrl + 
                             "' alt='photo' width='550' height='550'/></a></center></body></html>");
-                    }  
-                }else{
+                    }
+                } else {
                     LoadHTML2.setText("<html><body><center><br><br><font face='tahoma' size='2' color='#434343'>Kosong</font></center></body></html>");
                 }
             } catch (Exception e) {
-                System.out.println("Notif : "+e);
-            } finally{
-                if(rs!=null){
+                System.out.println("Notif : " + e);
+            } finally {
+                if (rs != null) {
                     rs.close();
                 }
-                if(ps!=null){
+                if (ps != null) {
                     ps.close();
                 }
             }
         } catch (Exception e) {
-            System.out.println("Notif : "+e);
+            System.out.println("Notif : " + e);
         }
     }
 }
 
-private String generatePresignedUrl(String bucketName, String objectKey) {
+private String generatePresignedUrl(String objectKey) {
     try {
-        // Expiration time (15 minutes from now)
+        // Ganti dengan kredensial Cloudflare R2 Anda
+        final String CLOUDFLARE_R2_ACCESS_KEY = koneksiDB.CLOUDFLARER2ACCESSKEY();
+        final String CLOUDFLARE_R2_SECRET_KEY = koneksiDB.CLOUDFLARER2SECRETKEY();
+        final String CLOUDFLARE_R2_ACCOUNT_ID = koneksiDB.CLOUDFLARER2ACCOUNTID(); 
+        final String BUCKET_NAME = koneksiDB.CLOUDFLAREBUCKETNAME();
+        final String REGION = koneksiDB.CLOUDFLAREREGION(); 
+
+        // Waktu kedaluwarsa URL (15 menit dari sekarang)
         long expiration = System.currentTimeMillis() + (15 * 60 * 1000);
         String dateStamp = new SimpleDateFormat("yyyyMMdd").format(new Date());
         String amzDate = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'").format(new Date());
-        
-        String stringToSign = "GET\n\n\n" + expiration + "\n" + 
-                            "/" + bucketName + "/" + objectKey;
-        
-        // Generate signature
-        Mac sha256_HMAC = Mac.getInstance("HmacSHA1");
-        SecretKeySpec secret_key = new SecretKeySpec(
-            "zEalus6kLZ7iBd6neCNW0aouUpAwFtD1xTTSkCtR".getBytes("UTF-8"), 
-            "HmacSHA1");
-        sha256_HMAC.init(secret_key);
-        String signature = Base64.encodeBase64String(
-            sha256_HMAC.doFinal(stringToSign.getBytes("UTF-8")));
-        
-        // Build URL
-        return String.format(
-            "https://is3.cloudhost.id/%s/%s?AWSAccessKeyId=%s&Expires=%d&Signature=%s",
-            bucketName,
-            objectKey,
-            "9R4ZPJ8S6TT1D8QQHRZH",
-            expiration,
-            URLEncoder.encode(signature, "UTF-8")
-        );
+
+        // Canonical Request
+        String canonicalUri = "/" + objectKey;
+        String canonicalQueryString = "";  // Tidak ada query string
+        String canonicalHeaders = 
+                "host:" + BUCKET_NAME + "." + CLOUDFLARE_R2_ACCOUNT_ID + ".r2.cloudflarestorage.com\n" + 
+                "x-amz-date:" + amzDate + "\n";
+        String signedHeaders = "host;x-amz-date";
+        String payloadHash = sha256Hex("".getBytes());  // Body kosong
+        String canonicalRequest = "GET\n" + 
+                                   canonicalUri + "\n" +
+                                   canonicalQueryString + "\n" +
+                                   canonicalHeaders + "\n" +
+                                   signedHeaders + "\n" + 
+                                   payloadHash;
+
+        // String untuk menandatangani
+        String stringToSign = "AWS4-HMAC-SHA256\n" + 
+                              amzDate + "\n" +
+                              dateStamp + "/" + REGION + "/s3/aws4_request\n" +
+                              sha256Hex(canonicalRequest.getBytes("UTF-8"));
+
+        // Hitung tanda tangan (signature)
+        byte[] signingKey = getSignatureKey(CLOUDFLARE_R2_SECRET_KEY, dateStamp, REGION, "s3");
+        String signature = bytesToHex(hmacSHA256(stringToSign, signingKey));
+
+        // Bangun URL presigned
+        String presignedUrl = koneksiDB.CLOUDFLARER2HOST()+ canonicalUri +
+                              "?X-Amz-Signature=" + signature +
+                              "&X-Amz-Date=" + amzDate +
+                              "&X-Amz-Algorithm=AWS4-HMAC-SHA256" +
+                              "&X-Amz-Credential=" + CLOUDFLARE_R2_ACCESS_KEY + "/" + dateStamp + "/" + REGION + "/s3/aws4_request" +
+                              "&X-Amz-SignedHeaders=" + signedHeaders +
+                              "&Expires=" + expiration;
+
+        return presignedUrl;
+
     } catch (Exception e) {
         System.out.println("Error generating presigned URL: " + e);
         return "";
     }
+}
+
+// Helper method untuk SHA-256 hash
+private String sha256Hex(byte[] data) throws Exception {
+    java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-256");
+    byte[] digest = md.digest(data);
+    return bytesToHex(digest);
+}
+
+// HMAC-SHA256 helper method
+private byte[] hmacSHA256(String data, byte[] key) throws Exception {
+    String algorithm = "HmacSHA256";
+    Mac mac = Mac.getInstance(algorithm);
+    mac.init(new SecretKeySpec(key, algorithm));
+    return mac.doFinal(data.getBytes("UTF-8"));
+}
+
+// Convert byte array to hex string
+private String bytesToHex(byte[] bytes) {
+    StringBuilder sb = new StringBuilder();
+    for (byte b : bytes) {
+        sb.append(String.format("%02x", b));
+    }
+    return sb.toString();
+}
+
+// Calculate the signing key
+private byte[] getSignatureKey(String key, String dateStamp, String regionName, String serviceName) throws Exception {
+    byte[] kSecret = ("AWS4" + key).getBytes("UTF-8");
+    byte[] kDate = hmacSHA256(dateStamp, kSecret);
+    byte[] kRegion = hmacSHA256(regionName, kDate);
+    byte[] kService = hmacSHA256(serviceName, kRegion);
+    return hmacSHA256("aws4_request", kService);
 }
     
     private void tampilOrthanc() {

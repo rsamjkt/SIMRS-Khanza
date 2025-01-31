@@ -1619,4 +1619,65 @@ public class koneksiDB {
         }
         return var;
     }    
+    
+    public static String CLOUDFLARER2HOST(){
+        try{
+            prop.loadFromXML(new FileInputStream("setting/database.xml"));
+            var=prop.getProperty("CLOUDFLARER2HOST");
+        }catch(Exception e){
+            var=""; 
+        }
+        return var;
+    }
+    
+    public static String CLOUDFLARER2ACCESSKEY(){
+        try{
+            prop.loadFromXML(new FileInputStream("setting/database.xml"));
+            var=prop.getProperty("CLOUDFLARER2ACCESSKEY");
+        }catch(Exception e){
+            var=""; 
+        }
+        return var;
+    }
+    
+    public static String CLOUDFLARER2SECRETKEY(){
+        try{
+            prop.loadFromXML(new FileInputStream("setting/database.xml"));
+            var=prop.getProperty("CLOUDFLARER2SECRETKEY");
+        }catch(Exception e){
+            var=""; 
+        }
+        return var;
+    }
+    
+    public static String CLOUDFLARER2ACCOUNTID (){
+        try{
+            prop.loadFromXML(new FileInputStream("setting/database.xml"));
+            var=prop.getProperty("CLOUDFLARER2ACCOUNTID");
+        }catch(Exception e){
+            var=""; 
+        }
+        return var;
+    }
+    
+    public static String CLOUDFLAREBUCKETNAME (){
+        try{
+            prop.loadFromXML(new FileInputStream("setting/database.xml"));
+            var=prop.getProperty("CLOUDFLAREBUCKETNAME");
+        }catch(Exception e){
+            var=""; 
+        }
+        return var;
+    }
+    
+    public static String CLOUDFLAREREGION (){
+        try{
+            prop.loadFromXML(new FileInputStream("setting/database.xml"));
+            var=prop.getProperty("CLOUDFLAREREGION");
+        }catch(Exception e){
+            var=""; 
+        }
+        return var;
+    }
+    
 }

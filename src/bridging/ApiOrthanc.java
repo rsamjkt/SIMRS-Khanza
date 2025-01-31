@@ -256,61 +256,117 @@ public class ApiOrthanc {
         return new RestTemplate(factory);
     }
     
-void uploadImage(String FileName, String docpath) {
+void uploadImage(String fileName, String docPath) {
+    // Ganti dengan kredensial dan info Cloudflare R2 Anda
+    final String CLOUDFLARE_R2_ACCESS_KEY = koneksiDB.CLOUDFLARER2ACCESSKEY();
+    final String CLOUDFLARE_R2_SECRET_KEY = koneksiDB.CLOUDFLARER2SECRETKEY();
+    final String CLOUDFLARE_R2_ACCOUNT_ID = koneksiDB.CLOUDFLARER2ACCOUNTID(); 
+    final String BUCKET_NAME = koneksiDB.CLOUDFLAREBUCKETNAME();
+    // Region di Cloudflare R2 umumnya "auto" atau "us-east-1". 
+    // Boleh pakai "auto", tapi beberapa integrasi kadang perlu "us-east-1".
+    final String REGION = koneksiDB.CLOUDFLAREREGION(); 
+    // Contoh: "docPath" = "pages/upload"
+
     try {
-        File file = new File("gambarradiologi/" + FileName);
-        byte[] data = FileUtils.readFileToByteArray(file);
-        
-        // Create URL for upload
-        String url = "https://is3.cloudhost.id/katalia.rsam.my.id/" + docpath + "/" + FileName;
-        
-        // Create connection
-        URL obj = new URL(url);
-        HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
+        // Baca file lokal yg mau di-upload
+        File file = new File("gambarradiologi/" + fileName);
+        byte[] fileBytes = FileUtils.readFileToByteArray(file);
+
+        // ----- 1. Siapkan parameter waktu -----
+        // x-amz-date format: "yyyyMMdd'T'HHmmss'Z'"
+        // dateStamp format: "yyyyMMdd" (untuk pembuatan signing key)
+        SimpleDateFormat amzDateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
+        amzDateFormat.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
+        String xAmzDate = amzDateFormat.format(new Date());
+
+        SimpleDateFormat dateStampFormat = new SimpleDateFormat("yyyyMMdd");
+        dateStampFormat.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
+        String dateStamp = dateStampFormat.format(new Date());
+
+        // ----- 2. Tentukan host & URL object -----
+        // Format host R2: <BUCKET_NAME>.<ACCOUNT_ID>.r2.cloudflarestorage.com
+        String host = BUCKET_NAME + "." + CLOUDFLARE_R2_ACCOUNT_ID + ".r2.cloudflarestorage.com";
+        // Lokasi penyimpanan object di dalam bucket, misal: /pages/upload/NamaFile.png
+        String canonicalUri = "/" + docPath + "/" + fileName;
+        // Endpoint lengkap
+        String endpoint = "https://" + host + canonicalUri;
+
+        // ----- 3. Hitung payload hash (SHA-256 atas body) -----
+        String payloadHash = sha256Hex(fileBytes);
+
+        // ----- 4. Bangun Canonical Request -----
+        // Contoh HEADERS minimal: host, x-amz-content-sha256, x-amz-date
+        String canonicalHeaders = 
+                "host:" + host + "\n" +
+                "x-amz-content-sha256:" + payloadHash + "\n" +
+                "x-amz-date:" + xAmzDate + "\n";
+
+        // SignedHeaders: daftar header yang ikut ditanda tangani
+        String signedHeaders = "host;x-amz-content-sha256;x-amz-date";
+
+        // Metode = PUT, QueryString = "" (kosong), lalu payloadHash di bagian terakhir
+        String canonicalRequest = 
+                "PUT\n" + 
+                canonicalUri + "\n" + 
+                "" + "\n" + 
+                canonicalHeaders + "\n" + 
+                signedHeaders + "\n" +
+                payloadHash;
+
+        // ----- 5. String to Sign -----
+        String algorithm = "AWS4-HMAC-SHA256";
+        String credentialScope = dateStamp + "/" + REGION + "/s3/aws4_request";
+        String hashCanonicalRequest = sha256Hex(canonicalRequest.getBytes("UTF-8"));
+        String stringToSign = 
+                algorithm + "\n" +
+                xAmzDate + "\n" +
+                credentialScope + "\n" +
+                hashCanonicalRequest;
+
+        // ----- 6. Hitung Signature -----
+        byte[] signingKey = getSignatureKey(CLOUDFLARE_R2_SECRET_KEY, dateStamp, REGION, "s3");
+        String signature = bytesToHex(hmacSHA256(stringToSign, signingKey));
+
+        // ----- 7. Bangun Header Authorization -----
+        String authorizationHeader = 
+                algorithm + " " +
+                "Credential=" + CLOUDFLARE_R2_ACCESS_KEY + "/" + credentialScope + ", " +
+                "SignedHeaders=" + signedHeaders + ", " +
+                "Signature=" + signature;
+
+        // ----- 8. Lakukan koneksi HTTP (PUT) -----
+        URL url = new URL(endpoint);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("PUT");
-        
-        // Generate date for headers
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
-        dateFormat.setTimeZone(java.util.TimeZone.getTimeZone("GMT"));
-        String date = dateFormat.format(new Date());
-        
-        // Create string to sign - tambahkan header x-amz-acl ke string yang akan di-sign
-        String stringToSign = "PUT\n\n" + 
-                            "image/png\n" +
-                            date + "\n" +
-                            "x-amz-acl:public-read\n" +  // Tambahkan ini
-                            "/katalia.rsam.my.id/" + docpath + "/" + FileName;
-        
-        // Calculate HMAC SHA1 signature
-        String signature = calculateHmacSHA1(stringToSign, "zEalus6kLZ7iBd6neCNW0aouUpAwFtD1xTTSkCtR");
-        
-        // Add headers
-        conn.setRequestProperty("Content-Type", "image/png");
-        conn.setRequestProperty("Date", date);
-        conn.setRequestProperty("x-amz-acl", "public-read");  // Tambahkan header ini
-        conn.setRequestProperty("Authorization", 
-            "AWS " + "9R4ZPJ8S6TT1D8QQHRZH" + ":" + signature);
-        
-        // Sisanya sama
         conn.setDoOutput(true);
         conn.setUseCaches(false);
-        
+
+        // Set header
+        conn.setRequestProperty("Host", host);
+        conn.setRequestProperty("x-amz-date", xAmzDate);
+        conn.setRequestProperty("x-amz-content-sha256", payloadHash);
+        // Jika ingin objek bisa diakses publik:
+        conn.setRequestProperty("x-amz-acl", "public-read");
+        // Konten MIME type (contoh PNG, bisa diganti sesuai fileName)
+        conn.setRequestProperty("Content-Type", "image/png");
+        // Header Authorization
+        conn.setRequestProperty("Authorization", authorizationHeader);
+
+        // Tulis data file ke output stream
         try (DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
-            wr.write(data);
+            wr.write(fileBytes);
             wr.flush();
         }
-        
-        // Get Response
+
+        // ----- 9. Cek response -----
         int responseCode = conn.getResponseCode();
-        
-        if (responseCode == HttpURLConnection.HTTP_OK || 
-            responseCode == HttpURLConnection.HTTP_CREATED || 
-            responseCode == HttpURLConnection.HTTP_ACCEPTED) {
-            System.out.println("File uploaded successfully to S3 with public-read permission");
+        if (responseCode >= 200 && responseCode < 300) {
+            System.out.println("File berhasil diupload ke Cloudflare R2: " + fileName);
+            // Jika ingin menghapus file lokal setelah upload
             deleteFile();
         } else {
             BufferedReader in = new BufferedReader(new InputStreamReader(
-                conn.getErrorStream() != null ? conn.getErrorStream() : conn.getInputStream()
+                    conn.getErrorStream() != null ? conn.getErrorStream() : conn.getInputStream()
             ));
             String inputLine;
             StringBuilder response = new StringBuilder();
@@ -318,14 +374,16 @@ void uploadImage(String FileName, String docpath) {
                 response.append(inputLine);
             }
             in.close();
-            System.out.println("S3 Upload failed. Response: " + response.toString());
+            System.out.println("Upload Cloudflare R2 gagal. Kode: " + responseCode + 
+                               ", Respon: " + response.toString());
         }
-        
+
     } catch (Exception e) {
-        System.out.println("Upload error: " + e);
         e.printStackTrace();
+        System.out.println("Terjadi error upload ke R2: " + e.getMessage());
     }
 }
+
 private String calculateHmacSHA1(String data, String key) throws Exception {
     SecretKeySpec signingKey = new SecretKeySpec(key.getBytes("UTF-8"), "HmacSHA1");
     Mac mac = Mac.getInstance("HmacSHA1");
@@ -347,7 +405,14 @@ private String createAuthHeader(String stringToSign, String dateStamp, String se
     }
 }
 
-// Helper method for HMAC-SHA256
+// Menghasilkan hash SHA-256 (hex string) dari sebuah byte[]
+private String sha256Hex(byte[] data) throws Exception {
+    java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-256");
+    byte[] digest = md.digest(data);
+    return bytesToHex(digest);
+}
+
+// HMAC-SHA256 untuk data & key
 private byte[] hmacSHA256(String data, byte[] key) throws Exception {
     String algorithm = "HmacSHA256";
     Mac mac = Mac.getInstance(algorithm);
@@ -355,14 +420,24 @@ private byte[] hmacSHA256(String data, byte[] key) throws Exception {
     return mac.doFinal(data.getBytes("UTF-8"));
 }
 
-// Helper method to convert bytes to hex
+// Konversi bytes ke format heksadesimal
 private String bytesToHex(byte[] bytes) {
-    StringBuilder result = new StringBuilder();
+    StringBuilder sb = new StringBuilder();
     for (byte b : bytes) {
-        result.append(String.format("%02x", b));
+        sb.append(String.format("%02x", b));
     }
-    return result.toString();
+    return sb.toString();
 }
+
+// Proses pembentukan key turunan (signature key) untuk V4
+private byte[] getSignatureKey(String key, String dateStamp, String regionName, String serviceName) throws Exception {
+    byte[] kSecret = ("AWS4" + key).getBytes("UTF-8");
+    byte[] kDate = hmacSHA256(dateStamp, kSecret);
+    byte[] kRegion = hmacSHA256(regionName, kDate);
+    byte[] kService = hmacSHA256(serviceName, kRegion);
+    return hmacSHA256("aws4_request", kService);
+}
+
     
     void deleteFile() {
         File file = new File("gambarradiologi");

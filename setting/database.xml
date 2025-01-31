@@ -208,4 +208,14 @@
     <entry key="SFTPFILEESIGNUSER">bAXbb94guPz+B30Ics1QDw==</entry>
     <entry key="SFTPFILEESIGNPAS">5/E2gzGZ+SOG9tal860JJ3/7uyy7V7L3Q8zIw6oL25w=</entry>
     <entry key="SFTPFILEESIGNFOLDER">bsX283RtohX0NO9hyh+GAIKiafyYwSe7hhw/HWdydQQ=</entry>
+    
+    <entry key="CLOUDFLARER2HOST">https://attaakai.rsam.my.id</entry>
+    <entry key="CLOUDFLARER2ACCESSKEY">1723e7b898b82f97e099f1316b44c344</entry>
+    <entry key="CLOUDFLARER2SECRETKEY">0899e8cd7da04fc89af230a17720e29177f8f38ebbea9869c44e35c074d75e22</entry>
+    <entry key="CLOUDFLARER2ACCOUNTID">25e966c107f5a3434d6c13b0929870e2</entry>
+    <entry key="CLOUDFLAREBUCKETNAME">attaakai</entry>
+    <entry key="CLOUDFLAREREGION">auto</entry>
+
+    
+    
 </properties>
