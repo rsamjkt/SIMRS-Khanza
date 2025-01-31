@@ -37,6 +37,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.DataOutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+
 /**
  *
  * @author windiartonugroho
@@ -247,23 +256,113 @@ public class ApiOrthanc {
         return new RestTemplate(factory);
     }
     
-    void uploadImage(String FileName, String docpath) {
-        try{
-            File file =new File("gambarradiologi/"+FileName);
-            byte[] data = new byte[(int) file.length()];
-            data = FileUtils.readFileToByteArray(file);
-            HttpClient httpClient = new DefaultHttpClient();
-            HttpPost postRequest = new HttpPost("http://"+koneksiDB.HOSTHYBRIDWEB()+":"+koneksiDB.PORTWEB()+"/"+koneksiDB.HYBRIDWEB()+"/radiologi/upload.php?doc="+docpath);
-            ByteArrayBody fileData = new ByteArrayBody (data, FileName);
-            MultipartEntity reqEntity = new MultipartEntity (HttpMultipartMode.BROWSER_COMPATIBLE);
-            reqEntity.addPart("file", fileData);
-            postRequest.setEntity (reqEntity);
-            httpClient.execute(postRequest);
+void uploadImage(String FileName, String docpath) {
+    try {
+        File file = new File("gambarradiologi/" + FileName);
+        byte[] data = FileUtils.readFileToByteArray(file);
+        
+        // Create URL for upload
+        String url = "https://is3.cloudhost.id/katalia.rsam.my.id/" + docpath + "/" + FileName;
+        
+        // Create connection
+        URL obj = new URL(url);
+        HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
+        conn.setRequestMethod("PUT");
+        
+        // Generate date for headers
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
+        dateFormat.setTimeZone(java.util.TimeZone.getTimeZone("GMT"));
+        String date = dateFormat.format(new Date());
+        
+        // Create string to sign - tambahkan header x-amz-acl ke string yang akan di-sign
+        String stringToSign = "PUT\n\n" + 
+                            "image/png\n" +
+                            date + "\n" +
+                            "x-amz-acl:public-read\n" +  // Tambahkan ini
+                            "/katalia.rsam.my.id/" + docpath + "/" + FileName;
+        
+        // Calculate HMAC SHA1 signature
+        String signature = calculateHmacSHA1(stringToSign, "zEalus6kLZ7iBd6neCNW0aouUpAwFtD1xTTSkCtR");
+        
+        // Add headers
+        conn.setRequestProperty("Content-Type", "image/png");
+        conn.setRequestProperty("Date", date);
+        conn.setRequestProperty("x-amz-acl", "public-read");  // Tambahkan header ini
+        conn.setRequestProperty("Authorization", 
+            "AWS " + "9R4ZPJ8S6TT1D8QQHRZH" + ":" + signature);
+        
+        // Sisanya sama
+        conn.setDoOutput(true);
+        conn.setUseCaches(false);
+        
+        try (DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
+            wr.write(data);
+            wr.flush();
+        }
+        
+        // Get Response
+        int responseCode = conn.getResponseCode();
+        
+        if (responseCode == HttpURLConnection.HTTP_OK || 
+            responseCode == HttpURLConnection.HTTP_CREATED || 
+            responseCode == HttpURLConnection.HTTP_ACCEPTED) {
+            System.out.println("File uploaded successfully to S3 with public-read permission");
             deleteFile();
-        } catch (Exception e) {
-            System.out.println("Upload error"+e);
-}
+        } else {
+            BufferedReader in = new BufferedReader(new InputStreamReader(
+                conn.getErrorStream() != null ? conn.getErrorStream() : conn.getInputStream()
+            ));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            System.out.println("S3 Upload failed. Response: " + response.toString());
+        }
+        
+    } catch (Exception e) {
+        System.out.println("Upload error: " + e);
+        e.printStackTrace();
     }
+}
+private String calculateHmacSHA1(String data, String key) throws Exception {
+    SecretKeySpec signingKey = new SecretKeySpec(key.getBytes("UTF-8"), "HmacSHA1");
+    Mac mac = Mac.getInstance("HmacSHA1");
+    mac.init(signingKey);
+    byte[] rawHmac = mac.doFinal(data.getBytes("UTF-8"));
+    return Base64.encodeBase64String(rawHmac);
+}
+    // Add this method for creating authentication header
+private String createAuthHeader(String stringToSign, String dateStamp, String secretKey) {
+    try {
+        byte[] kSecret = ("AWS4" + secretKey).getBytes("UTF-8");
+        byte[] kDate = hmacSHA256(dateStamp, kSecret);
+        byte[] kRegion = hmacSHA256("auto", kDate);
+        byte[] kService = hmacSHA256("s3", kRegion);
+        byte[] kSigning = hmacSHA256("aws4_request", kService);
+        return bytesToHex(hmacSHA256(stringToSign, kSigning));
+    } catch (Exception e) {
+        return "";
+    }
+}
+
+// Helper method for HMAC-SHA256
+private byte[] hmacSHA256(String data, byte[] key) throws Exception {
+    String algorithm = "HmacSHA256";
+    Mac mac = Mac.getInstance(algorithm);
+    mac.init(new SecretKeySpec(key, algorithm));
+    return mac.doFinal(data.getBytes("UTF-8"));
+}
+
+// Helper method to convert bytes to hex
+private String bytesToHex(byte[] bytes) {
+    StringBuilder result = new StringBuilder();
+    for (byte b : bytes) {
+        result.append(String.format("%02x", b));
+    }
+    return result.toString();
+}
     
     void deleteFile() {
         File file = new File("gambarradiologi");

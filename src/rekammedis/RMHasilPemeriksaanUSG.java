@@ -24,6 +24,7 @@ import java.awt.event.WindowListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataOutputStream;
+import java.text.SimpleDateFormat;
 import java.io.OutputStream;
 import org.json.JSONObject;
 import java.util.UUID;
@@ -33,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -58,6 +60,9 @@ import javax.swing.text.html.StyleSheet;
 import kepegawaian.DlgCariDokter;
 import javax.net.ssl.*;
 import java.security.cert.X509Certificate;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import org.apache.commons.codec.binary.Base64;
 
 
 /**
@@ -1961,11 +1966,9 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
                         noWa = "62" + noWa.substring(1);
                     }
                     
-                    String baseUrl = "webapp.rsam.my.id";
-                    if(!baseUrl.startsWith("http://") && !baseUrl.startsWith("https://")){
-                        baseUrl = "http://" + baseUrl;
-                    }
-                    String urlHasil = baseUrl + "/webapps/radiologi/" + rs.getString("lokasi_gambar");
+                    // Gunakan generatePresignedUrl yang sudah ada
+                    String urlHasil = "https://katalia.rsam.my.id/" + rs.getString("lokasi_gambar");
+                    System.out.println("Generated S3 URL: " + urlHasil);
 
                     JSONObject jsonRequest = new JSONObject();
                     jsonRequest.put("api_key", apiKey);
@@ -1974,7 +1977,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
                     jsonRequest.put("media_type", "image");
                     jsonRequest.put("caption", "Hasil Pemeriksaan USG");
                     jsonRequest.put("url", urlHasil);
-
+           
                     System.out.println("Request body: " + jsonRequest.toString());
 
                     URL obj = new URL(url);
@@ -2423,36 +2426,74 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
     }
 
     private void panggilPhoto() {
-        if(FormPhoto.isVisible()==true){
+    if(FormPhoto.isVisible()==true){
+        try {
+            ps=koneksi.prepareStatement("select gambar_radiologi.lokasi_gambar from gambar_radiologi where gambar_radiologi.no_rawat=?");
             try {
-                ps=koneksi.prepareStatement("select gambar_radiologi.lokasi_gambar from gambar_radiologi where gambar_radiologi.no_rawat=?");
-                try {
-                    ps.setString(1,tbObat.getValueAt(tbObat.getSelectedRow(),0).toString());
-                    rs=ps.executeQuery();
-                    if(rs.next()){
-                        if(rs.getString("lokasi_gambar").equals("")||rs.getString("lokasi_gambar").equals("-")){
-                            LoadHTML2.setText("<html><body><center><br><br><font face='tahoma' size='2' color='#434343'>Kosong</font></center></body></html>");
-                        }else{
-                            LoadHTML2.setText("<html><body><center><a href='http://"+koneksiDB.HOSTHYBRIDWEB()+":"+koneksiDB.PORTWEB()+"/"+koneksiDB.HYBRIDWEB()+"/radiologi/"+rs.getString("lokasi_gambar")+"'><img src='http://"+koneksiDB.HOSTHYBRIDWEB()+":"+koneksiDB.PORTWEB()+"/"+koneksiDB.HYBRIDWEB()+"/radiologi/"+rs.getString("lokasi_gambar")+"' alt='photo' width='550' height='550'/></a></center></body></html>");
-                        }  
-                    }else{
+                ps.setString(1,tbObat.getValueAt(tbObat.getSelectedRow(),0).toString());
+                rs=ps.executeQuery();
+                if(rs.next()){
+                    if(rs.getString("lokasi_gambar").equals("")||rs.getString("lokasi_gambar").equals("-")){
                         LoadHTML2.setText("<html><body><center><br><br><font face='tahoma' size='2' color='#434343'>Kosong</font></center></body></html>");
-                    }
-                } catch (Exception e) {
-                    System.out.println("Notif : "+e);
-                } finally{
-                    if(rs!=null){
-                        rs.close();
-                    }
-                    if(ps!=null){
-                        ps.close();
-                    }
+                    }else{
+                        String objectKey = rs.getString("lokasi_gambar");
+                        String presignedUrl = generatePresignedUrl("katalia.rsam.my.id", objectKey);
+                        LoadHTML2.setText("<html><body><center><a href='" + presignedUrl + 
+                            "'><img src='" + presignedUrl + 
+                            "' alt='photo' width='550' height='550'/></a></center></body></html>");
+                    }  
+                }else{
+                    LoadHTML2.setText("<html><body><center><br><br><font face='tahoma' size='2' color='#434343'>Kosong</font></center></body></html>");
                 }
             } catch (Exception e) {
                 System.out.println("Notif : "+e);
+            } finally{
+                if(rs!=null){
+                    rs.close();
+                }
+                if(ps!=null){
+                    ps.close();
+                }
             }
+        } catch (Exception e) {
+            System.out.println("Notif : "+e);
         }
     }
+}
+
+private String generatePresignedUrl(String bucketName, String objectKey) {
+    try {
+        // Expiration time (15 minutes from now)
+        long expiration = System.currentTimeMillis() + (15 * 60 * 1000);
+        String dateStamp = new SimpleDateFormat("yyyyMMdd").format(new Date());
+        String amzDate = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'").format(new Date());
+        
+        String stringToSign = "GET\n\n\n" + expiration + "\n" + 
+                            "/" + bucketName + "/" + objectKey;
+        
+        // Generate signature
+        Mac sha256_HMAC = Mac.getInstance("HmacSHA1");
+        SecretKeySpec secret_key = new SecretKeySpec(
+            "zEalus6kLZ7iBd6neCNW0aouUpAwFtD1xTTSkCtR".getBytes("UTF-8"), 
+            "HmacSHA1");
+        sha256_HMAC.init(secret_key);
+        String signature = Base64.encodeBase64String(
+            sha256_HMAC.doFinal(stringToSign.getBytes("UTF-8")));
+        
+        // Build URL
+        return String.format(
+            "https://is3.cloudhost.id/%s/%s?AWSAccessKeyId=%s&Expires=%d&Signature=%s",
+            bucketName,
+            objectKey,
+            "9R4ZPJ8S6TT1D8QQHRZH",
+            expiration,
+            URLEncoder.encode(signature, "UTF-8")
+        );
+    } catch (Exception e) {
+        System.out.println("Error generating presigned URL: " + e);
+        return "";
+    }
+}
     
     private void tampilOrthanc() {
         if(TabData.isVisible()==true){

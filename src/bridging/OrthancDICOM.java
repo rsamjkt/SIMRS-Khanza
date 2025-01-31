@@ -386,5 +386,5 @@ public class OrthancDICOM extends javax.swing.JDialog {
 
     public void setJudul(String string, String replaceAll, String toString) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-}
+    }
 }
