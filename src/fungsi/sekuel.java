@@ -1390,17 +1390,22 @@ public final class sekuel {
     }
     
     public boolean cekTanggalRegistrasi(String tanggalregistrasi,String tanggalinputdata){
-    bool = true; // Set langsung ke true, tanpa cek waktu
+        bool=false;
         try {
-        // Anda bisa menghapus atau tetap mempertahankan parsing tanggal jika masih dibutuhkan untuk tujuan lain
             waktumulai = formattanggal.parse(tanggalregistrasi);
             kegiatan = formattanggal.parse(tanggalinputdata);
-        // Tidak perlu hitung selisih waktu atau pengecekan lainnya
+            bedawaktu = (kegiatan.getTime()-waktumulai.getTime())/1000;
+            if(bedawaktu<0){
+                bool=false;
+                JOptionPane.showMessageDialog(null,"Maaf, jam input data / perubahan data minimal di jam "+tanggalregistrasi+" !");
+            }else{
+                bool=true;
+            }
         } catch (Exception ex) {
-        bool = false; // Tetap false jika terjadi error pada parsing tanggal
-        System.out.println("Notif : " + ex);
+            bool=false;
+            System.out.println("Notif : "+ex);
         }
-    return bool; // Selalu mengembalikan true kecuali ada error parsing
+        return bool;
     }
     
     public boolean cekTanggal48jam(String tanggalmulai,String tanggalinputdata){
@@ -1409,7 +1414,7 @@ public final class sekuel {
             waktumulai = formattanggal.parse(tanggalmulai);
             kegiatan = formattanggal.parse(tanggalinputdata);
             bedawaktu = (kegiatan.getTime()-waktumulai.getTime())/1000;
-            if(bedawaktu>572800){
+            if(bedawaktu>172800){
                 bool=false;
                 JOptionPane.showMessageDialog(null,"Maaf, perubahan data / penghapusan data tidak boleh lebih dari 2 x 24 jam !");
             }else{
@@ -2098,10 +2103,6 @@ public final class sekuel {
 
     private void cetak(String str) {
         System.out.println(str);
-    }
-
-    public void menyimpantf(String gambar_radiologi, String string, int i, String[] string0) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     public class Painter extends Canvas {
