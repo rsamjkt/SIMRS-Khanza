@@ -30,6 +30,9 @@ public class koneksiDB {
                 dataSource.setURL("jdbc:mysql://"+EnkripsiAES.decrypt(prop.getProperty("HOST"))+":"+EnkripsiAES.decrypt(prop.getProperty("PORT"))+"/"+EnkripsiAES.decrypt(prop.getProperty("DATABASE"))+"?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useCompression=true");
                 dataSource.setUser(EnkripsiAES.decrypt(prop.getProperty("USER")));
                 dataSource.setPassword(EnkripsiAES.decrypt(prop.getProperty("PAS")));
+                dataSource.setCachePreparedStatements(true);
+                dataSource.setUseCompression(true);
+                dataSource.setAutoReconnect(true);
                 connection=dataSource.getConnection();       
                 System.out.println("  Koneksi Berhasil. Sorry bro loading, silahkan baca dulu.... \n\n"+
                         "Jika Ada Kendala Silakan Hubungi IT \n"+
@@ -43,6 +46,9 @@ public class koneksiDB {
                         dataSource.setURL("jdbc:mysql://"+EnkripsiAES.decrypt(prop.getProperty("HOST"))+":"+EnkripsiAES.decrypt(prop.getProperty("PORT"))+"/"+EnkripsiAES.decrypt(prop.getProperty("DATABASE"))+"?zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;cachePrepStmts=true");
                         dataSource.setUser(EnkripsiAES.decrypt(prop.getProperty("USER")));
                         dataSource.setPassword(EnkripsiAES.decrypt(prop.getProperty("PAS")));
+                        dataSource.setCachePreparedStatements(true);
+                        dataSource.setUseCompression(true);
+                        dataSource.setAutoReconnect(true);
                         connection=dataSource.getConnection();  
                     }
                 } catch (Exception ex) {
@@ -1251,16 +1257,6 @@ public class koneksiDB {
         return var;
     }
     
-    public static String JADIKANBOOKINGSURATKONTROLAPIBPJS(){
-        try{
-            prop.loadFromXML(new FileInputStream("setting/database.xml"));
-            var=prop.getProperty("JADIKANBOOKINGSURATKONTROLAPIBPJS");
-        }catch(Exception e){
-            var=""; 
-        }
-        return var;
-    }
-    
     public static String JADIKANBOOKINGSURATKONTROL(){
         try{
             prop.loadFromXML(new FileInputStream("setting/database.xml"));
@@ -1271,6 +1267,15 @@ public class koneksiDB {
         return var;
     }
     
+    public static String JADIKANBOOKINGSURATKONTROLAPIBPJS(){
+        try{
+            prop.loadFromXML(new FileInputStream("setting/database.xml"));
+            var=prop.getProperty("JADIKANBOOKINGSURATKONTROLAPIBPJS");
+        }catch(Exception e){
+            var=""; 
+        }
+        return var;
+    }
     
     public static String URLAPIICARE(){
         try{
