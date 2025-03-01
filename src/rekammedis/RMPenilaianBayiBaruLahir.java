@@ -82,7 +82,7 @@ public final class RMPenilaianBayiBaruLahir extends javax.swing.JDialog {
         tbObat.setPreferredScrollableViewportSize(new Dimension(500,500));
         tbObat.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-        for (i = 0; i < 90; i++) {
+        for (i = 0; i < 109; i++) {
             TableColumn column = tbObat.getColumnModel().getColumn(i);
             if(i==0){
                 column.setPreferredWidth(105);
@@ -230,6 +230,78 @@ public final class RMPenilaianBayiBaruLahir extends javax.swing.JDialog {
                 column.setPreferredWidth(82);
             }else if(i==72){
                 column.setPreferredWidth(138);
+            }else if(i==73){
+                column.setPreferredWidth(82);
+            }else if(i==74){
+                column.setPreferredWidth(138);
+            }else if(i==75){
+                column.setPreferredWidth(82);
+            }else if(i==76){
+                column.setPreferredWidth(138);
+            }else if(i==77){
+                column.setPreferredWidth(82);
+            }else if(i==78){
+                column.setPreferredWidth(138);
+            }else if(i==79){
+                column.setPreferredWidth(82);
+            }else if(i==80){
+                column.setPreferredWidth(138);
+            }else if(i==81){
+                column.setPreferredWidth(82);
+            }else if(i==82){
+                column.setPreferredWidth(138);
+            }else if(i==83){
+                column.setPreferredWidth(82);
+            }else if(i==84){
+                column.setPreferredWidth(138);
+            }else if(i==85){
+                column.setPreferredWidth(82);
+            }else if(i==86){
+                column.setPreferredWidth(138);
+            }else if(i==87){
+                column.setPreferredWidth(82);
+            }else if(i==88){
+                column.setPreferredWidth(138);
+            }else if(i==89){
+                column.setPreferredWidth(82);
+            }else if(i==90){
+                column.setPreferredWidth(138);
+            }else if(i==91){
+                column.setPreferredWidth(82);
+            }else if(i==92){
+                column.setPreferredWidth(138);
+            }else if(i==93){
+                column.setPreferredWidth(82);
+            }else if(i==94){
+                column.setPreferredWidth(138);
+            }else if(i==95){
+                column.setPreferredWidth(119);
+            }else if(i==96){
+                column.setPreferredWidth(176);
+            }else if(i==97){
+                column.setPreferredWidth(82);
+            }else if(i==98){
+                column.setPreferredWidth(138);
+            }else if(i==99){
+                column.setPreferredWidth(82);
+            }else if(i==100){
+                column.setPreferredWidth(138);
+            }else if(i==101){
+                column.setPreferredWidth(82);
+            }else if(i==102){
+                column.setPreferredWidth(138);
+            }else if(i==103){
+                column.setPreferredWidth(87);
+            }else if(i==104){
+                column.setPreferredWidth(145);
+            }else if(i==105){
+                column.setPreferredWidth(200);
+            }else if(i==106){
+                column.setPreferredWidth(200);
+            }else if(i==107){
+                column.setPreferredWidth(200);
+            }else if(i==108){
+                column.setPreferredWidth(250);
             }
         }
         tbObat.setDefaultRenderer(Object.class, new WarnaTable());
