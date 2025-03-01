@@ -33,6 +33,14 @@ public class koneksiDB {
                 dataSource.setCachePreparedStatements(true);
                 dataSource.setUseCompression(true);
                 dataSource.setAutoReconnect(true);
+                dataSource.setAutoReconnectForPools(true);
+                dataSource.setReconnectAtTxEnd(true);
+                dataSource.setUseServerPrepStmts(true);                 
+                dataSource.setUseLocalSessionState(true);               
+                dataSource.setUseLocalTransactionState(true); 
+                dataSource.setLoginTimeout(10);                         
+                dataSource.setConnectTimeout(10000);                  
+                dataSource.setSocketTimeout(30000);  
                 connection=dataSource.getConnection();       
                 System.out.println("  Koneksi Berhasil. Sorry bro loading, silahkan baca dulu.... \n\n"+
                         "Jika Ada Kendala Silakan Hubungi IT \n"+
@@ -49,6 +57,14 @@ public class koneksiDB {
                         dataSource.setCachePreparedStatements(true);
                         dataSource.setUseCompression(true);
                         dataSource.setAutoReconnect(true);
+                        dataSource.setAutoReconnectForPools(true);
+                        dataSource.setReconnectAtTxEnd(true);
+                        dataSource.setUseServerPrepStmts(true);                 
+                        dataSource.setUseLocalSessionState(true);               
+                        dataSource.setUseLocalTransactionState(true); 
+                        dataSource.setLoginTimeout(10);                         
+                        dataSource.setConnectTimeout(10000);                  
+                        dataSource.setSocketTimeout(30000);
                         connection=dataSource.getConnection();  
                     }
                 } catch (Exception ex) {
