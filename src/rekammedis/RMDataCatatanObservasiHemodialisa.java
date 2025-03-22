@@ -232,7 +232,7 @@ import javax.swing.JPanel;
          TCari = new widget.TextBox();
          BtnCari = new widget.Button();
          BtnAll = new widget.Button();
-         JPanel PanelInput = new javax.swing.JPanel();
+         PanelInput = new javax.swing.JPanel();
          FormInput = new widget.PanelBiasa();
          jLabel4 = new widget.Label();
          TNoRw = new widget.TextBox();
@@ -1309,6 +1309,7 @@ import javax.swing.JPanel;
      private widget.TextBox NIP;
      private widget.TextBox Nadi;
      private widget.TextBox NamaPetugas;
+     private javax.swing.JPanel PanelInput;
      private widget.TextBox QB;
      private widget.TextBox QD;
      private widget.TextBox SPO;
@@ -1359,76 +1360,91 @@ import javax.swing.JPanel;
      // End of variables declaration                   
      
      public void tampil() {
-         Valid.tabelKosong(tabMode);
-         try {
-             if (TCari.getText().toString().equals("")) {
-                 ps = koneksi.prepareStatement(
-                     "select reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,reg_periksa.umurdaftar,reg_periksa.sttsumur," +
-                     "pasien.jk,pasien.tgl_lahir,catatan_observasi_hemodialisa.tgl_perawatan,catatan_observasi_hemodialisa.jam_rawat,catatan_observasi_hemodialisa.qb," +
-                     "catatan_observasi_hemodialisa.qd,catatan_observasi_hemodialisa.tekanan_arteri,catatan_observasi_hemodialisa.tekanan_vena,catatan_observasi_hemodialisa.tmp," +
-                     "catatan_observasi_hemodialisa.ufr,catatan_observasi_hemodialisa.tensi,catatan_observasi_hemodialisa.nadi,catatan_observasi_hemodialisa.suhu," +
-                     "catatan_observasi_hemodialisa.spo2,catatan_observasi_hemodialisa.tindakan,catatan_observasi_hemodialisa.ufg,catatan_observasi_hemodialisa.nip,petugas.nama " +
-                     "from catatan_observasi_hemodialisa inner join reg_periksa on catatan_observasi_hemodialisa.no_rawat=reg_periksa.no_rawat " +
-                     "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
-                     "inner join petugas on catatan_observasi_hemodialisa.nip=petugas.nip where " +
-                     "catatan_observasi_hemodialisa.tgl_perawatan between ? and ? order by catatan_observasi_hemodialisa.tgl_perawatan,catatan_observasi_hemodialisa.jam_rawat");
-             } else {
-                 ps = koneksi.prepareStatement(
-                     "select reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,reg_periksa.umurdaftar,reg_periksa.sttsumur," +
-                     "pasien.jk,pasien.tgl_lahir,catatan_observasi_hemodialisa.tgl_perawatan,catatan_observasi_hemodialisa.jam_rawat,catatan_observasi_hemodialisa.qb," +
-                     "catatan_observasi_hemodialisa.qd,catatan_observasi_hemodialisa.tekanan_arteri,catatan_observasi_hemodialisa.tekanan_vena,catatan_observasi_hemodialisa.tmp," +
-                     "catatan_observasi_hemodialisa.ufr,catatan_observasi_hemodialisa.tensi,catatan_observasi_hemodialisa.nadi,catatan_observasi_hemodialisa.suhu," +
-                     "catatan_observasi_hemodialisa.spo2,catatan_observasi_hemodialisa.tindakan,catatan_observasi_hemodialisa.ufg,catatan_observasi_hemodialisa.nip,petugas.nama " +
-                     "from catatan_observasi_hemodialisa inner join reg_periksa on catatan_observasi_hemodialisa.no_rawat=reg_periksa.no_rawat " +
-                     "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
-                     "inner join petugas on catatan_observasi_hemodialisa.nip=petugas.nip where " +
-                     "catatan_observasi_hemodialisa.tgl_perawatan between ? and ? and (reg_periksa.no_rawat like ? or pasien.no_rkm_medis like ? or pasien.nm_pasien like ? or catatan_observasi_hemodialisa.nip like ? or petugas.nama like ?) " +
-                     "order by catatan_observasi_hemodialisa.tgl_perawatan,catatan_observasi_hemodialisa.jam_rawat");
-             }
-                 
-             try {
-                 if (TCari.getText().trim().equals("")) {
-                     ps.setString(1, Valid.SetTgl(DTPCari1.getSelectedItem() + "") + " 00:00:00");
-                     ps.setString(2, Valid.SetTgl(DTPCari2.getSelectedItem() + "") + " 23:59:59");
-                 } else {
-                     ps.setString(1, Valid.SetTgl(DTPCari1.getSelectedItem() + "") + " 00:00:00");
-                     ps.setString(2, Valid.SetTgl(DTPCari2.getSelectedItem() + "") + " 23:59:59");
-                     ps.setString(3, "%" + TCari.getText() + "%");
-                     ps.setString(4, "%" + TCari.getText() + "%");
-                     ps.setString(5, "%" + TCari.getText() + "%");
-                     ps.setString(6, "%" + TCari.getText() + "%");
-                     ps.setString(7, "%" + TCari.getText() + "%");
-                 }
-                     
-                 rs = ps.executeQuery();
-                 while (rs.next()) {
-                     tabMode.addRow(new String[]{
-                         rs.getString("no_rawat"), rs.getString("no_rkm_medis"), rs.getString("nm_pasien"),
-                         rs.getString("umurdaftar") + 
-                         rs.getString("sttsumur"), rs.getString("jk"), rs.getString("tgl_lahir"),
-                         rs.getString("tgl_perawatan"), rs.getString("jam_rawat"), rs.getString("qb"),
-                         rs.getString("qd"), rs.getString("tekanan_arteri"), rs.getString("tekanan_vena"),
-                         rs.getString("tmp"), rs.getString("ufr"), rs.getString("tensi"),
-                         rs.getString("nadi"), rs.getString("suhu"), rs.getString("spo2"),
-                         rs.getString("tindakan"), rs.getString("ufg"), rs.getString("nip"),
-                         rs.getString("nama")
-                     });
-                 }
-             } catch (Exception e) {
-                 System.out.println("Notif : " + e);
-             } finally {
-                 if (rs != null) {
-                     rs.close();
-                 }
-                 if (ps != null) {
-                     ps.close();
-                 }
-             }
-         } catch (Exception e) {
-             System.out.println("Notifikasi : " + e);
-         }
-         LCount.setText("" + tabMode.getRowCount());
-     }
+    Valid.tabelKosong(tabMode);
+    try {
+        if (TCari.getText().trim().equals("")) {
+            ps = koneksi.prepareStatement(
+                "select reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,reg_periksa.umurdaftar,reg_periksa.sttsumur," +
+                "pasien.jk,pasien.tgl_lahir,catatan_observasi_hemodialisa.tgl_perawatan,catatan_observasi_hemodialisa.jam_rawat,catatan_observasi_hemodialisa.qb," +
+                "catatan_observasi_hemodialisa.qd,catatan_observasi_hemodialisa.tekanan_arteri,catatan_observasi_hemodialisa.tekanan_vena,catatan_observasi_hemodialisa.tmp," +
+                "catatan_observasi_hemodialisa.ufr,catatan_observasi_hemodialisa.tensi,catatan_observasi_hemodialisa.nadi,catatan_observasi_hemodialisa.suhu," +
+                "catatan_observasi_hemodialisa.spo2,catatan_observasi_hemodialisa.tindakan,catatan_observasi_hemodialisa.ufg,catatan_observasi_hemodialisa.nip,petugas.nama " +
+                "from catatan_observasi_hemodialisa inner join reg_periksa on catatan_observasi_hemodialisa.no_rawat=reg_periksa.no_rawat " +
+                "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
+                "inner join petugas on catatan_observasi_hemodialisa.nip=petugas.nip where " +
+                "catatan_observasi_hemodialisa.tgl_perawatan between ? and ? order by catatan_observasi_hemodialisa.tgl_perawatan,catatan_observasi_hemodialisa.jam_rawat");
+        } else {
+            ps = koneksi.prepareStatement(
+                "select reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,reg_periksa.umurdaftar,reg_periksa.sttsumur," +
+                "pasien.jk,pasien.tgl_lahir,catatan_observasi_hemodialisa.tgl_perawatan,catatan_observasi_hemodialisa.jam_rawat,catatan_observasi_hemodialisa.qb," +
+                "catatan_observasi_hemodialisa.qd,catatan_observasi_hemodialisa.tekanan_arteri,catatan_observasi_hemodialisa.tekanan_vena,catatan_observasi_hemodialisa.tmp," +
+                "catatan_observasi_hemodialisa.ufr,catatan_observasi_hemodialisa.tensi,catatan_observasi_hemodialisa.nadi,catatan_observasi_hemodialisa.suhu," +
+                "catatan_observasi_hemodialisa.spo2,catatan_observasi_hemodialisa.tindakan,catatan_observasi_hemodialisa.ufg,catatan_observasi_hemodialisa.nip,petugas.nama " +
+                "from catatan_observasi_hemodialisa inner join reg_periksa on catatan_observasi_hemodialisa.no_rawat=reg_periksa.no_rawat " +
+                "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
+                "inner join petugas on catatan_observasi_hemodialisa.nip=petugas.nip where " +
+                "catatan_observasi_hemodialisa.tgl_perawatan between ? and ? and (reg_periksa.no_rawat like ? or pasien.no_rkm_medis like ? or pasien.nm_pasien like ? or catatan_observasi_hemodialisa.nip like ? or petugas.nama like ?) " +
+                "order by catatan_observasi_hemodialisa.tgl_perawatan,catatan_observasi_hemodialisa.jam_rawat");
+        }
+
+        try {
+            if (TCari.getText().trim().equals("")) {
+                ps.setString(1, Valid.SetTgl(DTPCari1.getSelectedItem() + "") + " 00:00:00");
+                ps.setString(2, Valid.SetTgl(DTPCari2.getSelectedItem() + "") + " 23:59:59");
+            } else {
+                ps.setString(1, Valid.SetTgl(DTPCari1.getSelectedItem() + "") + " 00:00:00");
+                ps.setString(2, Valid.SetTgl(DTPCari2.getSelectedItem() + "") + " 23:59:59");
+                ps.setString(3, "%" + TCari.getText() + "%");
+                ps.setString(4, "%" + TCari.getText() + "%");
+                ps.setString(5, "%" + TCari.getText() + "%");
+                ps.setString(6, "%" + TCari.getText() + "%");
+                ps.setString(7, "%" + TCari.getText() + "%");
+            }
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                String[] rowData = new String[22];
+                rowData[0] = rs.getString("no_rawat");
+                rowData[1] = rs.getString("no_rkm_medis");
+                rowData[2] = rs.getString("nm_pasien");
+                rowData[3] = rs.getString("umurdaftar") + " " + rs.getString("sttsumur");
+                rowData[4] = rs.getString("jk");
+                rowData[5] = rs.getString("tgl_lahir");
+                rowData[6] = rs.getString("tgl_perawatan");
+                rowData[7] = rs.getString("jam_rawat");
+                rowData[8] = rs.getString("qb");
+                rowData[9] = rs.getString("qd");
+                rowData[10] = rs.getString("tekanan_arteri");
+                rowData[11] = rs.getString("tekanan_vena");
+                rowData[12] = rs.getString("tmp");
+                rowData[13] = rs.getString("ufr");
+                rowData[14] = rs.getString("tensi");
+                rowData[15] = rs.getString("nadi");
+                rowData[16] = rs.getString("suhu");
+                rowData[17] = rs.getString("spo2");
+                rowData[18] = rs.getString("tindakan");
+                rowData[19] = rs.getString("ufg");
+                rowData[20] = rs.getString("nip");
+                rowData[21] = rs.getString("nama");
+                tabMode.addRow(rowData);
+            }
+        } catch (Exception e) {
+            System.out.println("Notif : " + e);
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ps != null) {
+                ps.close();
+            }
+        }
+    } catch (Exception e) {
+        System.out.println("Notifikasi : " + e);
+        e.printStackTrace();
+    }
+    LCount.setText("" + tabMode.getRowCount());
+}
  
      public void emptTeks() {
          TNoRw.setText("");
@@ -1456,33 +1472,35 @@ import javax.swing.JPanel;
      }
  
      private void getData() {
-         if (tbObat.getSelectedRow() != -1) {
-             TNoRw.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString());
-             TNoRM.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 1).toString());
-             TPasien.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 2).toString());
-             Umur.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 3).toString() + " " + tbObat.getValueAt(tbObat.getSelectedRow(), 4).toString());
-             JK.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 5).toString());
-             TglLahir.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 6).toString());
-             Valid.SetTgl(Tanggal, tbObat.getValueAt(tbObat.getSelectedRow(), 6).toString());
-             Jam.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(), 7).toString().substring(0, 2));
-             Menit.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(), 7).toString().substring(3, 5));
-             Detik.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(), 7).toString().substring(6, 8));
-             QB.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 8).toString());
-             QD.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 9).toString());
-             TekananArteri.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 10).toString());
-             TekananVena.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 11).toString());
-             TMP.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 12).toString());
-             UFR.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 13).toString());
-             Tensi.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 14).toString());
-             Nadi.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 15).toString());
-             Suhu.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 16).toString());
-             SPO.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 17).toString());
-             Tindakan.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 18).toString());
-             UFG.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 19).toString());
-             NIP.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 20).toString());
-             NamaPetugas.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 21).toString());
-         }
-     }
+    if (tbObat.getSelectedRow() != -1 && tbObat.getColumnCount() == 22) {
+        TNoRw.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString());
+        TNoRM.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 1).toString());
+        TPasien.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 2).toString());
+        Umur.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 3).toString());
+        JK.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 4).toString());
+        TglLahir.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 5).toString());
+        Valid.SetTgl(Tanggal, tbObat.getValueAt(tbObat.getSelectedRow(), 6).toString());
+        Jam.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(), 7).toString().substring(0, 2));
+        Menit.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(), 7).toString().substring(3, 5));
+        Detik.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(), 7).toString().substring(6, 8));
+        QB.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 8).toString());
+        QD.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 9).toString());
+        TekananArteri.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 10).toString());
+        TekananVena.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 11).toString());
+        TMP.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 12).toString());
+        UFR.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 13).toString());
+        Tensi.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 14).toString());
+        Nadi.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 15).toString());
+        Suhu.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 16).toString());
+        SPO.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 17).toString());
+        Tindakan.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 18).toString());
+        UFG.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 19).toString());
+        NIP.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 20).toString());
+        NamaPetugas.setText(tbObat.getValueAt(tbObat.getSelectedRow(), 21).toString());
+    } else {
+        System.out.println("Jumlah kolom tidak sesuai: " + tbObat.getColumnCount());
+    }
+}
  
      private void isRawat() {
          try {
@@ -1515,19 +1533,28 @@ import javax.swing.JPanel;
          }
      }
  
-     private void isForm() {
-         if (ChkInput.isSelected() == true) {
-             ChkInput.setVisible(false);
-             PanelInput.setPreferredSize(new Dimension(192, 184));
-             FormInput.setVisible(true);
-             ChkInput.setVisible(true);
-         } else if (ChkInput.isSelected() == false) {
-             ChkInput.setVisible(false);
-             PanelInput.setPreferredSize(new Dimension(192, 20));
-             FormInput.setVisible(false);
-             ChkInput.setVisible(true);
-         }
-     }
+     private void isForm(){
+        if(ChkInput.isSelected()==true){
+            ChkInput.setVisible(false);
+            PanelInput.setPreferredSize(new Dimension(WIDTH,160));
+            FormInput.setVisible(true);      
+            ChkInput.setVisible(true);
+        }else if(ChkInput.isSelected()==false){           
+            ChkInput.setVisible(false);            
+            PanelInput.setPreferredSize(new Dimension(WIDTH,20));
+            FormInput.setVisible(false);      
+            ChkInput.setVisible(true);
+        }
+    }
+     
+     public void setNoRm(String norwt, Date tgl2) {
+        TNoRw.setText(norwt);
+        TCari.setText(norwt);
+        DTPCari2.setDate(tgl2);
+        isRawat();
+        ChkInput.setSelected(true);
+        isForm();
+    }
  
      private void jam() {
          ActionListener taskPerformer = new ActionListener() {
@@ -1565,22 +1592,23 @@ import javax.swing.JPanel;
      }
  
      private void simpan() {
-         if (Sequel.menyimpantf("catatan_observasi_hemodialisa", "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?", "Data", 19, new String[]{
-             TNoRw.getText(), Valid.SetTgl(Tanggal.getSelectedItem() + ""), Jam.getSelectedItem() + ":" + Menit.getSelectedItem() + ":" + Detik.getSelectedItem(),
-             QB.getText(), QD.getText(), TekananArteri.getText(), TekananVena.getText(), TMP.getText(), UFR.getText(),
-             Tensi.getText(), Nadi.getText(), Suhu.getText(), SPO.getText(), Tindakan.getText(), UFG.getText(), NIP.getText()
-         }) == true) {
-             tabMode.addRow(new String[]{
-                 TNoRw.getText(), TNoRM.getText(), TPasien.getText(), Umur.getText(), JK.getText(), TglLahir.getText(),
-                 Valid.SetTgl(Tanggal.getSelectedItem() + ""), Jam.getSelectedItem() + ":" + Menit.getSelectedItem() + ":" + Detik.getSelectedItem(),
-                 QB.getText(), QD.getText(), TekananArteri.getText(), TekananVena.getText(), TMP.getText(), UFR.getText(),
-                 Tensi.getText(), Nadi.getText(), Suhu.getText(), SPO.getText(), Tindakan.getText(), UFG.getText(),
-                 NIP.getText(), NamaPetugas.getText()
-             });
-             emptTeks();
-             LCount.setText("" + tabMode.getRowCount());
-         }
-     }
+    if (Sequel.menyimpantf("catatan_observasi_hemodialisa", "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?", "Data", 16, new String[]{
+        TNoRw.getText(), Valid.SetTgl(Tanggal.getSelectedItem() + ""), Jam.getSelectedItem() + ":" + Menit.getSelectedItem() + ":" + Detik.getSelectedItem(),
+        QB.getText(), QD.getText(), TekananArteri.getText(), TekananVena.getText(), TMP.getText(), UFR.getText(),
+        Tensi.getText(), Nadi.getText(), Suhu.getText(), SPO.getText(), Tindakan.getText(), UFG.getText(), NIP.getText()
+    }) == true) {
+        // kode lainnya tidak perlu diubah
+        tabMode.addRow(new String[]{
+            TNoRw.getText(), TNoRM.getText(), TPasien.getText(), Umur.getText(), JK.getText(), TglLahir.getText(),
+            Valid.SetTgl(Tanggal.getSelectedItem() + ""), Jam.getSelectedItem() + ":" + Menit.getSelectedItem() + ":" + Detik.getSelectedItem(),
+            QB.getText(), QD.getText(), TekananArteri.getText(), TekananVena.getText(), TMP.getText(), UFR.getText(),
+            Tensi.getText(), Nadi.getText(), Suhu.getText(), SPO.getText(), Tindakan.getText(), UFG.getText(),
+            NIP.getText(), NamaPetugas.getText()
+        });
+        emptTeks();
+        LCount.setText("" + tabMode.getRowCount());
+    }
+}
  
      private void hapus() {
          if (Sequel.queryu2tf("delete from catatan_observasi_hemodialisa where no_rawat=? and tgl_perawatan=? and jam_rawat=?", 3, new String[]{
@@ -1627,13 +1655,32 @@ import javax.swing.JPanel;
          }
      }
 
-    private static class PanelInput {
-
-        private static void setPreferredSize(Dimension dimension) {
-            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-        }
-
-        public PanelInput() {
+    public void isCek(){
+        BtnSimpan.setEnabled(akses.getcatatan_observasi_chbp());
+        BtnHapus.setEnabled(akses.getcatatan_observasi_chbp());
+        BtnEdit.setEnabled(akses.getcatatan_observasi_chbp());
+        BtnPrint.setEnabled(akses.getcatatan_observasi_chbp()); 
+        if(akses.getjml2()>=1){
+            NIP.setEditable(false);
+            btnPetugas.setEnabled(false);
+            NIP.setText(akses.getkode());
+            NamaPetugas.setText(petugas.tampil3(NIP.getText()));
+            if(NamaPetugas.getText().equals("")){
+                NIP.setText("");
+                JOptionPane.showMessageDialog(null,"User login bukan petugas...!!");
+            }
+        }  
+        
+        if(TANGGALMUNDUR.equals("no")){
+            if(!akses.getkode().equals("Admin Utama")){
+                Tanggal.setEditable(false);
+                Tanggal.setEnabled(false);
+                ChkKejadian.setEnabled(false);
+                Jam.setEnabled(false);
+                Menit.setEnabled(false);
+                Detik.setEnabled(false);
+            }
         }
     }
+    
  }
