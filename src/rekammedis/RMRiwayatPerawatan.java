@@ -326,6 +326,7 @@ public final class RMRiwayatPerawatan extends javax.swing.JDialog {
         chkCatatanDokter = new widget.CekBox();
         chkCatatanObservasiIGD = new widget.CekBox();
         chkCatatanObservasiCHBP = new widget.CekBox();
+        chkCatatanObservasiHemodialisa = new widget.CekBox();
         chkCatatanObservasiInduksiPersalinan = new widget.CekBox();
         chkCatatanObservasiRanap = new widget.CekBox();
         chkCatatanObservasiRanapKebidanan = new widget.CekBox();
@@ -1339,6 +1340,14 @@ public final class RMRiwayatPerawatan extends javax.swing.JDialog {
         chkCatatanObservasiCHBP.setOpaque(false);
         chkCatatanObservasiCHBP.setPreferredSize(new java.awt.Dimension(245, 22));
         FormMenu.add(chkCatatanObservasiCHBP);
+
+        chkCatatanObservasiHemodialisa.setSelected(true);
+        chkCatatanObservasiHemodialisa.setText("Catatan Observasi Hemodialisa");
+        chkCatatanObservasiHemodialisa.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        chkCatatanObservasiHemodialisa.setName("chkCatatanObservasiHemodialisa"); // NOI18N
+        chkCatatanObservasiHemodialisa.setOpaque(false);
+        chkCatatanObservasiHemodialisa.setPreferredSize(new java.awt.Dimension(245, 22));
+        FormMenu.add(chkCatatanObservasiHemodialisa);
 
         chkCatatanObservasiInduksiPersalinan.setSelected(true);
         chkCatatanObservasiInduksiPersalinan.setText("Catatan Observasi Induksi Persalinan");
@@ -2826,6 +2835,7 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             chkPenilaianPasienImunitasRendah.setSelected(true);
             chkCatatanKeseimbanganCairan.setSelected(true);
             chkCatatanObservasiCHBP.setSelected(true);
+            chkCatatanObservasiHemodialisa.setSelected(true);
             chkCatatanObservasiInduksiPersalinan.setSelected(true);
             chkKonsultasiMedik.setSelected(true);
             chkSkriningMerokokUsiaRemaja.setSelected(true);
@@ -2995,6 +3005,7 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             chkPenilaianPasienImunitasRendah.setSelected(false);
             chkCatatanKeseimbanganCairan.setSelected(false);
             chkCatatanObservasiCHBP.setSelected(false);
+            chkCatatanObservasiHemodialisa.setSelected(false);
             chkCatatanObservasiInduksiPersalinan.setSelected(false);
             chkKonsultasiMedik.setSelected(false);
             chkSkriningMerokokUsiaRemaja.setSelected(false);
@@ -3691,6 +3702,7 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     private widget.CekBox chkCatatanKeperawatanRanap;
     private widget.CekBox chkCatatanKeseimbanganCairan;
     private widget.CekBox chkCatatanObservasiCHBP;
+    private widget.CekBox chkCatatanObservasiHemodialisa;
     private widget.CekBox chkCatatanObservasiIGD;
     private widget.CekBox chkCatatanObservasiInduksiPersalinan;
     private widget.CekBox chkCatatanObservasiRanap;
@@ -11602,6 +11614,86 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 }
             }
             
+            //menampilkan catatan observasi Hemodialisa
+if(chkCatatanObservasiHemodialisa.isSelected()==true){
+    try {
+        rs2=koneksi.prepareStatement(
+                "select reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,reg_periksa.umurdaftar,reg_periksa.sttsumur," +
+                "pasien.jk,pasien.tgl_lahir,catatan_observasi_hemodialisa.tgl_perawatan,catatan_observasi_hemodialisa.jam_rawat,catatan_observasi_hemodialisa.qb," +
+                "catatan_observasi_hemodialisa.qd,catatan_observasi_hemodialisa.tekanan_arteri,catatan_observasi_hemodialisa.tekanan_vena,catatan_observasi_hemodialisa.tmp," +
+                "catatan_observasi_hemodialisa.ufr,catatan_observasi_hemodialisa.tensi,catatan_observasi_hemodialisa.nadi,catatan_observasi_hemodialisa.suhu," +
+                "catatan_observasi_hemodialisa.spo2,catatan_observasi_hemodialisa.tindakan,catatan_observasi_hemodialisa.ufg,catatan_observasi_hemodialisa.nip,petugas.nama " +
+                "from catatan_observasi_hemodialisa inner join reg_periksa on catatan_observasi_hemodialisa.no_rawat=reg_periksa.no_rawat " +
+                "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
+                "inner join petugas on catatan_observasi_hemodialisa.nip=petugas.nip " +
+                "where catatan_observasi_hemodialisa.no_rawat='"+norawat+"' order by catatan_observasi_hemodialisa.tgl_perawatan,catatan_observasi_hemodialisa.jam_rawat").executeQuery();
+        if(rs2.next()){
+            htmlContent.append(
+              "<tr class='isi'>"+ 
+                "<td valign='top' width='2%'></td>"+        
+                "<td valign='top' width='18%'>Catatan Observasi Hemodialisa</td>"+
+                "<td valign='top' width='1%' align='center'>:</td>"+
+                "<td valign='top' width='79%'>"+
+                  "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'>"+
+                     "<tr align='center'>"+
+                        "<td valign='middle' width='3%' bgcolor='#FFFAF8' rowspan='2'>No.</td>"+
+                        "<td valign='middle' width='10%' bgcolor='#FFFAF8' rowspan='2'>Tanggal</td>"+
+                        "<td valign='top' width='75%' bgcolor='#FFFAF8' colspan='13'>Monitoring</td>"+
+                        "<td valign='middle' width='12%' bgcolor='#FFFAF8' rowspan='2'>Petugas</td>"+
+                     "</tr>"+
+                     "<tr align='center'>"+
+                        "<td valign='middle' width='5%' bgcolor='#FFFAF8'>QB</td>"+
+                        "<td valign='middle' width='5%' bgcolor='#FFFAF8'>QD</td>"+
+                        "<td valign='middle' width='7%' bgcolor='#FFFAF8'>T. Arteri</td>"+
+                        "<td valign='middle' width='7%' bgcolor='#FFFAF8'>T. Vena</td>"+
+                        "<td valign='middle' width='5%' bgcolor='#FFFAF8'>TMP</td>"+
+                        "<td valign='middle' width='5%' bgcolor='#FFFAF8'>UFR</td>"+
+                        "<td valign='middle' width='5%' bgcolor='#FFFAF8'>Tensi</td>"+
+                        "<td valign='middle' width='5%' bgcolor='#FFFAF8'>Nadi</td>"+
+                        "<td valign='middle' width='5%' bgcolor='#FFFAF8'>Suhu</td>"+
+                        "<td valign='middle' width='5%' bgcolor='#FFFAF8'>SpO2</td>"+
+                        "<td valign='middle' width='11%' bgcolor='#FFFAF8'>Tindakan</td>"+
+                        "<td valign='middle' width='5%' bgcolor='#FFFAF8'>UFG</td>"+
+                     "</tr>"
+            );
+            rs2.beforeFirst();
+            w=1;
+            while(rs2.next()){
+                htmlContent.append(
+                     "<tr>"+
+                        "<td valign='top' align='center'>"+w+"</td>"+
+                        "<td valign='top'>"+rs2.getString("tgl_perawatan")+" "+rs2.getString("jam_rawat")+"</td>"+
+                        "<td valign='top' align='center'>"+rs2.getString("qb")+"</td>"+
+                        "<td valign='top' align='center'>"+rs2.getString("qd")+"</td>"+
+                        "<td valign='top' align='center'>"+rs2.getString("tekanan_arteri")+"</td>"+
+                        "<td valign='top' align='center'>"+rs2.getString("tekanan_vena")+"</td>"+
+                        "<td valign='top' align='center'>"+rs2.getString("tmp")+"</td>"+
+                        "<td valign='top' align='center'>"+rs2.getString("ufr")+"</td>"+
+                        "<td valign='top' align='center'>"+rs2.getString("tensi")+"</td>"+
+                        "<td valign='top' align='center'>"+rs2.getString("nadi")+"</td>"+
+                        "<td valign='top' align='center'>"+rs2.getString("suhu")+"</td>"+
+                        "<td valign='top' align='center'>"+rs2.getString("spo2")+"</td>"+
+                        "<td valign='top' align='center'>"+rs2.getString("tindakan")+"</td>"+
+                        "<td valign='top' align='center'>"+rs2.getString("ufg")+"</td>"+
+                        "<td valign='top'>"+rs2.getString("nip")+" "+rs2.getString("nama")+"</td>"+
+                     "</tr>"
+                );                                        
+                w++;
+            }
+            htmlContent.append(
+                  "</table>"+
+                "</td>"+
+              "</tr>");
+        }
+    } catch (Exception e) {
+        System.out.println("Notifikasi Observasi Hemodialisa : "+e);
+    } finally{
+        if(rs2!=null){
+            rs2.close();
+        }
+    }
+}
+
             //menampilkan catatan observasi Induksi Persalinan
             if(chkCatatanObservasiInduksiPersalinan.isSelected()==true){
                 try {

@@ -1536,7 +1536,7 @@ import javax.swing.JPanel;
      private void isForm(){
         if(ChkInput.isSelected()==true){
             ChkInput.setVisible(false);
-            PanelInput.setPreferredSize(new Dimension(WIDTH,160));
+            PanelInput.setPreferredSize(new Dimension(WIDTH,200));
             FormInput.setVisible(true);      
             ChkInput.setVisible(true);
         }else if(ChkInput.isSelected()==false){           
@@ -1656,10 +1656,10 @@ import javax.swing.JPanel;
      }
 
     public void isCek(){
-        BtnSimpan.setEnabled(akses.getcatatan_observasi_chbp());
-        BtnHapus.setEnabled(akses.getcatatan_observasi_chbp());
-        BtnEdit.setEnabled(akses.getcatatan_observasi_chbp());
-        BtnPrint.setEnabled(akses.getcatatan_observasi_chbp()); 
+        BtnSimpan.setEnabled(akses.getcatatan_observasi_hemodialisa());
+        BtnHapus.setEnabled(akses.getcatatan_observasi_hemodialisa());
+        BtnEdit.setEnabled(akses.getcatatan_observasi_hemodialisa());
+        BtnPrint.setEnabled(akses.getcatatan_observasi_hemodialisa()); 
         if(akses.getjml2()>=1){
             NIP.setEditable(false);
             btnPetugas.setEnabled(false);
