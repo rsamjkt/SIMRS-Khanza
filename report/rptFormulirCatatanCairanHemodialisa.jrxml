@@ -22,7 +22,7 @@
                     catatan_cairan_hemodialisa.tgl_perawatan,catatan_cairan_hemodialisa.jam_rawat,catatan_cairan_hemodialisa.minum,
                     catatan_cairan_hemodialisa.infus,catatan_cairan_hemodialisa.tranfusi,catatan_cairan_hemodialisa.sisa_priming,catatan_cairan_hemodialisa.wash_out,
                     catatan_cairan_hemodialisa.urine,catatan_cairan_hemodialisa.pendarahan,catatan_cairan_hemodialisa.muntah,catatan_cairan_hemodialisa.keterangan,
-                    catatan_cairan_hemodialisa.nip,petugas.nama 
+                    petugas.nama 
                     from catatan_cairan_hemodialisa inner join reg_periksa on catatan_cairan_hemodialisa.no_rawat=reg_periksa.no_rawat 
                     inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis 
                     inner join petugas on catatan_cairan_hemodialisa.nip=petugas.nip]]>
@@ -138,12 +138,6 @@
 	<field name="keterangan" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="keterangan"/>
 		<property name="com.jaspersoft.studio.field.label" value="keterangan"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="catatan_cairan_hemodialisa"/>
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nip" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="nip"/>
-		<property name="com.jaspersoft.studio.field.label" value="nip"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="catatan_cairan_hemodialisa"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>

@@ -327,6 +327,7 @@ public final class RMRiwayatPerawatan extends javax.swing.JDialog {
         chkCatatanObservasiIGD = new widget.CekBox();
         chkCatatanObservasiCHBP = new widget.CekBox();
         chkCatatanObservasiHemodialisa = new widget.CekBox();
+        chkCatatanCairanHemodialisa = new widget.CekBox();
         chkCatatanObservasiInduksiPersalinan = new widget.CekBox();
         chkCatatanObservasiRanap = new widget.CekBox();
         chkCatatanObservasiRanapKebidanan = new widget.CekBox();
@@ -1348,6 +1349,14 @@ public final class RMRiwayatPerawatan extends javax.swing.JDialog {
         chkCatatanObservasiHemodialisa.setOpaque(false);
         chkCatatanObservasiHemodialisa.setPreferredSize(new java.awt.Dimension(245, 22));
         FormMenu.add(chkCatatanObservasiHemodialisa);
+
+        chkCatatanCairanHemodialisa.setSelected(true);
+        chkCatatanCairanHemodialisa.setText("Catatan Cairan Hemodialisa");
+        chkCatatanCairanHemodialisa.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        chkCatatanCairanHemodialisa.setName("chkCatatanCairanHemodialisa"); // NOI18N
+        chkCatatanCairanHemodialisa.setOpaque(false);
+        chkCatatanCairanHemodialisa.setPreferredSize(new java.awt.Dimension(245, 22));
+        FormMenu.add(chkCatatanCairanHemodialisa);
 
         chkCatatanObservasiInduksiPersalinan.setSelected(true);
         chkCatatanObservasiInduksiPersalinan.setText("Catatan Observasi Induksi Persalinan");
@@ -2836,6 +2845,7 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             chkCatatanKeseimbanganCairan.setSelected(true);
             chkCatatanObservasiCHBP.setSelected(true);
             chkCatatanObservasiHemodialisa.setSelected(true);
+            chkCatatanCairanHemodialisa.setSelected(true);
             chkCatatanObservasiInduksiPersalinan.setSelected(true);
             chkKonsultasiMedik.setSelected(true);
             chkSkriningMerokokUsiaRemaja.setSelected(true);
@@ -3006,6 +3016,7 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             chkCatatanKeseimbanganCairan.setSelected(false);
             chkCatatanObservasiCHBP.setSelected(false);
             chkCatatanObservasiHemodialisa.setSelected(false);
+            chkCatatanCairanHemodialisa.setSelected(false);
             chkCatatanObservasiInduksiPersalinan.setSelected(false);
             chkKonsultasiMedik.setSelected(false);
             chkSkriningMerokokUsiaRemaja.setSelected(false);
@@ -3703,6 +3714,7 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     private widget.CekBox chkCatatanKeseimbanganCairan;
     private widget.CekBox chkCatatanObservasiCHBP;
     private widget.CekBox chkCatatanObservasiHemodialisa;
+    private widget.CekBox chkCatatanCairanHemodialisa;
     private widget.CekBox chkCatatanObservasiIGD;
     private widget.CekBox chkCatatanObservasiInduksiPersalinan;
     private widget.CekBox chkCatatanObservasiRanap;
@@ -11687,6 +11699,79 @@ if(chkCatatanObservasiHemodialisa.isSelected()==true){
         }
     } catch (Exception e) {
         System.out.println("Notifikasi Observasi Hemodialisa : "+e);
+    } finally{
+        if(rs2!=null){
+            rs2.close();
+        }
+    }
+}
+
+if(chkCatatanCairanHemodialisa.isSelected()==true){
+    try {
+        rs2=koneksi.prepareStatement(
+                "select reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,reg_periksa.umurdaftar,reg_periksa.sttsumur," +
+                "pasien.jk,pasien.tgl_lahir,catatan_cairan_hemodialisa.tgl_perawatan,catatan_cairan_hemodialisa.jam_rawat,catatan_cairan_hemodialisa.minum," +
+                "catatan_cairan_hemodialisa.infus,catatan_cairan_hemodialisa.tranfusi,catatan_cairan_hemodialisa.sisa_priming,catatan_cairan_hemodialisa.wash_out," +
+                "catatan_cairan_hemodialisa.urine,catatan_cairan_hemodialisa.pendarahan,catatan_cairan_hemodialisa.muntah,catatan_cairan_hemodialisa.keterangan," +
+                "catatan_cairan_hemodialisa.nip,petugas.nama " +
+                "from catatan_cairan_hemodialisa inner join reg_periksa on catatan_cairan_hemodialisa.no_rawat=reg_periksa.no_rawat " +
+                "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis " +
+                "inner join petugas on catatan_cairan_hemodialisa.nip=petugas.nip " +
+                "where catatan_cairan_hemodialisa.no_rawat='"+norawat+"' order by catatan_cairan_hemodialisa.tgl_perawatan,catatan_cairan_hemodialisa.jam_rawat").executeQuery();
+        if(rs2.next()){
+            htmlContent.append(
+              "<tr class='isi'>"+ 
+                "<td valign='top' width='2%'></td>"+        
+                "<td valign='top' width='18%'>Catatan Cairan Hemodialisa</td>"+
+                "<td valign='top' width='1%' align='center'>:</td>"+
+                "<td valign='top' width='79%'>"+
+                  "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'>"+
+                     "<tr align='center'>"+
+                        "<td valign='middle' width='3%' bgcolor='#FFFAF8' rowspan='2'>No.</td>"+
+                        "<td valign='middle' width='10%' bgcolor='#FFFAF8' rowspan='2'>Tanggal</td>"+
+                        "<td valign='top' width='65%' bgcolor='#FFFAF8' colspan='8'>Monitoring Cairan</td>"+
+                        "<td valign='middle' width='12%' bgcolor='#FFFAF8' rowspan='2'>Keterangan</td>"+
+                        "<td valign='middle' width='10%' bgcolor='#FFFAF8' rowspan='2'>Petugas</td>"+
+                     "</tr>"+
+                     "<tr align='center'>"+
+                        "<td valign='middle' width='8%' bgcolor='#FFFAF8'>Minum</td>"+
+                        "<td valign='middle' width='8%' bgcolor='#FFFAF8'>Infus</td>"+
+                        "<td valign='middle' width='8%' bgcolor='#FFFAF8'>Transfusi</td>"+
+                        "<td valign='middle' width='8%' bgcolor='#FFFAF8'>Sisa Priming</td>"+
+                        "<td valign='middle' width='8%' bgcolor='#FFFAF8'>Wash Out</td>"+
+                        "<td valign='middle' width='8%' bgcolor='#FFFAF8'>Urine</td>"+
+                        "<td valign='middle' width='8%' bgcolor='#FFFAF8'>Pendarahan</td>"+
+                        "<td valign='middle' width='9%' bgcolor='#FFFAF8'>Muntah</td>"+
+                     "</tr>"
+            );
+            rs2.beforeFirst();
+            w=1;
+            while(rs2.next()){
+                htmlContent.append(
+                     "<tr>"+
+                        "<td valign='top' align='center'>"+w+"</td>"+
+                        "<td valign='top'>"+rs2.getString("tgl_perawatan")+" "+rs2.getString("jam_rawat")+"</td>"+
+                        "<td valign='top' align='center'>"+rs2.getString("minum")+"</td>"+
+                        "<td valign='top' align='center'>"+rs2.getString("infus")+"</td>"+
+                        "<td valign='top' align='center'>"+rs2.getString("tranfusi")+"</td>"+
+                        "<td valign='top' align='center'>"+rs2.getString("sisa_priming")+"</td>"+
+                        "<td valign='top' align='center'>"+rs2.getString("wash_out")+"</td>"+
+                        "<td valign='top' align='center'>"+rs2.getString("urine")+"</td>"+
+                        "<td valign='top' align='center'>"+rs2.getString("pendarahan")+"</td>"+
+                        "<td valign='top' align='center'>"+rs2.getString("muntah")+"</td>"+
+                        "<td valign='top'>"+rs2.getString("keterangan")+"</td>"+
+                        "<td valign='top'>"+rs2.getString("nip")+" "+rs2.getString("nama")+"</td>"+
+                     "</tr>"
+                );                                        
+                w++;
+            }
+            htmlContent.append(
+                  "</table>"+
+                "</td>"+
+              "</tr>");
+        }
+    } catch (Exception e) {
+        System.out.println("Notifikasi Cairan Hemodialisa : "+e);
     } finally{
         if(rs2!=null){
             rs2.close();
