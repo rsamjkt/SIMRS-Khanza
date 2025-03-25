@@ -227,7 +227,7 @@ public final class akses {
             satu_sehat_kirim_servicerequest_lab=false,satu_sehat_kirim_servicerequest_labmb=false,satu_sehat_kirim_specimen_lab=false,satu_sehat_kirim_specimen_labmb=false,
             satu_sehat_kirim_observation_lab=false,satu_sehat_kirim_observation_labmb=false,satu_sehat_kirim_diagnosticreport_lab=false,satu_sehat_kirim_diagnosticreport_labmb=false,
             kepatuhan_kelengkapan_keselamatan_bedah=false,nilai_piutang_perjenis_bayar_per_bulan=false,ringkasan_piutang_jenis_bayar=false,penilaian_pasien_imunitas_rendah=false,
-            balance_cairan=false,catatan_observasi_chbp=false,penilaian_awal_keperawatan_hemodialisa=false,catatan_observasi_hemodialisa=false,catatan_cairan_hemodialisa=false,catatan_observasi_induksi_persalinan=false,skp_kategori_penilaian=false,skp_kriteria_penilaian=false,
+            balance_cairan=false,catatan_observasi_chbp=false,penilaian_awal_keperawatan_hemodialisa=false,catatan_observasi_hemodialisa=false,data_hemodialisa=false,catatan_cairan_hemodialisa=false,catatan_observasi_induksi_persalinan=false,skp_kategori_penilaian=false,skp_kriteria_penilaian=false,
             skp_penilaian=false,referensi_poli_mobilejknfktp=false,referensi_dokter_mobilejknfktp=false,skp_rekapitulasi_penilaian=false,pembayaran_pihak_ke3_bankmandiri=false,
             metode_pembayaran_bankmandiri=false,bank_tujuan_transfer_bankmandiri=false,kodetransaksi_tujuan_transfer_bankmandiri=false,konsultasi_medik=false,jawaban_konsultasi_medik=false,
             pcare_cek_alergi=false,pcare_cek_prognosa=false,data_sasaran_usiaproduktif=false,data_sasaran_usialansia=false,skrining_perilaku_merokok_sekolah_remaja=false,
@@ -1301,6 +1301,7 @@ public final class akses {
                         akses.catatan_observasi_chbp=true;
                         akses.penilaian_awal_keperawatan_hemodialisa=true;
                         akses.catatan_observasi_hemodialisa=true;
+                        akses.data_hemodialisa=true;
                         akses.catatan_cairan_hemodialisa=true;
                         akses.catatan_observasi_induksi_persalinan=true;
                         akses.skp_kategori_penilaian=true;
@@ -2421,6 +2422,7 @@ public final class akses {
                         akses.catatan_observasi_chbp=rs2.getBoolean("catatan_observasi_chbp");
                         akses.penilaian_awal_keperawatan_hemodialisa=rs2.getBoolean("penilaian_awal_keperawatan_hemodialisa");
                         akses.catatan_observasi_hemodialisa=rs2.getBoolean("catatan_observasi_hemodialisa");
+                        akses.data_hemodialisa=rs2.getBoolean("data_hemodialisa");
                         akses.catatan_cairan_hemodialisa=rs2.getBoolean("catatan_cairan_hemodialisa");
                         akses.catatan_observasi_induksi_persalinan=rs2.getBoolean("catatan_observasi_induksi_persalinan");
                         akses.skp_kategori_penilaian=rs2.getBoolean("skp_kategori_penilaian");
@@ -3539,6 +3541,7 @@ public final class akses {
                         akses.catatan_observasi_chbp=false;
                         akses.penilaian_awal_keperawatan_hemodialisa=false;
                         akses.catatan_observasi_hemodialisa=false;
+                        akses.data_hemodialisa=false;
                         akses.catatan_cairan_hemodialisa=false;
                         akses.catatan_observasi_induksi_persalinan=false;
                         akses.skp_kategori_penilaian=false;
@@ -4680,6 +4683,7 @@ public final class akses {
         akses.catatan_observasi_chbp=false;
         akses.penilaian_awal_keperawatan_hemodialisa=false;
         akses.catatan_observasi_hemodialisa=false;
+        akses.data_hemodialisa=false;
         akses.catatan_cairan_hemodialisa=false;
         akses.catatan_observasi_induksi_persalinan=false;
         akses.skp_kategori_penilaian=false;
@@ -5837,6 +5841,7 @@ public final class akses {
     public static boolean getcatatan_observasi_chbp(){return akses.catatan_observasi_chbp;}
     public static boolean getpenilaian_awal_keperawatan_hemodialisa(){return akses.penilaian_awal_keperawatan_hemodialisa;}
     public static boolean getcatatan_observasi_hemodialisa(){return akses.catatan_observasi_hemodialisa;}
+    public static boolean getdata_hemodialisa(){return akses.data_hemodialisa;}
     public static boolean getcatatan_cairan_hemodialisa(){return akses.catatan_cairan_hemodialisa;}
     public static boolean getcatatan_observasi_induksi_persalinan(){return akses.catatan_observasi_induksi_persalinan;}
     public static boolean getskp_kategori_penilaian(){return akses.skp_kategori_penilaian;}
