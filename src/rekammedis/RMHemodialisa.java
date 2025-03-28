@@ -63,6 +63,7 @@
          initComponents();
          this.setLocation(8,1);
          setSize(628,674);
+         tbObat.setComponentPopupMenu(jPopupMenu1);
  
          tabMode=new DefaultTableModel(null,new Object[]{
              "No.Rawat","No.R.M.","Nama Pasien","Umur","JK","Tanggal","HD Ke","No Mesin","BB Kering","BB HD Terakhir",
@@ -227,6 +228,8 @@
         JK = new widget.TextBox();
         Umur = new widget.TextBox();
         TanggalRegistrasi = new widget.TextBox();
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        MnHemodialisa = new javax.swing.JMenuItem();
         internalFrame1 = new widget.InternalFrame();
         Scroll = new widget.ScrollPane();
         tbObat = new widget.Table();
@@ -316,6 +319,22 @@
         TanggalRegistrasi.setHighlighter(null);
         TanggalRegistrasi.setName("TanggalRegistrasi"); // NOI18N
 
+        jPopupMenu1.setName("jPopupMenu1"); // NOI18N
+
+        MnHemodialisa.setBackground(new java.awt.Color(255, 255, 254));
+        MnHemodialisa.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        MnHemodialisa.setForeground(new java.awt.Color(50, 50, 50));
+        MnHemodialisa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/category.png"))); // NOI18N
+        MnHemodialisa.setText("Status Hemodialisa");
+        MnHemodialisa.setName("MnHemodialisa"); // NOI18N
+        MnHemodialisa.setPreferredSize(new java.awt.Dimension(260, 26));
+        MnHemodialisa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MnHemodialisaActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(MnHemodialisa);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
         setResizable(false);
@@ -330,6 +349,7 @@
         Scroll.setPreferredSize(new java.awt.Dimension(452, 200));
 
         tbObat.setToolTipText("Silahkan klik untuk memilih data yang mau diedit ataupun dihapus");
+        tbObat.setComponentPopupMenu(jPopupMenu1);
         tbObat.setName("tbObat"); // NOI18N
         tbObat.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -1343,31 +1363,107 @@ private void btnDokterKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     Valid.pindah(evt,Detik,THDKe);
 }//GEN-LAST:event_btnDokterKeyPressed
 
-private void MnHemodialisaActionPerformed(java.awt.event.ActionEvent evt) {                                                              
-        if(tbObat.getSelectedRow()>-1){
-            Map<String, Object> param = new HashMap<>();
-            param.put("namars",akses.getnamars());
-            param.put("alamatrs",akses.getalamatrs());
-            param.put("kotars",akses.getkabupatenrs());
-            param.put("propinsirs",akses.getpropinsirs());
-            param.put("kontakrs",akses.getkontakrs());
-            param.put("emailrs",akses.getemailrs());   
-            dpjp=Sequel.cariIsi("select dokter.nm_dokter from dpjp_ranap inner join dokter on dpjp_ranap.kd_dokter=dokter.kd_dokter where dpjp_ranap.no_rawat=?",tbObat.getValueAt(tbObat.getSelectedRow(),0).toString());
-            if(dpjp.equals("")){
-                dpjp=Sequel.cariIsi("select dokter.nm_dokter from reg_periksa inner join dokter on reg_periksa.kd_dokter=dokter.kd_dokter where reg_periksa.no_rawat=?",tbObat.getValueAt(tbObat.getSelectedRow(),0).toString());
-            }
-            param.put("dpjp",dpjp);   
-            param.put("logo",Sequel.cariGambar("select setting.logo from setting")); 
-            Valid.MyReportqry("rptFormulirCatatanObservasiHemodialisa.jasper","report","::[ Formulir Catatan Observasi Hemodialisa ]::",
-                    "select reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,reg_periksa.umurdaftar,reg_periksa.sttsumur,reg_periksa.tgl_registrasi,reg_periksa.jam_reg,"+
-                    "pasien.jk,pasien.tgl_lahir,catatan_observasi_hemodialisa.tgl_perawatan,catatan_observasi_hemodialisa.jam_rawat,catatan_observasi_hemodialisa.qb,catatan_observasi_hemodialisa.qd,"+
-                    "catatan_observasi_hemodialisa.tekanan_arteri,catatan_observasi_hemodialisa.tekanan_vena,catatan_observasi_hemodialisa.tmp,catatan_observasi_hemodialisa.ufr,catatan_observasi_hemodialisa.tensi,"+
-                    "catatan_observasi_hemodialisa.nadi,catatan_observasi_hemodialisa.suhu,catatan_observasi_hemodialisa.spo2,catatan_observasi_hemodialisa.tindakan,catatan_observasi_hemodialisa.ufg,"+
-                    "catatan_observasi_hemodialisa.nip,petugas.nama from catatan_observasi_hemodialisa inner join reg_periksa on catatan_observasi_hemodialisa.no_rawat=reg_periksa.no_rawat "+
-                    "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis inner join petugas on catatan_observasi_hemodialisa.nip=petugas.nip where reg_periksa.no_rawat='"+tbObat.getValueAt(tbObat.getSelectedRow(),0).toString()+"' "+
-                    "order by catatan_observasi_hemodialisa.tgl_perawatan,catatan_observasi_hemodialisa.jam_rawat",param);
+private void MnHemodialisaActionPerformed(java.awt.event.ActionEvent evt) {                                              
+    if(tbObat.getSelectedRow() > -1) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("namars", akses.getnamars());
+        param.put("alamatrs", akses.getalamatrs());
+        param.put("kotars", akses.getkabupatenrs());
+        param.put("propinsirs", akses.getpropinsirs());
+        param.put("kontakrs", akses.getkontakrs());
+        param.put("emailrs", akses.getemailrs());   
+        
+        dpjp = Sequel.cariIsi("select dokter.nm_dokter from dpjp_ranap inner join dokter on dpjp_ranap.kd_dokter=dokter.kd_dokter where dpjp_ranap.no_rawat=?", tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString());
+        if(dpjp.equals("")) {
+            dpjp = Sequel.cariIsi("select dokter.nm_dokter from reg_periksa inner join dokter on reg_periksa.kd_dokter=dokter.kd_dokter where reg_periksa.no_rawat=?", tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString());
         }
-    }  
+        param.put("dpjp", dpjp);   
+        param.put("logo", Sequel.cariGambar("select setting.logo from setting"));
+        
+        Valid.MyReportqry("rptStatusHemodialisa.jasper", "report", "::[ Formulir Catatan Observasi Hemodialisa ]::",
+                "SELECT " +
+                "reg_periksa.no_rawat, " +
+                "pasien.no_rkm_medis, " +
+                "pasien.nm_pasien, " +
+                "reg_periksa.umurdaftar, " +
+                "reg_periksa.sttsumur, " +
+                "reg_periksa.tgl_registrasi, " +
+                "reg_periksa.jam_reg, " +
+                "pasien.jk, " +
+                "pasien.tgl_lahir, " +
+                
+                "hemodialisa.tanggal AS hd_tanggal, " +
+                "hemodialisa.hd_ke, " +
+                "hemodialisa.no_mesin, " +
+                "hemodialisa.bb_kering, " +
+                "hemodialisa.bb_hd_terakhir, " +
+                "hemodialisa.lama, " +
+                "hemodialisa.akses, " +
+                "hemodialisa.dializer, " +
+                "hemodialisa.dialisat, " +
+                "hemodialisa.transfusi AS hd_transfusi, " +
+                "hemodialisa.penarikan, " +
+                "hemodialisa.qb AS hd_qb, " +
+                "hemodialisa.qd AS hd_qd, " +
+                "hemodialisa.ufg AS hd_ufg, " +
+                "hemodialisa.heparin_awal, " +
+                "hemodialisa.heparin_pemeliharaan, " +
+                "hemodialisa.heparin_sirkulasi, " +
+                "hemodialisa.volume_priming, " +
+                "dokter.nm_dokter, " +
+                
+                "coh.tgl_perawatan, " +
+                "coh.jam_rawat, " +
+                "coh.qb, " +
+                "coh.qd, " +
+                "coh.tekanan_arteri, " +
+                "coh.tekanan_vena, " +
+                "coh.tmp, " +
+                "coh.ufr, " +
+                "coh.tensi, " +
+                "coh.nadi, " +
+                "coh.suhu, " +
+                "coh.spo2, " +
+                "coh.tindakan, " +
+                "coh.ufg, " +
+                "coh.nip, " +
+                "petugas.nama, " +
+                
+                "cch.minum, " +
+                "cch.infus, " +
+                "cch.tranfusi AS cairan_tranfusi, " +
+                "cch.sisa_priming, " +
+                "cch.wash_out, " +
+                "cch.urine, " +
+                "cch.pendarahan, " +
+                "cch.muntah, " +
+                "cch.keterangan, " +
+                
+                "(SELECT suhu_tubuh FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan ASC, jam_rawat ASC LIMIT 1) AS pre_suhu_tubuh, " +
+                "(SELECT nadi FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan ASC, jam_rawat ASC LIMIT 1) AS pre_nadi, " +
+                "(SELECT tensi FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan ASC, jam_rawat ASC LIMIT 1) AS pre_tensi, " +
+                "(SELECT berat FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan ASC, jam_rawat ASC LIMIT 1) AS pre_berat, " +
+                "(SELECT keluhan FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan ASC, jam_rawat ASC LIMIT 1) AS pre_keluhan, " +
+                "(SELECT pemeriksaan FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan ASC, jam_rawat ASC LIMIT 1) AS pre_pemeriksaan, " +
+                
+                "(SELECT suhu_tubuh FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan DESC, jam_rawat DESC LIMIT 1) AS post_suhu_tubuh, " +
+                "(SELECT nadi FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan DESC, jam_rawat DESC LIMIT 1) AS post_nadi, " +
+                "(SELECT tensi FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan DESC, jam_rawat DESC LIMIT 1) AS post_tensi, " +
+                "(SELECT berat FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan DESC, jam_rawat DESC LIMIT 1) AS post_berat, " +
+                "(SELECT keluhan FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan DESC, jam_rawat DESC LIMIT 1) AS post_keluhan, " +
+                "(SELECT pemeriksaan FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan DESC, jam_rawat DESC LIMIT 1) AS post_pemeriksaan " +
+                "FROM reg_periksa " +
+                "INNER JOIN pasien ON reg_periksa.no_rkm_medis = pasien.no_rkm_medis " +
+                "LEFT JOIN hemodialisa ON reg_periksa.no_rawat = hemodialisa.no_rawat " +
+                "LEFT JOIN dokter ON hemodialisa.kd_dokter = dokter.kd_dokter " +
+                "LEFT JOIN catatan_observasi_hemodialisa AS coh ON reg_periksa.no_rawat = coh.no_rawat " +
+                "LEFT JOIN petugas ON coh.nip = petugas.nip " +
+                "LEFT JOIN catatan_cairan_hemodialisa AS cch ON cch.no_rawat = reg_periksa.no_rawat " +
+                "WHERE reg_periksa.no_rawat='" + tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString() + "' " +
+                "ORDER BY COALESCE(coh.tgl_perawatan, cch.tgl_perawatan), COALESCE(coh.jam_rawat, cch.jam_rawat)", param);
+    }
+}
+
 
 private void TAksesKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TAksesKeyPressed
     Valid.pindah(evt, TLama, TDializer);
@@ -1433,6 +1529,8 @@ private void TVolumePrimingKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:
     Valid.pindah(evt,THeparinSirkulasi,BtnSimpan);
 }//GEN-LAST:event_TVolumePrimingKeyPressed
 
+    
+
 /**
 * @param args the command line arguments
 */
@@ -1468,6 +1566,7 @@ public static void main(String args[]) {
     private widget.ComboBox Jam;
     private widget.Label LCount;
     private widget.ComboBox Menit;
+    private javax.swing.JMenuItem MnHemodialisa;
     private javax.swing.JPanel PanelInput;
     private widget.ScrollPane Scroll;
     private widget.TextBox TAkses;
@@ -1527,6 +1626,7 @@ public static void main(String args[]) {
     private widget.Label jLabel6;
     private widget.Label jLabel7;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private widget.TextBox kddok;
     private widget.TextBox namadokter;
     private widget.panelisi panelGlass8;
