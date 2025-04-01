@@ -261,7 +261,7 @@ public class DlgUser extends javax.swing.JDialog {
                 "[I]Ringkasan Jasa Tindakan Pasien","[I]Pendapatan Per Akun Rekening","[M]Hasil Pemeriksaan ECHO","[M]Penilaian Bayi Baru Lahir","[J]RL 1.3 Ketersediaan Tempat Tidur",
                 "[I]Pendapatan Per Akun Closing","[K]Pengeluaran-pengeluaran/Kas Keluar","[M]Skrining Diabetes Melitus","[M]Laporan Tindakan","[M]Pelaksanaan Informasi & Edukasi",
                 "[M]Layanan Kedokteran Fisik & Rehabilitasi","[M]Skrining Kesehatan Gigi & Mulut Balita","[M]Skrining Anemia","[M]Layanan Program KFR","[M]Skrining Hipertensi",
-                "[M]Skrining Kesehatan Penglihatan"
+                "[M]Skrining Kesehatan Penglihatan","[M]Catatan Observasi Hemodialisa","[M]Skrining Kesehatan Gigi & Mulut Dewasa","[M]Skrining Risiko Kanker Serviks","[M]Catatan Cairan Hemodialisa"
         };
         
         tabMode=new DefaultTableModel(null,row){
@@ -577,7 +577,7 @@ public class DlgUser extends javax.swing.JDialog {
         tbUser.setPreferredScrollableViewportSize(new Dimension(500,500));
         tbUser.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-        for (i = 0; i < 1114;i++) {
+        for (i = 0; i < 1118;i++) {
             TableColumn column = tbUser.getColumnModel().getColumn(i);
             switch (i) {
                 case 0:
@@ -3373,6 +3373,18 @@ public class DlgUser extends javax.swing.JDialog {
                 case 1113:
                     column.setPreferredWidth(178);
                     break;
+                case 1114:
+                    column.setPreferredWidth(177);
+                    break;
+                case 1115:
+                    column.setPreferredWidth(220);
+                    break;
+                case 1116:
+                    column.setPreferredWidth(168);
+                    break;
+                case 1117:
+                    column.setPreferredWidth(161);
+                    break;
                 default:
                     column.setPreferredWidth(133);
                     break;
@@ -3855,7 +3867,7 @@ public class DlgUser extends javax.swing.JDialog {
                     "'false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false',"+
                     "'false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false',"+
                     "'false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false','false',"+
-                    "'false','false','false','false','false','false','false','false','false','false'","User")==true){
+                    "'false','false','false','false','false','false','false','false','false','false','false','false','false','false'","User")==true){
                 tabMode.addRow(new Object[]{
                     TKd.getText(),TNmUser.getText(),Jabatan.getText(),TPass.getText(),false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,
                     false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,
@@ -3883,7 +3895,7 @@ public class DlgUser extends javax.swing.JDialog {
                     false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,
                     false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,
                     false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,
-                    false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false
+                    false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false
                 });
                 emptTeks();
                 LCount.setText(""+tabMode.getRowCount());
@@ -5045,8 +5057,10 @@ public class DlgUser extends javax.swing.JDialog {
                     "layanan_program_kfr='"+tbUser.getValueAt(i,1111).toString()+"',"+
                     "skrining_hipertensi='"+tbUser.getValueAt(i,1112).toString()+"',"+
                     "skrining_kesehatan_penglihatan='"+tbUser.getValueAt(i,1113).toString()+"',"+
-                    "catatan_observasi_hemodialisa='"+tbUser.getValueAt(i,1114).toString()+"'")==true){
-
+                    "catatan_observasi_hemodialisa='"+tbUser.getValueAt(i,1114).toString()+"',"+
+                    "skrining_kesehatan_gigi_mulut_dewasa='"+tbUser.getValueAt(i,1115).toString()+"',"+
+                    "skrining_risiko_kanker_serviks='"+tbUser.getValueAt(i,1116).toString()+"',"+
+                    "catatan_cairan_hemodialisa='"+tbUser.getValueAt(i,1117).toString()+"'")==true){
                     emptTeks();
                 }
             }         
@@ -6378,7 +6392,10 @@ private void BtnPrintKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
                                         "layanan_program_kfr='"+tbUser.getValueAt(barisdicopy,1111).toString()+"',"+
                                         "skrining_hipertensi='"+tbUser.getValueAt(barisdicopy,1112).toString()+"',"+
                                         "skrining_kesehatan_penglihatan='"+tbUser.getValueAt(barisdicopy,1113).toString()+"',"+
-                                        "catatan_observasi_hemodialisa='"+tbUser.getValueAt(barisdicopy,1114).toString()+"'");
+                                        "catatan_observasi_hemodialisa='"+tbUser.getValueAt(barisdicopy,1114).toString()+"',"+
+                                        "skrining_kesehatan_gigi_mulut_dewasa='"+tbUser.getValueAt(barisdicopy,1115).toString()+"',"+
+                                        "skrining_risiko_kanker_serviks='"+tbUser.getValueAt(barisdicopy,1116).toString()+"',"+
+                                        "catatan_cairan_hemodialisa='"+tbUser.getValueAt(barisdicopy,1117).toString()+"'");
                                 }
                                 userdicopy="";
                                 copyhakakses="";
@@ -6691,7 +6708,8 @@ private void BtnPrintKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
                 "user.penilaian_awal_medis_ranap_neonatus,user.penilaian_derajat_dehidrasi,user.ringkasan_jasa_tindakan_medis,user.pendapatan_per_akun,user.hasil_pemeriksaan_echo,"+
                 "user.penilaian_bayi_baru_lahir,user.rl1_3_ketersediaan_kamar,user.pendapatan_per_akun_closing,user.pengeluaran_pengeluaran,user.skrining_diabetes_melitus,"+
                 "user.laporan_tindakan,user.pelaksanaan_informasi_edukasi,user.layanan_kedokteran_fisik_rehabilitasi,user.skrining_kesehatan_gigi_mulut_balita,user.skrining_anemia,"+
-                "user.layanan_program_kfr,user.skrining_hipertensi,user.skrining_kesehatan_penglihatan, user.catatan_observasi_hemodialisa from user order by AES_DECRYPT(user.id_user,'nur')");
+                "user.layanan_program_kfr,user.skrining_hipertensi,user.skrining_kesehatan_penglihatan,user.catatan_observasi_hemodialisa,user.skrining_kesehatan_gigi_mulut_dewasa,"+
+                "user.skrining_risiko_kanker_serviks,user.catatan_cairan_hemodialisa from user order by AES_DECRYPT(user.id_user,'nur')");
             try {
                 rs=ps.executeQuery();
                 while(rs.next()){
@@ -7818,8 +7836,10 @@ private void BtnPrintKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
                                rs.getBoolean("layanan_program_kfr"),
                                rs.getBoolean("skrining_hipertensi"),
                                rs.getBoolean("skrining_kesehatan_penglihatan"),
-                               rs.getBoolean("catatan_observasi_hemodialisa")
-                               
+                               rs.getBoolean("catatan_observasi_hemodialisa"),
+                               rs.getBoolean("skrining_kesehatan_gigi_mulut_dewasa"),
+                               rs.getBoolean("skrining_risiko_kanker_serviks"),
+                               rs.getBoolean("catatan_cairan_hemodialisa")
                             });
                         }   
                     } catch (Exception e) {
@@ -8934,7 +8954,11 @@ private void BtnPrintKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
                            rs.getBoolean("skrining_anemia"),
                            rs.getBoolean("layanan_program_kfr"),
                            rs.getBoolean("skrining_hipertensi"),
-                           rs.getBoolean("skrining_kesehatan_penglihatan")
+                           rs.getBoolean("skrining_kesehatan_penglihatan"),
+                           rs.getBoolean("catatan_observasi_hemodialisa"),
+                           rs.getBoolean("skrining_kesehatan_gigi_mulut_dewasa"),
+                           rs.getBoolean("skrining_risiko_kanker_serviks"),
+                           rs.getBoolean("catatan_cairan_hemodialisa")
                         });
                     }                                             
                  }

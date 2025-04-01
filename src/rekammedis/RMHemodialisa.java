@@ -28,10 +28,12 @@
  import java.sql.PreparedStatement;
  import java.sql.ResultSet;
  import java.sql.SQLException;
- import java.util.Calendar;
+import java.util.ArrayList;
+import java.util.Calendar;
  import java.util.Date;
  import java.util.HashMap;
- import java.util.Map;
+import java.util.List;
+import java.util.Map;
  import javax.swing.JOptionPane;
  import javax.swing.JTable;
  import javax.swing.Timer;
@@ -55,6 +57,49 @@
      private DlgCariDokter dokter=new DlgCariDokter(null,false);
      private String dpjp="";
      private String TANGGALMUNDUR="yes";
+
+     // Tambahkan kelas Observasi di sini
+    public static class Observasi {
+        private java.sql.Time waktu;
+        private Double qb;
+        private Double qd;
+        private Double tekArteri;
+        private Double tekVena;
+        private Double tmp;
+        private Double uf;
+        private String td;
+        private Integer nadi;
+        private Double suhu;
+        private String tindakan;
+
+        public Observasi(java.sql.Time waktu, Double qb, Double qd, Double tekArteri, Double tekVena,
+                         Double tmp, Double uf, String td, Integer nadi, Double suhu, String tindakan) {
+            this.waktu = waktu;
+            this.qb = qb;
+            this.qd = qd;
+            this.tekArteri = tekArteri;
+            this.tekVena = tekVena;
+            this.tmp = tmp;
+            this.uf = uf;
+            this.td = td;
+            this.nadi = nadi;
+            this.suhu = suhu;
+            this.tindakan = tindakan;
+        }
+
+        // Getter (wajib untuk JasperReports)
+        public java.sql.Time getWaktu() { return waktu; }
+        public Double getQb() { return qb; }
+        public Double getQd() { return qd; }
+        public Double getTek_arteri() { return tekArteri; }
+        public Double getTek_vena() { return tekVena; }
+        public Double getTmp() { return tmp; }
+        public Double getUf() { return uf; }
+        public String getTd() { return td; }
+        public Integer getNadi() { return nadi; }
+        public Double getSuhu() { return suhu; }
+        public String getTindakan() { return tindakan; }
+    }
      /** Creates new form DlgRujuk
       * @param parent
       * @param modal */
@@ -1379,88 +1424,81 @@ private void MnHemodialisaActionPerformed(java.awt.event.ActionEvent evt) {
         }
         param.put("dpjp", dpjp);   
         param.put("logo", Sequel.cariGambar("select setting.logo from setting"));
-        
-        Valid.MyReportqry("rptStatusHemodialisa.jasper", "report", "::[ Formulir Catatan Observasi Hemodialisa ]::",
-                "SELECT " +
-                "reg_periksa.no_rawat, " +
-                "pasien.no_rkm_medis, " +
-                "pasien.nm_pasien, " +
-                "reg_periksa.umurdaftar, " +
-                "reg_periksa.sttsumur, " +
-                "reg_periksa.tgl_registrasi, " +
-                "reg_periksa.jam_reg, " +
-                "pasien.jk, " +
-                "pasien.tgl_lahir, " +
-                
-                "hemodialisa.tanggal AS hd_tanggal, " +
-                "hemodialisa.hd_ke, " +
-                "hemodialisa.no_mesin, " +
-                "hemodialisa.bb_kering, " +
-                "hemodialisa.bb_hd_terakhir, " +
-                "hemodialisa.lama, " +
-                "hemodialisa.akses, " +
-                "hemodialisa.dializer, " +
-                "hemodialisa.dialisat, " +
-                "hemodialisa.transfusi AS hd_transfusi, " +
-                "hemodialisa.penarikan, " +
-                "hemodialisa.qb AS hd_qb, " +
-                "hemodialisa.qd AS hd_qd, " +
-                "hemodialisa.ufg AS hd_ufg, " +
-                "hemodialisa.heparin_awal, " +
-                "hemodialisa.heparin_pemeliharaan, " +
-                "hemodialisa.heparin_sirkulasi, " +
-                "hemodialisa.volume_priming, " +
-                "dokter.nm_dokter, " +
-                
-                "coh.tgl_perawatan, " +
-                "coh.jam_rawat, " +
-                "coh.qb, " +
-                "coh.qd, " +
-                "coh.tekanan_arteri, " +
-                "coh.tekanan_vena, " +
-                "coh.tmp, " +
-                "coh.ufr, " +
-                "coh.tensi, " +
-                "coh.nadi, " +
-                "coh.suhu, " +
-                "coh.spo2, " +
-                "coh.tindakan, " +
-                "coh.ufg, " +
-                "coh.nip, " +
-                "petugas.nama, " +
-                
-                "cch.minum, " +
-                "cch.infus, " +
-                "cch.tranfusi AS cairan_tranfusi, " +
-                "cch.sisa_priming, " +
-                "cch.wash_out, " +
-                "cch.urine, " +
-                "cch.pendarahan, " +
-                "cch.muntah, " +
-                "cch.keterangan, " +
-                
-                "(SELECT suhu_tubuh FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan ASC, jam_rawat ASC LIMIT 1) AS pre_suhu_tubuh, " +
-                "(SELECT nadi FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan ASC, jam_rawat ASC LIMIT 1) AS pre_nadi, " +
-                "(SELECT tensi FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan ASC, jam_rawat ASC LIMIT 1) AS pre_tensi, " +
-                "(SELECT berat FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan ASC, jam_rawat ASC LIMIT 1) AS pre_berat, " +
-                "(SELECT keluhan FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan ASC, jam_rawat ASC LIMIT 1) AS pre_keluhan, " +
-                "(SELECT pemeriksaan FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan ASC, jam_rawat ASC LIMIT 1) AS pre_pemeriksaan, " +
-                
-                "(SELECT suhu_tubuh FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan DESC, jam_rawat DESC LIMIT 1) AS post_suhu_tubuh, " +
-                "(SELECT nadi FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan DESC, jam_rawat DESC LIMIT 1) AS post_nadi, " +
-                "(SELECT tensi FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan DESC, jam_rawat DESC LIMIT 1) AS post_tensi, " +
-                "(SELECT berat FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan DESC, jam_rawat DESC LIMIT 1) AS post_berat, " +
-                "(SELECT keluhan FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan DESC, jam_rawat DESC LIMIT 1) AS post_keluhan, " +
-                "(SELECT pemeriksaan FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan DESC, jam_rawat DESC LIMIT 1) AS post_pemeriksaan " +
-                "FROM reg_periksa " +
-                "INNER JOIN pasien ON reg_periksa.no_rkm_medis = pasien.no_rkm_medis " +
-                "LEFT JOIN hemodialisa ON reg_periksa.no_rawat = hemodialisa.no_rawat " +
-                "LEFT JOIN dokter ON hemodialisa.kd_dokter = dokter.kd_dokter " +
-                "LEFT JOIN catatan_observasi_hemodialisa AS coh ON reg_periksa.no_rawat = coh.no_rawat " +
-                "LEFT JOIN petugas ON coh.nip = petugas.nip " +
-                "LEFT JOIN catatan_cairan_hemodialisa AS cch ON cch.no_rawat = reg_periksa.no_rawat " +
-                "WHERE reg_periksa.no_rawat='" + tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString() + "' " +
-                "ORDER BY COALESCE(coh.tgl_perawatan, cch.tgl_perawatan), COALESCE(coh.jam_rawat, cch.jam_rawat)", param);
+
+        // Tambahan: Ambil data observasi untuk observasiList
+        List<Observasi> observasiList = new ArrayList<>();
+        try {
+            ps = koneksi.prepareStatement(
+                "SELECT tgl_perawatan, jam_rawat, qb, qd, tekanan_arteri, tekanan_vena, tmp, ufr, tensi, nadi, suhu, tindakan " +
+                "FROM catatan_observasi_hemodialisa " +
+                "WHERE no_rawat = ? " +
+                "ORDER BY tgl_perawatan, jam_rawat"
+            );
+            ps.setString(1, tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString());
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Observasi obs = new Observasi(
+                    rs.getTime("jam_rawat"),         // waktu
+                    rs.getDouble("qb"),              // qb
+                    rs.getDouble("qd"),              // qd
+                    rs.getDouble("tekanan_arteri"),  // tek_arteri
+                    rs.getDouble("tekanan_vena"),    // tek_vena
+                    rs.getDouble("tmp"),             // tmp
+                    rs.getDouble("ufr"),             // uf (ufr)
+                    rs.getString("tensi"),           // td
+                    rs.getInt("nadi"),               // nadi
+                    rs.getDouble("suhu"),            // suhu
+                    rs.getString("tindakan")         // tindakan
+                );
+                observasiList.add(obs);
+            }
+        } catch (SQLException e) {
+            System.out.println("Notif : Gagal mengambil data observasi - " + e.getMessage());
+        } finally {
+            if (rs != null) {
+                try { rs.close(); } catch (SQLException e) { System.out.println("Notif : " + e); }
+            }
+            if (ps != null) {
+                try { ps.close(); } catch (SQLException e) { System.out.println("Notif : " + e); }
+            }
+        }
+
+        // Tambahkan observasiList ke parameter
+        param.put("observasiList", observasiList);
+
+        // Panggil laporan dengan parameter yang diperbarui
+        Valid.MyReportqry("rptStatusHemodialisa.jasper", "report", "::[ Formulir Status Hemodialisa ]::",
+    "select reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,reg_periksa.umurdaftar,reg_periksa.sttsumur,reg_periksa.tgl_registrasi,reg_periksa.jam_reg,"+
+    "pasien.jk,pasien.tgl_lahir,"+
+    
+    "hemodialisa.tanggal AS hd_tanggal,hemodialisa.hd_ke,hemodialisa.no_mesin,hemodialisa.bb_kering,hemodialisa.bb_hd_terakhir,hemodialisa.lama,hemodialisa.akses,"+
+    "hemodialisa.dializer,hemodialisa.dialisat,hemodialisa.transfusi AS hd_transfusi,hemodialisa.penarikan,hemodialisa.qb AS hd_qb,hemodialisa.qd AS hd_qd,"+
+    "hemodialisa.ufg AS hd_ufg,hemodialisa.heparin_awal,hemodialisa.heparin_pemeliharaan,hemodialisa.heparin_sirkulasi,hemodialisa.volume_priming,dokter.nm_dokter,"+
+    
+    "catatan_cairan_hemodialisa.minum,catatan_cairan_hemodialisa.infus,catatan_cairan_hemodialisa.tranfusi AS cairan_tranfusi,"+
+    "catatan_cairan_hemodialisa.sisa_priming,catatan_cairan_hemodialisa.wash_out,catatan_cairan_hemodialisa.urine,catatan_cairan_hemodialisa.pendarahan,"+
+    "catatan_cairan_hemodialisa.muntah,catatan_cairan_hemodialisa.keterangan,"+
+    
+    "(SELECT suhu_tubuh FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan ASC, jam_rawat ASC LIMIT 1) AS pre_suhu_tubuh,"+
+    "(SELECT nadi FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan ASC, jam_rawat ASC LIMIT 1) AS pre_nadi,"+
+    "(SELECT tensi FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan ASC, jam_rawat ASC LIMIT 1) AS pre_tensi,"+
+    "(SELECT berat FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan ASC, jam_rawat ASC LIMIT 1) AS pre_berat,"+
+    "(SELECT keluhan FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan ASC, jam_rawat ASC LIMIT 1) AS pre_keluhan,"+
+    "(SELECT pemeriksaan FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan ASC, jam_rawat ASC LIMIT 1) AS pre_pemeriksaan,"+
+    
+    "(SELECT suhu_tubuh FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan DESC, jam_rawat DESC LIMIT 1) AS post_suhu_tubuh,"+
+    "(SELECT nadi FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan DESC, jam_rawat DESC LIMIT 1) AS post_nadi,"+
+    "(SELECT tensi FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan DESC, jam_rawat DESC LIMIT 1) AS post_tensi,"+
+    "(SELECT berat FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan DESC, jam_rawat DESC LIMIT 1) AS post_berat,"+
+    "(SELECT keluhan FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan DESC, jam_rawat DESC LIMIT 1) AS post_keluhan,"+
+    "(SELECT pemeriksaan FROM pemeriksaan_ralan WHERE no_rawat = reg_periksa.no_rawat ORDER BY tgl_perawatan DESC, jam_rawat DESC LIMIT 1) AS post_pemeriksaan "+
+    
+    "from reg_periksa "+
+    "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
+    "left join hemodialisa on reg_periksa.no_rawat=hemodialisa.no_rawat "+
+    "left join dokter on hemodialisa.kd_dokter=dokter.kd_dokter "+
+    "left join catatan_cairan_hemodialisa on catatan_cairan_hemodialisa.no_rawat=reg_periksa.no_rawat "+
+    "where reg_periksa.no_rawat='"+tbObat.getValueAt(tbObat.getSelectedRow(),0).toString()+"'", param);
     }
 }
 

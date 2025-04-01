@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ObservationSubreport" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="b488dda3-46e0-4eda-a666-7ae23ba8f440">
+	<parameter name="no_rawat_observasi" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+            coh.tgl_perawatan,
+            coh.jam_rawat,
+            coh.qb,
+            coh.qd,
+            coh.tekanan_arteri,
+            coh.tekanan_vena,
+            coh.tmp,
+            coh.ufr,
+            coh.tensi,
+            coh.nadi,
+            coh.suhu,
+            coh.spo2,
+            coh.tindakan,
+            coh.ufg,
+            coh.nip,
+            petugas.nama
+        FROM catatan_observasi_hemodialisa AS coh
+        LEFT JOIN petugas ON coh.nip = petugas.nip
+        WHERE coh.no_rawat = $P{no_rawat_observasi}
+        ORDER BY coh.tgl_perawatan, coh.jam_rawat]]>
+	</queryString>
+	<field name="tgl_perawatan" class="java.sql.Date"/>
+	<field name="jam_rawat" class="java.sql.Time"/>
+	<field name="qb" class="java.lang.Double"/>
+	<field name="qd" class="java.lang.Double"/>
+	<field name="tekanan_arteri" class="java.lang.Double"/>
+	<field name="tekanan_vena" class="java.lang.Double"/>
+	<field name="tmp" class="java.lang.Double"/>
+	<field name="ufr" class="java.lang.Double"/>
+	<field name="tensi" class="java.lang.String"/>
+	<field name="nadi" class="java.lang.Integer"/>
+	<field name="suhu" class="java.lang.Double"/>
+	<field name="spo2" class="java.lang.String"/>
+	<field name="tindakan" class="java.lang.String"/>
+	<field name="ufg" class="java.lang.Double"/>
+	<field name="nip" class="java.lang.String"/>
+	<field name="nama" class="java.lang.String"/>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy HH:mm:ss" isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="70" height="20" uuid="6599afc2-ea4e-4c6a-a165-b9c30c685156"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tgl_perawatan} != null && $F{jam_rawat} != null ? 
+                    new SimpleDateFormat("dd/MM/yyyy HH:mm").format($F{tgl_perawatan}) + " " + new SimpleDateFormat("HH:mm").format($F{jam_rawat}) : ""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="70" y="0" width="60" height="20" uuid="c2492ef3-78ef-46d2-9497-c7494f8890bb"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{qb} != null ? $F{qb} : "") + " / " + ($F{qd} != null ? $F{qd} : "")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="130" y="0" width="60" height="20" uuid="c2df4010-fda4-4dbb-b564-fcd7aecedff6"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tekanan_arteri}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="190" y="0" width="60" height="20" uuid="ee8b4d8e-1e8b-48cc-b871-ffd6cdb69201"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tekanan_vena}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="250" y="0" width="60" height="20" uuid="a7c99446-b4d1-411d-bd28-b4b6f126eecf"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tmp}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="310" y="0" width="60" height="20" uuid="bad5e104-3ad8-4e4a-8542-3e96eb7ae8ef"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ufr}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="370" y="0" width="60" height="20" uuid="688f61de-3bca-4243-a80f-72586f68880c"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tensi}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="430" y="0" width="50" height="20" uuid="9fb1e387-d8e2-43f5-b099-02a95d0857db"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{nadi} != null ? $F{nadi} : "") + ($F{suhu} != null ? " / " + $F{suhu} + "°C" : "")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="480" y="0" width="75" height="20" uuid="d927a093-fa56-44f6-8a26-de6a2657fb95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tindakan}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
