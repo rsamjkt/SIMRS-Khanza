@@ -55,6 +55,7 @@ import java.util.Map;
      private ResultSet rs;
      private int i=0;    
      private DlgCariDokter dokter=new DlgCariDokter(null,false);
+     private String finger="";
      private String dpjp="";
      private String TANGGALMUNDUR="yes";
 
@@ -1424,6 +1425,9 @@ private void MnHemodialisaActionPerformed(java.awt.event.ActionEvent evt) {
         }
         param.put("dpjp", dpjp);   
         param.put("logo", Sequel.cariGambar("select setting.logo from setting"));
+        finger=Sequel.cariIsi("select sha1(sidikjari.sidikjari) from sidikjari inner join pegawai on pegawai.id=sidikjari.id where pegawai.nik=?",tbObat.getValueAt(tbObat.getSelectedRow(),5).toString());
+            param.put("finger","Dikeluarkan di "+akses.getnamars()+", Kota "+akses.getkabupatenrs()+"\nDitandatangani secara elektronik oleh "+tbObat.getValueAt(tbObat.getSelectedRow(),6).toString()+"\nID "+(finger.equals("")?tbObat.getValueAt(tbObat.getSelectedRow(),5).toString():finger)+"\n"+Valid.SetTgl3(tbObat.getValueAt(tbObat.getSelectedRow(),7).toString())); 
+            
 
         // Tambahan: Ambil data observasi untuk observasiList
         List<Observasi> observasiList = new ArrayList<>();
