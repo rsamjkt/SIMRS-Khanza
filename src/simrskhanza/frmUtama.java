@@ -1008,6 +1008,7 @@ import rekammedis.RMSkriningKankerKolorektal;
 import rekammedis.RMSkriningKekerasanPadaPerempuan;
 import rekammedis.RMSkriningKesehatanGigiMulutBalita;
 import rekammedis.RMSkriningKesehatanGigiMulutDewasa;
+import rekammedis.RMSkriningKesehatanGigiMulutLansia;
 import rekammedis.RMSkriningMPP;
 import rekammedis.RMSkriningMPPFormA;
 import rekammedis.RMSkriningMPPFormB;
@@ -2109,7 +2110,7 @@ public class frmUtama extends javax.swing.JFrame {
 
         tanggal.setEditable(false);
         tanggal.setForeground(new java.awt.Color(50, 70, 50));
-        tanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "02/04/2025" }));
+        tanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "04/03/2025" }));
         tanggal.setDisplayFormat("dd/MM/yyyy");
         tanggal.setName("tanggal"); // NOI18N
         tanggal.setOpaque(false);
@@ -7489,7 +7490,7 @@ public class frmUtama extends javax.swing.JFrame {
         jLabel7.setForeground(new java.awt.Color(50, 50, 50));
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/file-edit-16x16.png"))); // NOI18N
-        jLabel7.setText("Dikembangkan Ulang Oleh : Randy Mandala");
+        jLabel7.setText(" Didesain & dibuat oleh Khanza.Soft Media");
         jLabel7.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         jLabel7.setIconTextGap(3);
         jLabel7.setName("jLabel7"); // NOI18N
@@ -7560,7 +7561,7 @@ public class frmUtama extends javax.swing.JFrame {
 
         getContentPane().add(PanelUtama, java.awt.BorderLayout.CENTER);
 
-        MenuBar.setBackground(new java.awt.Color(0, 106, 113));
+        MenuBar.setBackground(new java.awt.Color(124, 42, 90));
         MenuBar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         MenuBar.setForeground(new java.awt.Color(255, 255, 253));
         MenuBar.setToolTipText("");
@@ -8330,7 +8331,7 @@ public class frmUtama extends javax.swing.JFrame {
         jMenu4.setForeground(new java.awt.Color(255, 255, 253));
         jMenu4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/63.png"))); // NOI18N
         jMenu4.setMnemonic('G');
-        jMenu4.setText("EMR RSAM");
+        jMenu4.setText("Tentang Program");
         jMenu4.setToolTipText("Alt+G");
         jMenu4.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
         jMenu4.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -22480,6 +22481,18 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
         this.setCursor(Cursor.getDefaultCursor());
     }
     
+    private void btnSkriningKesehatanGigiMulutLansiaActionPerformed(java.awt.event.ActionEvent evt) {                                                        
+        isTutup();
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        RMSkriningKesehatanGigiMulutLansia form=new RMSkriningKesehatanGigiMulutLansia(this,false);
+        form.isCek();
+        form.setSize(PanelUtama.getWidth(),PanelUtama.getHeight());
+        form.setLocationRelativeTo(PanelUtama);
+        form.setVisible(true);
+        DlgHome.dispose();
+        this.setCursor(Cursor.getDefaultCursor());
+    }
+    
     /**
     * @param args the command line arguments
     */
@@ -23182,7 +23195,7 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
             btnPenilaianDerajatDehidrasi,btnRingkasanJasaTindakanPasien,btnPendapatanPerAkun,btnHasilPemeriksaanECHO,btnRl13KetersediaanKamar,btnPendapatanPerAkunClosing,
             btnPenilaianBayiBaruLahir,btnPengeluaranPengeluaran,btnSkriningDiabetesMelitus,btnLaporanTindakan,btnPelaksanaanInformasiEdukasi,btnLayananKedokteranFisikRehabilitasi,
             btnSkriningKesehatanGigiMulutBalita,btnSkriningAnemia,btnPermintaanLayananProgramKFR,btnLayananProgramKFR,btnSkriningHipertensi,btnSkriningKesehatanPenglihatan,
-            btnCatatanObservasiHemodialisa,btnSkriningKesehatanGigiMulutDewasa,btnSkriningRisikoKankerServiks,btnCatatanCairanHemodialisa;
+            btnCatatanObservasiHemodialisa,btnSkriningKesehatanGigiMulutDewasa,btnSkriningRisikoKankerServiks,btnCatatanCairanHemodialisa,btnSkriningKesehatanGigiMulutLansia;
     
     public void isWall(){
         try{            
@@ -27559,6 +27572,11 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
             
             if(akses.getskrining_kesehatan_gigi_mulut_balita()==true){
                 Panelmenu.add(btnSkriningKesehatanGigiMulutBalita);
+                jmlmenu++;
+            }
+            
+            if(akses.getskrining_kesehatan_gigi_mulut_lansia()==true){
+                Panelmenu.add(btnSkriningKesehatanGigiMulutLansia);
                 jmlmenu++;
             }
             
@@ -33078,6 +33096,11 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
         
         if(akses.getskrining_kesehatan_gigi_mulut_balita()==true){
             Panelmenu.add(btnSkriningKesehatanGigiMulutBalita);
+            jmlmenu++;
+        }
+        
+        if(akses.getskrining_kesehatan_gigi_mulut_lansia()==true){
+            Panelmenu.add(btnSkriningKesehatanGigiMulutLansia);
             jmlmenu++;
         }
         
@@ -40310,6 +40333,13 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
             }                
         }
         
+        if(akses.getskrining_kesehatan_gigi_mulut_lansia()==true){
+            if(btnSkriningKesehatanGigiMulutLansia.getText().toLowerCase().trim().contains(TCari.getText().toLowerCase().trim())){
+                Panelmenu.add(btnSkriningKesehatanGigiMulutLansia);
+                jmlmenu++;
+            }                
+        }
+        
         if(akses.getskrining_kesehatan_gigi_mulut_dewasa()==true){
             if(btnSkriningKesehatanGigiMulutDewasa.getText().toLowerCase().trim().contains(TCari.getText().toLowerCase().trim())){
                 Panelmenu.add(btnSkriningKesehatanGigiMulutDewasa);
@@ -46920,6 +46950,14 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
         btnSkriningKesehatanGigiMulutBalita.setName("btnSkriningKesehatanGigiMulutBalita"); 
         btnSkriningKesehatanGigiMulutBalita.setPreferredSize(new java.awt.Dimension(200, 90));
         btnSkriningKesehatanGigiMulutBalita.addActionListener(this::btnSkriningKesehatanGigiMulutBalitaActionPerformed);
+        
+        btnSkriningKesehatanGigiMulutLansia = new widget.ButtonBig();
+        btnSkriningKesehatanGigiMulutLansia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/48x48/2185054_dental_dental veneers_dentist_dentistry_medical_icon.png"))); 
+        btnSkriningKesehatanGigiMulutLansia.setText("Skrining Kesehatan Gigi Mulut Lansia");
+        btnSkriningKesehatanGigiMulutLansia.setIconTextGap(0);
+        btnSkriningKesehatanGigiMulutLansia.setName("btnSkriningKesehatanGigiMulutLansia"); 
+        btnSkriningKesehatanGigiMulutLansia.setPreferredSize(new java.awt.Dimension(200, 90));
+        btnSkriningKesehatanGigiMulutLansia.addActionListener(this::btnSkriningKesehatanGigiMulutLansiaActionPerformed);
         
         btnSkriningKesehatanGigiMulutDewasa = new widget.ButtonBig();
         btnSkriningKesehatanGigiMulutDewasa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/48x48/2185055_dental_dental checking_dentist_dentistry_oral hygiene_icon.png"))); 
