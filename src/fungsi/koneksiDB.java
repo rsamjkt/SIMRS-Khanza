@@ -31,8 +31,8 @@ public class koneksiDB {
                 dataSource.setUser(EnkripsiAES.decrypt(prop.getProperty("USER")));
                 dataSource.setPassword(EnkripsiAES.decrypt(prop.getProperty("PAS")));
                 dataSource.setCachePreparedStatements(true);
-                dataSource.setPreparedStatementCacheSize(100);    
-                dataSource.setPreparedStatementCacheSqlLimit(2048);
+                dataSource.setPreparedStatementCacheSize(500);          
+                dataSource.setPreparedStatementCacheSqlLimit(4096); 
                 dataSource.setUseCompression(true);
                 dataSource.setAutoReconnect(true);
                 dataSource.setAutoReconnectForPools(true);
@@ -40,6 +40,9 @@ public class koneksiDB {
                 dataSource.setUseServerPrepStmts(true);                 
                 dataSource.setUseLocalSessionState(true);               
                 dataSource.setUseLocalTransactionState(true); 
+                dataSource.setLoginTimeout(10);                         
+                dataSource.setConnectTimeout(10000);                  
+                dataSource.setSocketTimeout(30000);  
                 connection=dataSource.getConnection();       
                 System.out.println("  Koneksi Berhasil. Sorry bro loading, silahkan baca dulu.... \n\n"+
                         "Jika Ada Kendala Silakan Hubungi IT \n"+
@@ -54,8 +57,8 @@ public class koneksiDB {
                         dataSource.setUser(EnkripsiAES.decrypt(prop.getProperty("USER")));
                         dataSource.setPassword(EnkripsiAES.decrypt(prop.getProperty("PAS")));
                         dataSource.setCachePreparedStatements(true);
-                        dataSource.setPreparedStatementCacheSize(100);          
-                        dataSource.setPreparedStatementCacheSqlLimit(2048); 
+                        dataSource.setPreparedStatementCacheSize(500);          
+                        dataSource.setPreparedStatementCacheSqlLimit(4096); 
                         dataSource.setUseCompression(true);
                         dataSource.setAutoReconnect(true);
                         dataSource.setAutoReconnectForPools(true);
@@ -63,6 +66,9 @@ public class koneksiDB {
                         dataSource.setUseServerPrepStmts(true);                 
                         dataSource.setUseLocalSessionState(true);               
                         dataSource.setUseLocalTransactionState(true); 
+                        dataSource.setLoginTimeout(10);                         
+                        dataSource.setConnectTimeout(10000);                  
+                        dataSource.setSocketTimeout(30000);
                         connection=dataSource.getConnection();  
                     }
                 } catch (Exception ex) {
