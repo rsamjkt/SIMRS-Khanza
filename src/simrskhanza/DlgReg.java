@@ -249,6 +249,7 @@ import surat.SuratPulangAtasPermintaanSendiri;
 import surat.SuratSakit;
 import surat.SuratSakitPihak2;
 import surat.SuratTidakHamil;
+import surat.SuratPernyataanPembiayaanNaikKelas;
 /**
  *
  * @author dosen
@@ -1149,6 +1150,7 @@ public final class DlgReg extends javax.swing.JDialog {
         MnPulangAtasPermintaanSendiri = new javax.swing.JMenuItem();
         MnPernyataanPasienUmum = new javax.swing.JMenuItem();
         MnPersetujuanRawatInap = new javax.swing.JMenuItem();
+        MnPernyataanPembiayaanNaikKelas = new javax.swing.JMenuItem();
         MnPersetujuanPenundaanPelayanan = new javax.swing.JMenuItem();
         MnPenolakanAnjuranMedis = new javax.swing.JMenuItem();
         jMenu8 = new javax.swing.JMenu();
@@ -3770,6 +3772,22 @@ public final class DlgReg extends javax.swing.JDialog {
             }
         });
         MnSuratSurat.add(MnPersetujuanRawatInap);
+        
+        MnPernyataanPembiayaanNaikKelas.setBackground(new java.awt.Color(255, 255, 254));
+        MnPernyataanPembiayaanNaikKelas.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        MnPernyataanPembiayaanNaikKelas.setForeground(new java.awt.Color(50, 50, 50));
+        MnPernyataanPembiayaanNaikKelas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/category.png"))); // NOI18N
+        MnPernyataanPembiayaanNaikKelas.setText("Pernyataan Pembiayaan Naik Kelas Rawat Inap");
+        MnPernyataanPembiayaanNaikKelas.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        MnPernyataanPembiayaanNaikKelas.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        MnPernyataanPembiayaanNaikKelas.setName("MnPernyataanPembiayaanNaikKelas"); // NOI18N
+        MnPernyataanPembiayaanNaikKelas.setPreferredSize(new java.awt.Dimension(170, 26));
+        MnPernyataanPembiayaanNaikKelas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MnPernyataanPembiayaanNaikKelasActionPerformed(evt);
+            }
+        });
+        MnSuratSurat.add(MnPernyataanPembiayaanNaikKelas);
 
         MnPersetujuanPenundaanPelayanan.setBackground(new java.awt.Color(255, 255, 254));
         MnPersetujuanPenundaanPelayanan.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
@@ -13646,6 +13664,29 @@ private void MnLaporanRekapKunjunganBulananPoliActionPerformed(java.awt.event.Ac
             }
         }
     }//GEN-LAST:event_MnPersetujuanRawatInapActionPerformed
+    
+    private void MnPernyataanPembiayaanNaikKelasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnPersetujuanRawatInapActionPerformed
+        if(tabMode.getRowCount()==0){
+            JOptionPane.showMessageDialog(null,"Maaf, data registrasi sudah habis...!!!!");
+            TNoRM.requestFocus();
+        }else if(TPasien.getText().trim().equals("")){
+            JOptionPane.showMessageDialog(null,"Maaf, Silahkan anda pilih dulu data pasien dengan menklik data pada table...!!!");
+            tbPetugas.requestFocus();
+        }else{
+            if(tbPetugas.getSelectedRow()!= -1){
+                this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                SuratPernyataanPembiayaanNaikKelas form=new SuratPernyataanPembiayaanNaikKelas(null,false);
+                form.isCek();
+                form.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
+                form.setLocationRelativeTo(internalFrame1);
+                form.setVisible(true);
+                form.emptTeks();
+                form.setNoRm(TNoRw.getText(),DTPCari2.getDate());
+                form.tampil();
+                this.setCursor(Cursor.getDefaultCursor());
+            }
+        }
+    }//GEN-LAST:event_MnPersetujuanRawatInapActionPerformed
 
     private void MnMonitoringReaksiTranfusiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnMonitoringReaksiTranfusiActionPerformed
         if(tabMode.getRowCount()==0){
@@ -16032,6 +16073,7 @@ private void MnLaporanRekapKunjunganBulananPoliActionPerformed(java.awt.event.Ac
     private javax.swing.JMenuItem MnPersetujuanPenolakanTindakan;
     private javax.swing.JMenuItem MnPersetujuanPenundaanPelayanan;
     private javax.swing.JMenuItem MnPersetujuanRawatInap;
+    private javax.swing.JMenuItem MnPernyataanPembiayaanNaikKelas;
     private javax.swing.JMenuItem MnPersetujuanUmum;
     private javax.swing.JMenu MnPilihBilling;
     private javax.swing.JMenuItem MnPoliInternal;
