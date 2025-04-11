@@ -1860,21 +1860,32 @@ private void isForm(){
 }
 
 public void isCek(){
-    BtnSimpan.setEnabled(akses.gethemodialisa());
-    BtnHapus.setEnabled(akses.gethemodialisa());
-    BtnEdit.setEnabled(akses.gethemodialisa());
-    BtnPrint.setEnabled(akses.gethemodialisa()); 
-    
-    if(akses.getjml2()>=1){
-        kddok.setEditable(false);
-        btnDokter.setEnabled(false);
-        kddok.setText(akses.getkode());
-        namadokter.setText(dokter.tampil3(kddok.getText()));
-        if(namadokter.getText().equals("")){
-            kddok.setText("");
-            JOptionPane.showMessageDialog(null,"User login bukan Dokter...!!");
-        }
-    }
+     BtnSimpan.setEnabled(akses.gethemodialisa());
+     BtnHapus.setEnabled(akses.gethemodialisa());
+     BtnEdit.setEnabled(akses.gethemodialisa());
+     BtnPrint.setEnabled(akses.gethemodialisa());
+
+     // --- Modifikasi Dimulai ---
+     // Selalu aktifkan tombol pilih dokter jika user punya akses ke modul hemodialisa
+     // Terlepas dari apakah user login adalah dokter atau bukan.
+     btnDokter.setEnabled(akses.gethemodialisa());
+
+     /*
+     // KOMENTARI ATAU HAPUS BLOK INI:
+     // Blok ini sebelumnya membatasi pemilihan dokter hanya untuk user dokter
+     if(akses.getjml2()>=1){ // Mengecek apakah user login adalah dokter (berdasarkan jumlah grup/hak akses?)
+         // kddok sudah di set non-editable di initComponents(), jadi baris ini tidak perlu diubah
+         // kddok.setEditable(false);
+         // btnDokter.setEnabled(false); // Ini yang mencegah petugas memilih dokter
+         kddok.setText(akses.getkode()); // Mengisi otomatis kode dokter user yg login
+         namadokter.setText(dokter.tampil3(kddok.getText())); // Mengisi otomatis nama dokter user yg login
+         if(namadokter.getText().equals("")){ // Jika nama dokter kosong (user bukan dokter?)
+             kddok.setText(""); // Kosongkan lagi field kode
+             // JOptionPane.showMessageDialog(null,"User login bukan Dokter...!!"); // Pesan error ini tidak diperlukan lagi jika semua boleh memilih
+         }
+     }
+     */
+     // --- Modifikasi Selesai ---
     
     if(TANGGALMUNDUR.equals("no")){
         if(!akses.getkode().equals("Admin Utama")){

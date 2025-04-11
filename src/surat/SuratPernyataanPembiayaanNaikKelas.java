@@ -1382,13 +1382,13 @@
                  param.put("kontakrs",akses.getkontakrs());
                  param.put("emailrs",akses.getemailrs());
                  param.put("logo",Sequel.cariGambar("select setting.logo from setting"));
-                 param.put("photo","http://"+koneksiDB.HOSTHYBRIDWEB()+":"+koneksiDB.PORTWEB()+"/"+koneksiDB.HYBRIDWEB()+"/persetujuanrawatinap/"+lokasifile);
+                 param.put("photo","http://"+koneksiDB.HOSTHYBRIDWEB()+":"+koneksiDB.PORTWEB()+"/"+koneksiDB.HYBRIDWEB()+"/pernyataanpembiayaannaikkelas/"+lokasifile);
  
                  finger=Sequel.cariIsi("select sha1(sidikjari.sidikjari) from sidikjari inner join pegawai on pegawai.id=sidikjari.id where pegawai.nik=?",tbObat.getValueAt(tbObat.getSelectedRow(),19).toString());
                  param.put("finger","Dikeluarkan di "+akses.getnamars()+", Kabupaten/Kota "+akses.getkabupatenrs()+"\nDitandatangani secara elektronik oleh "+tbObat.getValueAt(tbObat.getSelectedRow(),20).toString()+"\nID "+(finger.equals("")?tbObat.getValueAt(tbObat.getSelectedRow(),19).toString():finger)+"\n"+Valid.SetTgl3(tbObat.getValueAt(tbObat.getSelectedRow(),7).toString()));
  
                  Valid.MyReportqry("rptSuratPernyataanPembiayaanNaikKelas.jasper","report","::[ Surat Pernyataan Pembiayaan Naik Kelas ]::",
-                     "SELECT reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,pasien.jk,pasien.tgl_lahir,pasien.pekerjaan,reg_periksa.umurdaftar,reg_periksa.tgl_registrasi,reg_periksa.jam_reg,reg_periksa.sttsumur,pasien.tmp_lahir,concat(pasien.alamat,', ',kelurahan.nm_kel,', ',kecamatan.nm_kec,', ',kabupaten.nm_kab,', ',propinsi.nm_prop) AS alamat_pasien,"+
+                     "SELECT reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.no_ktp,pasien.nm_pasien,pasien.jk,pasien.tgl_lahir,pasien.pekerjaan,reg_periksa.umurdaftar,reg_periksa.tgl_registrasi,reg_periksa.jam_reg,reg_periksa.sttsumur,pasien.tmp_lahir,concat(pasien.alamat,', ',kelurahan.nm_kel,', ',kecamatan.nm_kec,', ',kabupaten.nm_kab,', ',propinsi.nm_prop) AS alamat_pasien,"+
                      "spnk.tanggal,spnk.nama_pj,spnk.no_ktppj,spnk.pendidikan_pj,spnk.alamatpj,spnk.no_telppj,spnk.ruang,spnk.kelas,spnk.hubungan,spnk.hak_kelas,"+
                      "spnk.nama_alamat_keluarga_terdekat,spnk.bayar_secara,spnk.nip,petugas.nama,spnk.no_surat "+
                      "FROM surat_pernyataan_pembiayaan_naik_kelas spnk "+
