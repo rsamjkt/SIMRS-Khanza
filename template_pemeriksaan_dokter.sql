@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : PermataIbunda
+ Source Server         : serverDevAtta-ygakseIP
  Source Server Type    : MariaDB
- Source Server Version : 100420 (10.4.20-MariaDB)
- Source Host           : 172.26.69.18:3306
- Source Schema         : sik
+ Source Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
+ Source Host           : 10.0.2.121:3306
+ Source Schema         : sikrsamlegacy2
 
  Target Server Type    : MariaDB
- Target Server Version : 100420 (10.4.20-MariaDB)
+ Target Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
  File Encoding         : 65001
 
- Date: 03/04/2025 12:43:35
+ Date: 21/04/2025 14:49:37
 */
 
 SET NAMES utf8mb4;
@@ -33,6 +33,6 @@ CREATE TABLE `template_pemeriksaan_dokter` (
   PRIMARY KEY (`no_template`) USING BTREE,
   KEY `kd_dokter` (`kd_dokter`) USING BTREE,
   CONSTRAINT `template_pemeriksaan_dokter_ibfk_1` FOREIGN KEY (`kd_dokter`) REFERENCES `dokter` (`kd_dokter`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci ROW_FORMAT=DYNAMIC;
 
 SET FOREIGN_KEY_CHECKS = 1;
