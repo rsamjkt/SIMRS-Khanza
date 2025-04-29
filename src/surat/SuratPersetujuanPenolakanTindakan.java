@@ -1971,6 +1971,8 @@ public final class SuratPersetujuanPenolakanTindakan extends javax.swing.JDialog
                 panggilPhoto();
             } catch (java.lang.NullPointerException e) {
             }
+             // Tambahkan pemanggilan getData() di sini:
+            getData(); // <---- TAMBAHKAN BARIS INI
             if((evt.getClickCount()==2)&&(tbObat.getSelectedColumn()==0)){
                 TabRawat.setSelectedIndex(0);
             }
@@ -2601,21 +2603,44 @@ public final class SuratPersetujuanPenolakanTindakan extends javax.swing.JDialog
     }
     
     public void isCek(){
-        BtnSimpan.setEnabled(akses.getpersetujuan_penolakan_tindakan());
-        BtnHapus.setEnabled(akses.getpersetujuan_penolakan_tindakan());
-        BtnEdit.setEnabled(akses.getpersetujuan_penolakan_tindakan());
-        BtnEdit.setEnabled(akses.getpersetujuan_penolakan_tindakan());
-        if(akses.getjml2()>=1){
-            KdDokter.setEditable(false);
-            BtnDokter.setEnabled(false);
-            KdDokter.setText(akses.getkode());
-            NmDokter.setText(dokter.tampil3(KdDokter.getText()));
-            if(NmDokter.getText().equals("")){
-                KdDokter.setText("");
-                JOptionPane.showMessageDialog(null,"User login bukan Dokter...!!");
-            }
-        }            
+    // Tetapkan status tombol Simpan, Hapus, Edit berdasarkan hak akses
+    // Bagian ini tidak diubah karena berkaitan dengan izin aksi, bukan pemilihan dokter.
+    BtnSimpan.setEnabled(akses.getpersetujuan_penolakan_tindakan());
+    BtnHapus.setEnabled(akses.getpersetujuan_penolakan_tindakan());
+    BtnEdit.setEnabled(akses.getpersetujuan_penolakan_tindakan());
+    // Anda memiliki BtnEdit.setEnabled dua kali, saya biarkan satu saja.
+    // Jika ini mengontrol tombol lain, sesuaikan.
+
+    // --- Bagian yang Diubah ---
+    // Hapus blok if yang membatasi pemilihan dokter hanya untuk user dokter.
+    // Sekarang, semua user akan memiliki field dokter yang bisa diedit dan tombol pilih dokter yang aktif.
+
+    /* Blok kode lama yang dihapus/dikomentari:
+    if(akses.getjml2()>=1){ // Kondisi ini membatasi hanya untuk user dokter
+        KdDokter.setEditable(false); // Membuat field kode dokter tidak bisa diedit
+        BtnDokter.setEnabled(false); // Menonaktifkan tombol pilih dokter
+        KdDokter.setText(akses.getkode()); // Mengisi kode dokter otomatis sesuai user login
+        NmDokter.setText(dokter.tampil3(KdDokter.getText())); // Menampilkan nama dokter otomatis
+        if(NmDokter.getText().equals("")){ // Pengecekan jika user login bukan dokter valid
+            KdDokter.setText("");
+            JOptionPane.showMessageDialog(null,"User login bukan Dokter...!!");
+        }
     }
+    */
+
+    // Pastikan field Kode Dokter selalu bisa diedit dan Tombol Pilih Dokter selalu aktif
+    // untuk semua user, terlepas dari status login mereka.
+    KdDokter.setEditable(true);
+    BtnDokter.setEnabled(true);
+
+    // Opsional: Anda mungkin ingin membersihkan field dokter saat form diinisialisasi
+    // atau saat user baru dipilih, tergantung alur kerja aplikasi Anda.
+    // Contoh:
+    // if (kondisi_inisialisasi_atau_user_baru) {
+    //     KdDokter.setText("");
+    //     NmDokter.setText("");
+    // }
+}
     
     public void setTampil(){
        TabRawat.setSelectedIndex(1);
@@ -2633,18 +2658,111 @@ public final class SuratPersetujuanPenolakanTindakan extends javax.swing.JDialog
         }
     }
 
-    private void ganti() {
-        if(Sequel.mengedittf("persetujuan_penolakan_tindakan","no_pernyataan=?","no_pernyataan=?,no_rawat=?,tanggal=?,diagnosa=?,diagnosa_konfirmasi=?,tindakan=?,tindakan_konfirmasi=?,indikasi_tindakan=?,indikasi_tindakan_konfirmasi=?,tata_cara=?,tata_cara_konfirmasi=?,tujuan=?,tujuan_konfirmasi=?,risiko=?,risiko_konfirmasi=?,komplikasi=?,komplikasi_konfirmasi=?,prognosis=?,prognosis_konfirmasi=?,alternatif_dan_risikonya=?,alternatif_konfirmasi=?,biaya=?,biaya_konfirmasi=?,lain_lain=?,lain_lain_konfirmasi=?,kd_dokter=?,nip=?,penerima_informasi=?,alasan_diwakilkan_penerima_informasi=?,jk_penerima_informasi=?,tanggal_lahir_penerima_informasi=?,umur_penerima_informasi=?,alamat_penerima_informasi=?,no_hp=?,hubungan_penerima_informasi=?,pernyataan=?,saksi_keluarga=?",38,new String[]{
-                NoPenyataan.getText(),TNoRw.getText(),Valid.SetTgl(TglPernyataan.getSelectedItem()+""),Diagnosa.getText(),"false",TindakanKedokteran.getText(),"false",
-                IndikasiTindakan.getText(),"false",TataCara.getText(),"false",Tujuan.getText(),"false",Risiko.getText(),"false",Komplikasi.getText(),"false",Prognosis.getText(), 
-                "false",AlternatifResiko.getText(),"false",Biaya.getText(),"false",LainLain.getText(),"false",KdDokter.getText(),KdPerawat.getText(),PenerimaInformasi.getText(),
-                AlasanDiwakilkan.getText(),JKPenerima.getSelectedItem().toString().substring(0,1),Valid.SetTgl(TglLahirPenerima.getSelectedItem()+""),UmurPenerima.getText(),
-                AlamatPenerima.getText(),NoHPPenerima.getText(),HubunganDenganPasien.getSelectedItem().toString(),"Belum Dikonfirmasi",SaksiKeluarga.getText(),
-                tbObat.getValueAt(tbObat.getSelectedRow(),0).toString()
+        private void ganti() {
+        // 1. Pastikan ada baris yang dipilih
+        if (tbObat.getSelectedRow() == -1) {
+            JOptionPane.showMessageDialog(rootPane, "Silahkan anda pilih data terlebih dahulu..!!");
+            return; // Keluar jika tidak ada baris dipilih
+        }
+
+        // 2. Validasi field input teks (biarkan seperti sebelumnya)
+        if(TNoRM.getText().trim().equals("")){
+            Valid.textKosong(TNoRw,"Nama Pasien");
+            return;
+        }else if(NmDokter.getText().trim().equals("")){
+            Valid.textKosong(BtnDokter,"Dokter");
+            return;
+        }else if(Diagnosa.getText().trim().equals("")){
+            Valid.textKosong(Diagnosa,"Diagnosa");
+            return;
+        }else if(TindakanKedokteran.getText().trim().equals("")){
+            Valid.textKosong(TindakanKedokteran,"Tindakan");
+            return;
+        }else if(PenerimaInformasi.getText().trim().equals("")){
+            Valid.textKosong(PenerimaInformasi,"Penerima Informasi");
+            return;
+        }else if(NmPerawat.getText().trim().equals("")){
+            Valid.textKosong(NmPerawat,"Saksi II Perawat");
+            return;
+        }else if(SaksiKeluarga.getText().trim().equals("")){
+            Valid.textKosong(SaksiKeluarga,"Saksi I Keluarga");
+            return;
+        }else if(Biaya.getText().trim().equals("")){
+            Valid.textKosong(Biaya,"Biaya");
+            return;
+        }
+        // --- Akhir Validasi ---
+
+        // 3. Eksekusi UPDATE, ambil nilai boolean dari tabel
+        if(Sequel.mengedittf("persetujuan_penolakan_tindakan","no_pernyataan=?", // kondisi WHERE
+            // Daftar kolom yang di-SET
+            "no_pernyataan=?,no_rawat=?,tanggal=?," +
+            "diagnosa=?,diagnosa_konfirmasi=?," + // Kolom Boolean
+            "tindakan=?,tindakan_konfirmasi=?," + // Kolom Boolean
+            "indikasi_tindakan=?,indikasi_tindakan_konfirmasi=?," + // Kolom Boolean
+            "tata_cara=?,tata_cara_konfirmasi=?," + // Kolom Boolean
+            "tujuan=?,tujuan_konfirmasi=?," + // Kolom Boolean
+            "risiko=?,risiko_konfirmasi=?," + // Kolom Boolean
+            "komplikasi=?,komplikasi_konfirmasi=?," + // Kolom Boolean
+            "prognosis=?,prognosis_konfirmasi=?," + // Kolom Boolean
+            "alternatif_dan_risikonya=?,alternatif_konfirmasi=?," + // Kolom Boolean
+            "lain_lain=?,lain_lain_konfirmasi=?," + // Kolom Boolean
+            "biaya=?,biaya_konfirmasi=?," + // Kolom Boolean
+            "kd_dokter=?,nip=?,penerima_informasi=?,alasan_diwakilkan_penerima_informasi=?," +
+            "jk_penerima_informasi=?,tanggal_lahir_penerima_informasi=?,umur_penerima_informasi=?," +
+            "alamat_penerima_informasi=?,no_hp=?,hubungan_penerima_informasi=?," +
+            "pernyataan=?,saksi_keluarga=?",
+            38, // Jumlah total parameter (?)
+            new String[]{
+                // Nilai untuk kolom yang di-SET (HARUS SESUAI URUTAN DI ATAS)
+                NoPenyataan.getText(), // no_pernyataan
+                TNoRw.getText(), // no_rawat
+                Valid.SetTgl(TglPernyataan.getSelectedItem()+""), // tanggal
+                Diagnosa.getText(), // diagnosa
+                // Ambil nilai boolean DARI TABEL untuk baris terpilih, konversi ke String
+                String.valueOf((Boolean)tbObat.getValueAt(tbObat.getSelectedRow(), 8)), // diagnosa_konfirmasi (index 8)
+                TindakanKedokteran.getText(), // tindakan
+                String.valueOf((Boolean)tbObat.getValueAt(tbObat.getSelectedRow(), 10)), // tindakan_konfirmasi (index 10)
+                IndikasiTindakan.getText(), // indikasi_tindakan
+                String.valueOf((Boolean)tbObat.getValueAt(tbObat.getSelectedRow(), 12)), // indikasi_tindakan_konfirmasi (index 12)
+                TataCara.getText(), // tata_cara
+                String.valueOf((Boolean)tbObat.getValueAt(tbObat.getSelectedRow(), 14)), // tata_cara_konfirmasi (index 14)
+                Tujuan.getText(), // tujuan
+                String.valueOf((Boolean)tbObat.getValueAt(tbObat.getSelectedRow(), 16)), // tujuan_konfirmasi (index 16)
+                Risiko.getText(), // risiko
+                String.valueOf((Boolean)tbObat.getValueAt(tbObat.getSelectedRow(), 18)), // risiko_konfirmasi (index 18)
+                Komplikasi.getText(), // komplikasi
+                String.valueOf((Boolean)tbObat.getValueAt(tbObat.getSelectedRow(), 20)), // komplikasi_konfirmasi (index 20)
+                Prognosis.getText(), // prognosis
+                String.valueOf((Boolean)tbObat.getValueAt(tbObat.getSelectedRow(), 22)), // prognosis_konfirmasi (index 22)
+                AlternatifResiko.getText(), // alternatif_dan_risikonya
+                String.valueOf((Boolean)tbObat.getValueAt(tbObat.getSelectedRow(), 24)), // alternatif_konfirmasi (index 24)
+                LainLain.getText(), // lain_lain
+                String.valueOf((Boolean)tbObat.getValueAt(tbObat.getSelectedRow(), 26)), // lain_lain_konfirmasi (index 26)
+                Biaya.getText(), // biaya
+                String.valueOf((Boolean)tbObat.getValueAt(tbObat.getSelectedRow(), 28)), // biaya_konfirmasi (index 28)
+                // Lanjutan field lainnya
+                KdDokter.getText(), // kd_dokter
+                KdPerawat.getText(), // nip
+                PenerimaInformasi.getText(), // penerima_informasi
+                AlasanDiwakilkan.getText(), // alasan_diwakilkan_penerima_informasi
+                JKPenerima.getSelectedItem().toString().substring(0,1), // jk_penerima_informasi
+                Valid.SetTgl(TglLahirPenerima.getSelectedItem()+""), // tanggal_lahir_penerima_informasi
+                UmurPenerima.getText(), // umur_penerima_informasi
+                AlamatPenerima.getText(), // alamat_penerima_informasi
+                NoHPPenerima.getText(), // no_hp
+                HubunganDenganPasien.getSelectedItem().toString(), // hubungan_penerima_informasi
+                "Belum Dikonfirmasi", // pernyataan (sesuaikan jika bisa diedit)
+                SaksiKeluarga.getText(), // saksi_keluarga
+
+                // Nilai untuk kondisi WHERE (Primary Key)
+                tbObat.getValueAt(tbObat.getSelectedRow(),0).toString() // no_pernyataan di WHERE clause
             })==true){
-               tampil();
-               emptTeks();
-               TabRawat.setSelectedIndex(1);
+               tampil(); // Refresh tabel
+               emptTeks(); // Kosongkan form input
+               TabRawat.setSelectedIndex(1); // Pindah ke tab data
+        } else {
+            JOptionPane.showMessageDialog(null,"Gagal menyimpan perubahan."); // Pesan jika gagal
         }
     }
     
