@@ -317,6 +317,7 @@
         Keterangan = new widget.TextBox();
         jLabel30 = new widget.Label();
         NamaObat = new widget.TextBox();
+        btnCariObatBalance = new widget.Button();
         ChkInput = new widget.CekBox();
 
         jPopupMenu1.setName("jPopupMenu1"); // NOI18N
@@ -522,7 +523,7 @@
         panelGlass9.add(jLabel19);
 
         DTPCari1.setForeground(new java.awt.Color(50, 70, 50));
-        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "09-10-2024" }));
+        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "29-04-2025" }));
         DTPCari1.setDisplayFormat("dd-MM-yyyy");
         DTPCari1.setName("DTPCari1"); // NOI18N
         DTPCari1.setOpaque(false);
@@ -536,7 +537,7 @@
         panelGlass9.add(jLabel21);
 
         DTPCari2.setForeground(new java.awt.Color(50, 70, 50));
-        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "09-10-2024" }));
+        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "29-04-2025" }));
         DTPCari2.setDisplayFormat("dd-MM-yyyy");
         DTPCari2.setName("DTPCari2"); // NOI18N
         DTPCari2.setOpaque(false);
@@ -627,7 +628,7 @@
         TPasien.setBounds(326, 10, 295, 23);
 
         Tanggal.setForeground(new java.awt.Color(50, 70, 50));
-        Tanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "09-10-2024" }));
+        Tanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "29-04-2025" }));
         Tanggal.setDisplayFormat("dd-MM-yyyy");
         Tanggal.setName("Tanggal"); // NOI18N
         Tanggal.setOpaque(false);
@@ -726,7 +727,7 @@
             }
         });
         FormInput.add(btnPetugas);
-        btnPetugas.setBounds(761, 70, 28, 23);
+        btnPetugas.setBounds(760, 70, 28, 23);
 
         jLabel8.setText("Tgl.Lahir :");
         jLabel8.setName("jLabel8"); // NOI18N
@@ -912,7 +913,24 @@
             }
         });
         FormInput.add(NamaObat);
-        NamaObat.setBounds(74, 70, 312, 23);
+        NamaObat.setBounds(74, 70, 290, 23);
+
+        btnCariObatBalance.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/190.png"))); // NOI18N
+        btnCariObatBalance.setMnemonic('2');
+        btnCariObatBalance.setToolTipText("ALt+2");
+        btnCariObatBalance.setName("btnCariObatBalance"); // NOI18N
+        btnCariObatBalance.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCariObatBalanceActionPerformed(evt);
+            }
+        });
+        btnCariObatBalance.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                btnCariObatBalanceKeyPressed(evt);
+            }
+        });
+        FormInput.add(btnCariObatBalance);
+        btnCariObatBalance.setBounds(370, 70, 28, 23);
 
         PanelInput.add(FormInput, java.awt.BorderLayout.CENTER);
 
@@ -1345,6 +1363,48 @@
           // atau set fokus awal
           TNoRw.requestFocus();
      }//GEN-LAST:event_formWindowOpened
+
+    private void btnCariObatBalanceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariObatBalanceActionPerformed
+    if (TNoRw.getText().equals("") && TNoRM.getText().equals("")) {
+        JOptionPane.showMessageDialog(null, "Pasien masih kosong...!!!");
+    } else {
+        RMCariObatBalance cariobatbalance = new RMCariObatBalance(null, false);
+        cariobatbalance.addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) {}
+            @Override
+            public void windowClosing(WindowEvent e) {}
+            @Override
+            public void windowClosed(WindowEvent e) {
+                if (cariobatbalance.getTable().getSelectedRow() != -1) {
+                    // Get the value from the table
+                    String obatDipilih = cariobatbalance.getTable().getValueAt(cariobatbalance.getTable().getSelectedRow(), 1).toString();
+                    // Get current text from NamaObat, append the new value and a newline, then set it back
+                    NamaObat.setText(NamaObat.getText() + obatDipilih + "\n"); // <-- CORRECTED LINE
+                    NamaObat.requestFocus();
+                }
+            }
+            @Override
+            public void windowIconified(WindowEvent e) {}
+            @Override
+            public void windowDeiconified(WindowEvent e) {}
+            @Override
+            public void windowActivated(WindowEvent e) {}
+            @Override
+            public void windowDeactivated(WindowEvent e) {}
+        });
+        cariobatbalance.tampil(); // Assuming this method loads data and prepares the dialog
+        cariobatbalance.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
+        cariobatbalance.setLocationRelativeTo(internalFrame1);
+        cariobatbalance.setVisible(true);
+    }
+    // TODO add your handling code here: // This comment might be misplaced, usually it's at the end of the method stub
+
+    }//GEN-LAST:event_btnCariObatBalanceActionPerformed
+
+    private void btnCariObatBalanceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnCariObatBalanceKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCariObatBalanceKeyPressed
  
      /**
      * @param args the command line arguments
@@ -1404,6 +1464,7 @@
     private widget.TextBox Tranfusi;
     private widget.TextBox Umur;
     private widget.TextBox Urine;
+    private widget.Button btnCariObatBalance;
     private widget.Button btnPetugas;
     private widget.InternalFrame internalFrame1;
     private widget.Label jLabel12;
