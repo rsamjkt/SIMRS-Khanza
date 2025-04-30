@@ -11780,33 +11780,44 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 }
             }
             
-            //menampilkan catatan Keseimbangan Cairan
+                        //menampilkan catatan Keseimbangan Cairan
             if(chkCatatanKeseimbanganCairan.isSelected()==true){
+                PreparedStatement ps2 = null; // Better practice: Declare PreparedStatement
+                ResultSet rs2 = null;      // Declare ResultSet
                 try {
-                    rs2=koneksi.prepareStatement(
-                        "select catatan_keseimbangan_cairan.tgl_perawatan,catatan_keseimbangan_cairan.jam_rawat,catatan_keseimbangan_cairan.infus,"+
+                    // Modified SQL Query: Added catatan_keseimbangan_cairan.nama_obat
+                    ps2 = koneksi.prepareStatement( // Use ps2 for PreparedStatement
+                        "select catatan_keseimbangan_cairan.tgl_perawatan,catatan_keseimbangan_cairan.jam_rawat,catatan_keseimbangan_cairan.nama_obat,"+ // <-- Added nama_obat here
+                        "catatan_keseimbangan_cairan.infus,"+
                         "catatan_keseimbangan_cairan.tranfusi,catatan_keseimbangan_cairan.minum,catatan_keseimbangan_cairan.urine,catatan_keseimbangan_cairan.drain,"+
                         "catatan_keseimbangan_cairan.ngt,catatan_keseimbangan_cairan.iwl,catatan_keseimbangan_cairan.keseimbangan,catatan_keseimbangan_cairan.keterangan,"+
                         "catatan_keseimbangan_cairan.nip,petugas.nama "+
                         "from catatan_keseimbangan_cairan inner join petugas on catatan_keseimbangan_cairan.nip=petugas.nip "+
-                        "where catatan_keseimbangan_cairan.no_rawat='"+norawat+"' order by catatan_keseimbangan_cairan.tgl_perawatan,catatan_keseimbangan_cairan.jam_rawat").executeQuery();
+                        "where catatan_keseimbangan_cairan.no_rawat=? order by catatan_keseimbangan_cairan.tgl_perawatan,catatan_keseimbangan_cairan.jam_rawat"); // Use prepared statement parameter
+
+                    ps2.setString(1, norawat); // Set parameter value safely
+                    rs2 = ps2.executeQuery(); // Execute query
+
                     if(rs2.next()){
                         htmlContent.append(
-                          "<tr class='isi'>").append( 
-                            "<td valign='top' width='2%'></td>").append(        
+                          "<tr class='isi'>").append(
+                            "<td valign='top' width='2%'></td>").append(
                             "<td valign='top' width='18%'>Keseimbangan Cairan</td>").append(
                             "<td valign='top' width='1%' align='center'>:</td>").append(
                             "<td valign='top' width='79%'>").append(
                               "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'>").append(
+                                 // Modified Header Row 1: Added "Nama Obat" column, adjusted widths
                                  "<tr align='center'>").append(
-                                    "<td valign='middle' width='4%' bgcolor='#FFFAF8' rowspan='2'>No.</td>").append(
-                                    "<td valign='middle' width='15%' bgcolor='#FFFAF8' rowspan='2'>Tanggal</td>").append(
+                                    "<td valign='middle' width='3%' bgcolor='#FFFAF8' rowspan='2'>No.</td>").append( // Adjusted width
+                                    "<td valign='middle' width='12%' bgcolor='#FFFAF8' rowspan='2'>Tanggal</td>").append( // Adjusted width
+                                    "<td valign='middle' width='15%' bgcolor='#FFFAF8' rowspan='2'>Nama Obat</td>").append( // <-- Added Nama Obat Header
                                     "<td valign='top' width='15%' bgcolor='#FFFAF8' colspan='3'>Input</td>").append(
                                     "<td valign='top' width='25%' bgcolor='#FFFAF8' colspan='4'>Output</td>").append(
                                     "<td valign='middle' width='10%' bgcolor='#FFFAF8' rowspan='2'>Keseimbangan Cairan</td>").append(
-                                    "<td valign='middle' width='15%' bgcolor='#FFFAF8' rowspan='2'>Keterangan</td>").append(
-                                    "<td valign='middle' width='16%' bgcolor='#FFFAF8' rowspan='2'>Perawat/Paramedis</td>").append(
+                                    "<td valign='middle' width='10%' bgcolor='#FFFAF8' rowspan='2'>Keterangan</td>").append( // Adjusted width
+                                    "<td valign='middle' width='10%' bgcolor='#FFFAF8' rowspan='2'>Perawat/Paramedis</td>").append( // Adjusted width
                                  "</tr>").append(
+                                 // Header Row 2: Defines Input/Output sub-columns (no change needed here for nama_obat)
                                  "<tr align='center'>").append(
                                     "<td valign='top' width='5%' bgcolor='#FFFAF8'>Infus</td>").append(
                                     "<td valign='top' width='5%' bgcolor='#FFFAF8'>Tranfusi</td>").append(
@@ -11817,12 +11828,20 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                                     "<td valign='top' width='5%' bgcolor='#FFFAF8'>IWL</td>").append(
                                  "</tr>"
                         );
-                        w=1;
+                        int w=1; // Renamed counter variable to avoid conflict if 'w' is used elsewhere
                         do{
+                             // Handle potential null value for nama_obat
+                            String namaObat = rs2.getString("nama_obat");
+                            if (namaObat == null) {
+                                namaObat = ""; // Display empty string if null
+                            }
+
                             htmlContent.append(
+                                 // Modified Data Row: Added cell for nama_obat
                                  "<tr>").append(
                                     "<td valign='top' align='center'>").append(w).append("</td>").append(
                                     "<td valign='top'>").append(rs2.getString("tgl_perawatan")).append(" ").append(rs2.getString("jam_rawat")).append("</td>").append(
+                                    "<td valign='top'>").append(namaObat).append("</td>").append( // <-- Added Nama Obat Data
                                     "<td valign='top' align='center'>").append(rs2.getString("infus")).append("</td>").append(
                                     "<td valign='top' align='center'>").append(rs2.getString("tranfusi")).append("</td>").append(
                                     "<td valign='top' align='center'>").append(rs2.getString("minum")).append("</td>").append(
@@ -11833,7 +11852,7 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                                     "<td valign='top' align='center'>").append(rs2.getString("keseimbangan")).append("</td>").append(
                                     "<td valign='top'>").append(rs2.getString("keterangan")).append("</td>").append(
                                     "<td valign='top'>").append(rs2.getString("nip")).append(" ").append(rs2.getString("nama")).append("</td>").append(
-                                 "</tr>");                                        
+                                 "</tr>");
                             w++;
                         }while(rs2.next());
                         htmlContent.append(
@@ -11844,8 +11863,12 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 } catch (Exception e) {
                     System.out.println("Notifikasi Cek Keseimbangan Cairan : "+e);
                 } finally{
+                    // Proper closing of resources
                     if(rs2!=null){
-                        rs2.close();
+                        try { rs2.close(); } catch (Exception e) { /* ignored */ }
+                    }
+                    if(ps2!=null){
+                        try { ps2.close(); } catch (Exception e) { /* ignored */ }
                     }
                 }
             }
