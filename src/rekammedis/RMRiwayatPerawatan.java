@@ -325,6 +325,7 @@ public final class RMRiwayatPerawatan extends javax.swing.JDialog {
         chkKonsultasiMedik = new widget.CekBox();
         chkCatatanDokter = new widget.CekBox();
         chkCatatanObservasiIGD = new widget.CekBox();
+        chkCatatanObservasiBayi = new widget.CekBox();
         chkCatatanObservasiCHBP = new widget.CekBox();
         chkCatatanObservasiInduksiPersalinan = new widget.CekBox();
         chkCatatanObservasiRanap = new widget.CekBox();
@@ -1340,6 +1341,14 @@ public final class RMRiwayatPerawatan extends javax.swing.JDialog {
         chkCatatanObservasiIGD.setOpaque(false);
         chkCatatanObservasiIGD.setPreferredSize(new java.awt.Dimension(245, 22));
         FormMenu.add(chkCatatanObservasiIGD);
+
+        chkCatatanObservasiBayi.setSelected(true);
+        chkCatatanObservasiBayi.setText("Catatan Observasi Bayi");
+        chkCatatanObservasiBayi.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        chkCatatanObservasiBayi.setName("chkCatatanObservasiBayi"); // NOI18N
+        chkCatatanObservasiBayi.setOpaque(false);
+        setPreferredSize(new java.awt.Dimension(245, 22));
+        FormMenu.add(chkCatatanObservasiBayi);
 
         chkCatatanObservasiCHBP.setSelected(true);
         chkCatatanObservasiCHBP.setText("Catatan Observasi CHBP");
@@ -2825,6 +2834,7 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             chkUjiFungsiKFR.setSelected(true);
             chkAsuhanKeperawatanIGD.setSelected(true);
             chkCatatanObservasiIGD.setSelected(true);
+            chkCatatanObservasiBayi.setSelected(true);
             chkCatatanObservasiRanap.setSelected(true);
             chkCatatanObservasiRanapKebidanan.setSelected(true);
             chkCatatanObservasiRanapPostPartum.setSelected(true);
@@ -3003,6 +3013,7 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             chkUjiFungsiKFR.setSelected(false);
             chkAsuhanKeperawatanIGD.setSelected(false);
             chkCatatanObservasiIGD.setSelected(false);
+            chkCatatanObservasiBayi.setSelected(false);
             chkCatatanObservasiRanap.setSelected(false);
             chkCatatanObservasiRanapKebidanan.setSelected(false);
             chkCatatanObservasiRanapPostPartum.setSelected(false);
@@ -3793,6 +3804,7 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     private widget.CekBox chkCatatanObservasiCHBP;
     private widget.CekBox chkCatatanObservasiHemodialisa;
     private widget.CekBox chkCatatanObservasiIGD;
+    private widget.CekBox chkCatatanObservasiBayi;
     private widget.CekBox chkCatatanObservasiInduksiPersalinan;
     private widget.CekBox chkCatatanObservasiRanap;
     private widget.CekBox chkCatatanObservasiRanapKebidanan;
@@ -11595,6 +11607,82 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     }
                 }
             }
+
+            //menampilkan catatan observasi bayi
+if(chkCatatanObservasiBayi.isSelected()==true){
+    try {
+        rs2=koneksi.prepareStatement(
+                "select catatan_observasi_bayi.tgl_perawatan,catatan_observasi_bayi.jam_rawat,catatan_observasi_bayi.gcs,"+
+                "catatan_observasi_bayi.td,catatan_observasi_bayi.hr,catatan_observasi_bayi.rr,catatan_observasi_bayi.suhu,catatan_observasi_bayi.spo2,"+
+                "catatan_observasi_bayi.retraksi_dada,catatan_observasi_bayi.ogt_residu,catatan_observasi_bayi.asi_jumlah,catatan_observasi_bayi.pasi_jumlah,"+
+                "catatan_observasi_bayi.bak_status,catatan_observasi_bayi.bab_status,catatan_observasi_bayi.ikterik_status,catatan_observasi_bayi.nch,"+
+                "catatan_observasi_bayi.nip,petugas.nama from catatan_observasi_bayi inner join petugas on catatan_observasi_bayi.nip=petugas.nip "+
+                "where catatan_observasi_bayi.no_rawat='"+norawat+"' order by catatan_observasi_bayi.tgl_perawatan,catatan_observasi_bayi.jam_rawat").executeQuery();
+        if(rs2.next()){
+            htmlContent.append(
+              "<tr class='isi'>").append( 
+                "<td valign='top' width='2%'></td>").append(        
+                "<td valign='top' width='18%'>Catatan Observasi Bayi</td>").append(
+                "<td valign='top' width='1%' align='center'>:</td>").append(
+                "<td valign='top' width='79%'>").append(
+                  "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'>").append(
+                     "<tr align='center'>").append(
+                        "<td valign='middle' width='3%' bgcolor='#FFFAF8' rowspan='2'>No.</td>").append(
+                        "<td valign='middle' width='10%' bgcolor='#FFFAF8' rowspan='2'>Tanggal</td>").append(
+                        "<td valign='top' width='60%' bgcolor='#FFFAF8' colspan='10'>Monitoring</td>").append(
+                        "<td valign='middle' width='27%' bgcolor='#FFFAF8' rowspan='2'>Perawat/Paramedis</td>").append(
+                     "</tr>").append(
+                     "<tr align='center'>").append(
+                        "<td valign='top' width='6%' bgcolor='#FFFAF8'>GCS</td>").append(
+                        "<td valign='top' width='6%' bgcolor='#FFFAF8'>TD</td>").append(
+                        "<td valign='top' width='6%' bgcolor='#FFFAF8'>HR (/menit)</td>").append(
+                        "<td valign='top' width='6%' bgcolor='#FFFAF8'>RR (/menit)</td>").append(
+                        "<td valign='top' width='6%' bgcolor='#FFFAF8'>Suhu(C)</td>").append(
+                        "<td valign='top' width='6%' bgcolor='#FFFAF8'>SpO2(%)</td>").append(
+                        "<td valign='top' width='6%' bgcolor='#FFFAF8'>Retraksi Dada</td>").append(
+                        "<td valign='top' width='6%' bgcolor='#FFFAF8'>OGT Residu</td>").append(
+                        "<td valign='top' width='6%' bgcolor='#FFFAF8'>ASI</td>").append(
+                        "<td valign='top' width='6%' bgcolor='#FFFAF8'>PASI</td>").append(
+                     "</tr>"
+            );
+            rs2.beforeFirst(); // Kembali ke awal result set
+            int w=1;
+            while(rs2.next()){
+                htmlContent.append(
+                     "<tr>").append(
+                        "<td valign='top' align='center'>").append(w).append("</td>").append(
+                        "<td valign='top'>").append(rs2.getString("tgl_perawatan")).append(" ").append(rs2.getString("jam_rawat")).append("</td>").append(
+                        "<td valign='top' align='center'>").append(rs2.getString("gcs") != null ? rs2.getString("gcs") : "-").append("</td>").append(
+                        "<td valign='top' align='center'>").append(rs2.getString("td") != null ? rs2.getString("td") : "-").append("</td>").append(
+                        "<td valign='top' align='center'>").append(rs2.getString("hr") != null ? rs2.getString("hr") : "-").append("</td>").append(
+                        "<td valign='top' align='center'>").append(rs2.getString("rr") != null ? rs2.getString("rr") : "-").append("</td>").append(
+                        "<td valign='top' align='center'>").append(rs2.getString("suhu") != null ? rs2.getString("suhu") : "-").append("</td>").append(
+                        "<td valign='top' align='center'>").append(rs2.getString("spo2") != null ? rs2.getString("spo2") : "-").append("</td>").append(
+                        "<td valign='top'>").append(rs2.getString("retraksi_dada") != null ? rs2.getString("retraksi_dada") : "-").append("</td>").append(
+                        "<td valign='top'>").append(rs2.getString("ogt_residu") != null ? rs2.getString("ogt_residu") : "-").append("</td>").append(
+                        "<td valign='top'>").append(rs2.getString("asi_jumlah") != null ? rs2.getString("asi_jumlah") : "-").append("</td>").append(
+                        "<td valign='top'>").append(rs2.getString("pasi_jumlah") != null ? rs2.getString("pasi_jumlah") : "-").append("</td>").append(
+                        "<td valign='top'>").append(rs2.getString("nip")).append(" ").append(rs2.getString("nama")).append("</td>").append(
+                     "</tr>");                                        
+                w++;
+            }
+            htmlContent.append(
+                  "</table>").append(
+                "</td>").append(
+              "</tr>");
+        }
+    } catch (Exception e) {
+        System.out.println("Notifikasi : "+e);
+    } finally {
+        if(rs2!=null){
+            try {
+                rs2.close();
+            } catch (Exception e) {
+                System.out.println("Notifikasi : "+e);
+            }
+        }
+    }
+}
             
             //menampilkan catatan observasi CHBP
             if(chkCatatanObservasiCHBP.isSelected()==true){
