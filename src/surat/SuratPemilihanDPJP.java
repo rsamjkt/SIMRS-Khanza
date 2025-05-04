@@ -1,5 +1,7 @@
 /*
  * Adapted for Surat Pemilihan DPJP - with Photo Panel restored
+ * - Added logic for BertindakAtas "Diri Sendiri" to autofill NamaPJ and AlamatPJ
+ * - Fixed logical error in setNoRm condition check
  */
 
  package surat;
@@ -12,6 +14,8 @@
  import fungsi.akses;
  import java.awt.Cursor;
  import java.awt.Dimension;
+ import java.awt.event.ActionEvent;
+ import java.awt.event.ActionListener;
  import java.awt.event.KeyEvent;
  import java.awt.event.WindowEvent;
  import java.awt.event.WindowListener;
@@ -26,13 +30,13 @@
  import javax.swing.event.DocumentEvent;
  import javax.swing.table.DefaultTableModel;
  import javax.swing.table.TableColumn;
- import javax.swing.text.Document; // Added import
- import javax.swing.text.html.HTMLEditorKit; // Added import
- import javax.swing.text.html.StyleSheet; // Added import
+ import javax.swing.text.Document;
+ import javax.swing.text.html.HTMLEditorKit;
+ import javax.swing.text.html.StyleSheet;
  import kepegawaian.DlgCariDokter;
  import kepegawaian.DlgCariPetugas;
- 
- 
+
+
  /**
   *
   * @author windiartohugroho (adapted)
@@ -48,14 +52,14 @@
      private DlgCariPetugas petugas=new DlgCariPetugas(null,false);
      private DlgCariDokter dokter=new DlgCariDokter(null,false);
      private String finger="", lokasifile=""; // Added lokasifile and finger
- 
+
      public SuratPemilihanDPJP(java.awt.Frame parent, boolean modal) {
          super(parent, modal);
          initComponents();
          this.setLocation(8,1);
          // Adjust size to accommodate photo panel again
          setSize(1090, 500); // Example size adjustment (Wider)
- 
+
          // Table Model (same as previous DPJP version)
          tabMode=new DefaultTableModel(null,new Object[]{
              "No. Surat","No. Rawat","No. R.M.","Nama Pasien","Tgl. Lahir","Tgl. Surat",
@@ -64,10 +68,10 @@
                @Override public boolean isCellEditable(int rowIndex, int colIndex){return false;}
          };
          tbSurat.setModel(tabMode);
- 
+
          tbSurat.setPreferredScrollableViewportSize(new Dimension(500,500));
          tbSurat.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
- 
+
          // Column widths (same as previous DPJP version)
          for (i = 0; i < 13; i++) {
              TableColumn column = tbSurat.getColumnModel().getColumn(i);
@@ -87,7 +91,7 @@
              }
          }
          tbSurat.setDefaultRenderer(Object.class, new WarnaTable());
- 
+
          // Input limits (same as previous DPJP version)
          TNoRw.setDocument(new batasInput((byte)17).getKata(TNoRw));
          NIP.setDocument(new batasInput((byte)20).getKata(NIP));
@@ -96,7 +100,7 @@
          TCari.setDocument(new batasInput((int)100).getKata(TCari));
          NamaPJ.setDocument(new batasInput((byte)100).getKata(NamaPJ));
          AlamatPJ.setDocument(new batasInput((int)200).getFilter(AlamatPJ));
- 
+
          if(koneksiDB.CARICEPAT().equals("aktif")){
              TCari.getDocument().addDocumentListener(new javax.swing.event.DocumentListener(){
                  @Override public void insertUpdate(DocumentEvent e) { if(TCari.getText().length()>2){ tampil(); } }
@@ -104,7 +108,7 @@
                  @Override public void changedUpdate(DocumentEvent e) { if(TCari.getText().length()>2){ tampil(); } }
              });
          }
- 
+
          // Listener Petugas (same)
           petugas.addWindowListener(new WindowListener() {
              @Override public void windowOpened(WindowEvent e) {}
@@ -121,7 +125,7 @@
              @Override public void windowActivated(WindowEvent e) {}
              @Override public void windowDeactivated(WindowEvent e) {}
          });
- 
+
          // Listener Dokter (same)
          dokter.addWindowListener(new WindowListener() {
              @Override public void windowOpened(WindowEvent e) {}
@@ -138,14 +142,23 @@
              @Override public void windowActivated(WindowEvent e) {}
              @Override public void windowDeactivated(WindowEvent e) {}
          });
- 
+
+         // ****** START: Added ActionListener for BertindakAtas ******
+         BertindakAtas.addActionListener(new ActionListener() {
+             @Override
+             public void actionPerformed(ActionEvent e) {
+                 isPasien(); // Panggil method isPasien setiap kali pilihan berubah
+             }
+         });
+         // ****** END: Added ActionListener for BertindakAtas ******
+
          ChkInput.setSelected(false);
          isForm();
- 
+
          // Restore photo panel setup
          ChkAccor.setSelected(false);
          isPhoto();
- 
+
          HTMLEditorKit kit = new HTMLEditorKit();
          LoadHTML2.setEditable(true);
          LoadHTML2.setEditorKit(kit);
@@ -163,9 +176,12 @@
          );
          Document doc = kit.createDefaultDocument();
          LoadHTML2.setDocument(doc);
+
+         // Pastikan isPasien dipanggil setelah komponen diinisialisasi
+         isPasien();
      }
- 
- 
+
+
      /** This method is called from within the constructor to
       * initialize the form.
       * WARNING: Do NOT modify this code. The content of this method is
@@ -209,25 +225,25 @@
          TNoRw = new widget.TextBox();
          TPasien = new widget.TextBox();
          TNoRM = new widget.TextBox();
-         jLabel8 = new widget.Label();
-         NamaPJ = new widget.TextBox();
-         jLabel10 = new widget.Label();
-         BertindakAtas = new widget.ComboBox();
-         jLabel18 = new widget.Label();
-         NIP = new widget.TextBox();
-         NamaPetugas = new widget.TextBox();
-         btnPetugas = new widget.Button();
+         jLabel17 = new widget.Label();
          jLabel16 = new widget.Label();
          Tanggal = new widget.Tanggal();
          jLabel3 = new widget.Label();
          NoSurat = new widget.TextBox();
+         jLabel10 = new widget.Label();
+         NamaPJ = new widget.TextBox();
+         jLabel8 = new widget.Label();
+         BertindakAtas = new widget.ComboBox();
          jLabel22 = new widget.Label();
          AlamatPJ = new widget.TextBox();
+         jLabel18 = new widget.Label();
+         NIP = new widget.TextBox();
+         NamaPetugas = new widget.TextBox();
+         btnPetugas = new widget.Button();
          jLabel23 = new widget.Label();
          KdDokter = new widget.TextBox();
          NmDokter = new widget.TextBox();
          btnDokter = new widget.Button();
-         jLabel17 = new widget.Label();
          ChkInput = new widget.CekBox();
          PanelAccor = new widget.PanelBiasa();
          ChkAccor = new widget.CekBox();
@@ -424,7 +440,7 @@
          panelGlass9.add(jLabel19);
  
          DTPCari1.setForeground(new java.awt.Color(50, 70, 50));
-         DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "26-09-2024" }));
+         DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "02-05-2024" }));
          DTPCari1.setDisplayFormat("dd-MM-yyyy");
          DTPCari1.setName("DTPCari1"); // NOI18N
          DTPCari1.setOpaque(false);
@@ -438,7 +454,7 @@
          panelGlass9.add(jLabel21);
  
          DTPCari2.setForeground(new java.awt.Color(50, 70, 50));
-         DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "26-09-2024" }));
+         DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "02-05-2024" }));
          DTPCari2.setDisplayFormat("dd-MM-yyyy");
          DTPCari2.setName("DTPCari2"); // NOI18N
          DTPCari2.setOpaque(false);
@@ -527,10 +543,49 @@
          FormInput.add(TNoRM);
          TNoRM.setBounds(212, 10, 111, 23);
  
-         jLabel8.setText("Bertindak Untuk/Atas Nama :");
-         jLabel8.setName("jLabel8"); // NOI18N
-         FormInput.add(jLabel8);
-         jLabel8.setBounds(469, 70, 160, 23);
+         jLabel17.setText("Pasien :");
+         jLabel17.setName("jLabel17"); // NOI18N
+         FormInput.add(jLabel17);
+         jLabel17.setBounds(580, 10, 50, 23);
+ 
+         jLabel16.setText("Tgl. Surat :");
+         jLabel16.setName("jLabel16"); // NOI18N
+         jLabel16.setVerifyInputWhenFocusTarget(false);
+         FormInput.add(jLabel16);
+         jLabel16.setBounds(0, 40, 70, 23);
+ 
+         Tanggal.setForeground(new java.awt.Color(50, 70, 50));
+         Tanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "02-05-2024" }));
+         Tanggal.setDisplayFormat("dd-MM-yyyy");
+         Tanggal.setName("Tanggal"); // NOI18N
+         Tanggal.setOpaque(false);
+         Tanggal.addKeyListener(new java.awt.event.KeyAdapter() {
+             public void keyPressed(java.awt.event.KeyEvent evt) {
+                 TanggalKeyPressed(evt);
+             }
+         });
+         FormInput.add(Tanggal);
+         Tanggal.setBounds(74, 40, 90, 23);
+ 
+         jLabel3.setText("No. Surat :");
+         jLabel3.setName("jLabel3"); // NOI18N
+         FormInput.add(jLabel3);
+         jLabel3.setBounds(530, 40, 90, 23);
+ 
+         NoSurat.setHighlighter(null);
+         NoSurat.setName("NoSurat"); // NOI18N
+         NoSurat.addKeyListener(new java.awt.event.KeyAdapter() {
+             public void keyPressed(java.awt.event.KeyEvent evt) {
+                 NoSuratKeyPressed(evt);
+             }
+         });
+         FormInput.add(NoSurat);
+         NoSurat.setBounds(624, 40, 119, 23);
+ 
+         jLabel10.setText("Penandatangan :");
+         jLabel10.setName("jLabel10"); // NOI18N
+         FormInput.add(jLabel10);
+         jLabel10.setBounds(0, 70, 85, 23);
  
          NamaPJ.setName("NamaPJ"); // NOI18N
          NamaPJ.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -541,10 +596,10 @@
          FormInput.add(NamaPJ);
          NamaPJ.setBounds(89, 70, 370, 23);
  
-         jLabel10.setText("Penandatangan :");
-         jLabel10.setName("jLabel10"); // NOI18N
-         FormInput.add(jLabel10);
-         jLabel10.setBounds(0, 70, 85, 23);
+         jLabel8.setText("Bertindak Untuk/Atas Nama :");
+         jLabel8.setName("jLabel8"); // NOI18N
+         FormInput.add(jLabel8);
+         jLabel8.setBounds(469, 70, 160, 23);
  
          BertindakAtas.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Diri Sendiri", "Suami", "Istri", "Anak", "Ayah", "Ibu", "Kakak", "Adik", "Wali", "Saudara", "Lainnya" }));
          BertindakAtas.setName("BertindakAtas"); // NOI18N
@@ -555,6 +610,21 @@
          });
          FormInput.add(BertindakAtas);
          BertindakAtas.setBounds(633, 70, 110, 23);
+ 
+         jLabel22.setText("Alamat P.J. :");
+         jLabel22.setName("jLabel22"); // NOI18N
+         FormInput.add(jLabel22);
+         jLabel22.setBounds(0, 100, 85, 23);
+ 
+         AlamatPJ.setHighlighter(null);
+         AlamatPJ.setName("AlamatPJ"); // NOI18N
+         AlamatPJ.addKeyListener(new java.awt.event.KeyAdapter() {
+             public void keyPressed(java.awt.event.KeyEvent evt) {
+                 AlamatPJKeyPressed(evt);
+             }
+         });
+         FormInput.add(AlamatPJ);
+         AlamatPJ.setBounds(89, 100, 654, 23);
  
          jLabel18.setText("Petugas :");
          jLabel18.setName("jLabel18"); // NOI18N
@@ -589,55 +659,6 @@
          FormInput.add(btnPetugas);
          btnPetugas.setBounds(378, 130, 28, 23);
  
-         jLabel16.setText("Tgl. Surat :");
-         jLabel16.setName("jLabel16"); // NOI18N
-         jLabel16.setVerifyInputWhenFocusTarget(false);
-         FormInput.add(jLabel16);
-         jLabel16.setBounds(0, 40, 70, 23);
- 
-         Tanggal.setForeground(new java.awt.Color(50, 70, 50));
-         Tanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "26-09-2024" }));
-         Tanggal.setDisplayFormat("dd-MM-yyyy");
-         Tanggal.setName("Tanggal"); // NOI18N
-         Tanggal.setOpaque(false);
-         Tanggal.addKeyListener(new java.awt.event.KeyAdapter() {
-             public void keyPressed(java.awt.event.KeyEvent evt) {
-                 TanggalKeyPressed(evt);
-             }
-         });
-         FormInput.add(Tanggal);
-         Tanggal.setBounds(74, 40, 90, 23);
- 
-         jLabel3.setText("No. Surat :");
-         jLabel3.setName("jLabel3"); // NOI18N
-         FormInput.add(jLabel3);
-         jLabel3.setBounds(530, 40, 90, 23);
- 
-         NoSurat.setHighlighter(null);
-         NoSurat.setName("NoSurat"); // NOI18N
-         NoSurat.addKeyListener(new java.awt.event.KeyAdapter() {
-             public void keyPressed(java.awt.event.KeyEvent evt) {
-                 NoSuratKeyPressed(evt);
-             }
-         });
-         FormInput.add(NoSurat);
-         NoSurat.setBounds(624, 40, 119, 23);
- 
-         jLabel22.setText("Alamat P.J. :");
-         jLabel22.setName("jLabel22"); // NOI18N
-         FormInput.add(jLabel22);
-         jLabel22.setBounds(0, 100, 85, 23);
- 
-         AlamatPJ.setHighlighter(null);
-         AlamatPJ.setName("AlamatPJ"); // NOI18N
-         AlamatPJ.addKeyListener(new java.awt.event.KeyAdapter() {
-             public void keyPressed(java.awt.event.KeyEvent evt) {
-                 AlamatPJKeyPressed(evt);
-             }
-         });
-         FormInput.add(AlamatPJ);
-         AlamatPJ.setBounds(89, 100, 654, 23);
- 
          jLabel23.setText("DPJP Pilihan:");
          jLabel23.setName("jLabel23"); // NOI18N
          FormInput.add(jLabel23);
@@ -670,11 +691,6 @@
          });
          FormInput.add(btnDokter);
          btnDokter.setBounds(718, 130, 28, 23);
- 
-         jLabel17.setText("Pasien :");
-         jLabel17.setName("jLabel17"); // NOI18N
-         FormInput.add(jLabel17);
-         jLabel17.setBounds(580, 10, 50, 23);
  
          PanelInput.add(FormInput, java.awt.BorderLayout.CENTER);
  
@@ -824,8 +840,8 @@
                      BertindakAtas.getSelectedItem().toString(), KdDokter.getText(), NmDokter.getText(),
                      NIP.getText(), NamaPetugas.getText()
                  });
-                 LCount.setText(""+tabMode.getRowCount());
-                 emptTeks();
+                  LCount.setText(""+tabMode.getRowCount());
+                  emptTeks();
              }
          }
      }//GEN-LAST:event_BtnSimpanActionPerformed
@@ -859,10 +875,11 @@
              if(akses.getkode().equals("Admin Utama")){
                  hapus();
              }else{
+                 // Cek apakah NIP di tabel (indeks 11) sama dengan NIP di form
                  if(NIP.getText().equals(tbSurat.getValueAt(tbSurat.getSelectedRow(), 11).toString())){
                      hapus();
                  }else{
-                     JOptionPane.showMessageDialog(null,"Hanya bisa dihapus oleh petugas yang bersangkutan..!!");
+                     JOptionPane.showMessageDialog(null,"Hanya bisa dihapus oleh petugas ("+tbSurat.getValueAt(tbSurat.getSelectedRow(), 12).toString()+") yang membuat surat ini!");
                  }
              }
          }else{
@@ -898,10 +915,11 @@
                  if(akses.getkode().equals("Admin Utama")){
                      ganti();
                  }else{
+                     // Cek apakah NIP di tabel (indeks 11) sama dengan NIP di form
                      if(NIP.getText().equals(tbSurat.getValueAt(tbSurat.getSelectedRow(),11).toString())){
                          ganti();
                      }else{
-                         JOptionPane.showMessageDialog(null,"Hanya bisa diganti oleh petugas yang bersangkutan..!!");
+                         JOptionPane.showMessageDialog(null,"Hanya bisa diganti oleh petugas ("+tbSurat.getValueAt(tbSurat.getSelectedRow(), 12).toString()+") yang membuat surat ini!");
                      }
                  }
              }else{
@@ -949,6 +967,17 @@
              param.put("emailrs",akses.getemailrs());
              param.put("logo",Sequel.cariGambar("select setting.logo from setting"));
  
+             // Filter selection based on current state (one row selected or all based on date range)
+             String filter = " WHERE s.tanggal BETWEEN '"+Valid.SetTgl(DTPCari1.getSelectedItem()+"")+"' AND '"+Valid.SetTgl(DTPCari2.getSelectedItem()+"")+"' ";
+             if (!TCari.getText().trim().equals("")) {
+                 filter += " AND (s.no_surat LIKE '%"+TCari.getText().trim()+"%' OR s.no_rawat LIKE '%"+TCari.getText().trim()+"%' OR s.no_rkm_medis LIKE '%"+TCari.getText().trim()+"%' OR p.nm_pasien LIKE '%"+TCari.getText().trim()+"%' OR s.nama_pj LIKE '%"+TCari.getText().trim()+"%' OR d.nm_dokter LIKE '%"+TCari.getText().trim()+"%' OR pt.nama LIKE '%"+TCari.getText().trim()+"%') ";
+             }
+ 
+             // Jika sebuah baris di tabel dipilih, utamakan cetak data dari baris itu
+             if (tbSurat.getSelectedRow() > -1 && !NoSurat.getText().isEmpty() && NoSurat.getText().equals(tbSurat.getValueAt(tbSurat.getSelectedRow(), 0).toString()) ) {
+                  filter = " WHERE s.no_surat = '"+tbSurat.getValueAt(tbSurat.getSelectedRow(), 0).toString()+"' ";
+             }
+ 
              String reportQuery = "SELECT s.no_surat, s.no_rawat, s.tanggal AS tgl_surat, s.no_rkm_medis, p.nm_pasien, " +
                                   "p.tgl_lahir, p.jk, s.nama_pj, s.alamat_pj, s.bertindak_atas, s.kd_dokter, d.nm_dokter, " +
                                   "s.nip, pt.nama AS nama_petugas " +
@@ -957,9 +986,7 @@
                                   "INNER JOIN pasien p ON s.no_rkm_medis = p.no_rkm_medis " +
                                   "INNER JOIN dokter d ON s.kd_dokter = d.kd_dokter " +
                                   "INNER JOIN petugas pt ON s.nip = pt.nip " +
-                                  "WHERE s.tanggal BETWEEN '"+Valid.SetTgl(DTPCari1.getSelectedItem()+"")+"' AND '"+Valid.SetTgl(DTPCari2.getSelectedItem()+"")+"' " +
-                                  (TCari.getText().trim().equals("") ? "" :
-                                  "AND (s.no_surat LIKE '%"+TCari.getText().trim()+"%' OR s.no_rawat LIKE '%"+TCari.getText().trim()+"%' OR s.no_rkm_medis LIKE '%"+TCari.getText().trim()+"%' OR p.nm_pasien LIKE '%"+TCari.getText().trim()+"%' OR s.nama_pj LIKE '%"+TCari.getText().trim()+"%' OR d.nm_dokter LIKE '%"+TCari.getText().trim()+"%' OR pt.nama LIKE '%"+TCari.getText().trim()+"%') ") +
+                                  filter +
                                   "ORDER BY s.tanggal, s.no_surat";
  
              // *** Replace "rptSuratPemilihanDPJP.jasper" with your actual report file name ***
@@ -1026,7 +1053,9 @@
              // Restore photo calls
              try {
                  isPhoto();
-                 panggilPhoto();
+                 if (ChkAccor.isSelected()) { // Hanya panggil jika panel terbuka
+                    panggilPhoto();
+                 }
              } catch (java.lang.NullPointerException e) { }
          }
      }//GEN-LAST:event_tbSuratMouseClicked
@@ -1038,21 +1067,30 @@
  
      private void tbSuratKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbSuratKeyReleased
          if(tabMode.getRowCount()!=0){
-             if((evt.getKeyCode()==KeyEvent.VK_ENTER)||(evt.getKeyCode()==KeyEvent.VK_UP)||(evt.getKeyCode()==KeyEvent.VK_DOWN)){
+             if((evt.getKeyCode()==KeyEvent.VK_UP)||(evt.getKeyCode()==KeyEvent.VK_DOWN)){
                  try {
                      getData();
                  } catch (java.lang.NullPointerException e) { }
                   // Restore photo calls
                  try {
                      isPhoto();
-                     panggilPhoto();
+                     if (ChkAccor.isSelected()) { // Hanya panggil jika panel terbuka
+                        panggilPhoto();
+                     }
+                 } catch (java.lang.NullPointerException e) { }
+             } else if (evt.getKeyCode() == KeyEvent.VK_SPACE) { // Tambahkan event space untuk view photo
+                 try {
+                     getData();
+                     ChkAccor.setSelected(true); // Otomatis buka panel photo
+                     isPhoto(); // Update tampilan panel
+                     panggilPhoto(); // Panggil photo setelah panel dibuka
                  } catch (java.lang.NullPointerException e) { }
              }
          }
      }//GEN-LAST:event_tbSuratKeyReleased
  
      private void btnPetugasKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnPetugasKeyPressed
-        // Logic remains the same
+        // Pindah ke DPJP Pilihan (btnDokter) setelah petugas dipilih
          Valid.pindah(evt,AlamatPJ,btnDokter);
      }//GEN-LAST:event_btnPetugasKeyPressed
  
@@ -1066,12 +1104,16 @@
      }//GEN-LAST:event_btnPetugasActionPerformed
  
      private void BertindakAtasKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BertindakAtasKeyPressed
-         // Logic remains the same
-         Valid.pindah(evt,NamaPJ, AlamatPJ);
+         // Pindah ke AlamatPJ jika bisa diedit, atau langsung ke btnPetugas jika tidak
+         if (AlamatPJ.isEditable()) {
+             Valid.pindah(evt, NamaPJ, AlamatPJ); // Pindah normal ke AlamatPJ
+         } else {
+             Valid.pindah(evt, NamaPJ, btnPetugas); // Langsung ke petugas karena NamaPJ & AlamatPJ disable
+         }
      }//GEN-LAST:event_BertindakAtasKeyPressed
  
      private void NamaPJKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_NamaPJKeyPressed
-         // Logic remains the same
+         // Pindah ke Bertindak Atas jika field NamaPJ bisa diedit
          Valid.pindah(evt,NoSurat,BertindakAtas);
      }//GEN-LAST:event_NamaPJKeyPressed
  
@@ -1079,8 +1121,12 @@
          // Logic remains the same
          if(evt.getKeyCode()==KeyEvent.VK_PAGE_DOWN){
              isRawat();
-             isPasien();
-         }else{
+             isPasien(); // Panggil isPasien setelah data pasien didapat
+         }else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+             isRawat();
+             isPasien(); // Panggil isPasien setelah data pasien didapat
+             Tanggal.requestFocus(); // Pindah fokus ke Tanggal setelah Enter di No Rawat
+         } else{
              Valid.pindah(evt,TCari,Tanggal);
          }
      }//GEN-LAST:event_TNoRwKeyPressed
@@ -1091,12 +1137,16 @@
      }//GEN-LAST:event_TanggalKeyPressed
  
      private void NoSuratKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_NoSuratKeyPressed
-         // Logic remains the same
-         Valid.pindah(evt,Tanggal,NamaPJ);
+         // Pindah ke NamaPJ jika NamaPJ bisa diedit, atau langsung ke BertindakAtas
+         if (NamaPJ.isEditable()) {
+            Valid.pindah(evt,Tanggal,NamaPJ);
+         } else {
+            Valid.pindah(evt,Tanggal,BertindakAtas);
+         }
      }//GEN-LAST:event_NoSuratKeyPressed
  
      private void AlamatPJKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_AlamatPJKeyPressed
-        // Logic remains the same
+        // Pindah ke tombol Petugas setelah mengisi Alamat PJ
          Valid.pindah(evt, BertindakAtas, btnPetugas);
      }//GEN-LAST:event_AlamatPJKeyPressed
  
@@ -1118,9 +1168,15 @@
      private void ChkAccorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChkAccorActionPerformed
          if(tbSurat.getSelectedRow()!= -1){
              isPhoto();
-             panggilPhoto(); // Call panggilPhoto after toggling
+             if (ChkAccor.isSelected()) { // Hanya panggil photo jika panel dibuka
+                 panggilPhoto(); // Call panggilPhoto after toggling
+             } else {
+                 LoadHTML2.setText("<html><body><center><br><br><font face='tahoma' size='2' color='#434343'>Photo/Scan Belum Tersedia</font></center></body></html>");
+                 lokasifile = "";
+             }
          }else{
              ChkAccor.setSelected(false); // Keep it closed if no row selected
+             isPhoto(); // Update panel view even if closed
              JOptionPane.showMessageDialog(null,"Silahkan pilih data surat pada tabel terlebih dahulu..!!!");
          }
      }//GEN-LAST:event_ChkAccorActionPerformed
@@ -1137,12 +1193,17 @@
                   // *** WARNING: This logic below is from the original Persetujuan Umum. ***
                   // *** It targets tables potentially unrelated to DPJP selection directly. ***
                   // *** You may need to modify or replace this logic based on your actual photo capture workflow for DPJP. ***
-                 Sequel.queryu("delete from antripemilihandpjp"); // Example queue table
-                 Sequel.queryu("insert into antripemilihandpjp values('"+tbSurat.getValueAt(tbSurat.getSelectedRow(),0).toString()+"','"+tbSurat.getValueAt(tbSurat.getSelectedRow(),1).toString()+"')");
-                 // This deletes from the *original* photo table. Adapt if using a new table for DPJP photos.
-                 Sequel.queryu("delete from surat_pemilihan_dpjp_bukti where no_surat='"+tbSurat.getValueAt(tbSurat.getSelectedRow(),0).toString()+"'");
-                 // You might need to launch a separate capture frame/dialog here.
-                 JOptionPane.showMessageDialog(rootPane,"Nomor surat "+tbSurat.getValueAt(tbSurat.getSelectedRow(),0).toString()+" siap untuk pengambilan bukti/scan.");
+ 
+                  // Buat tabel antrian spesifik jika belum ada, misal: antri_pemilihan_dpjp
+                  // Sequel.queryu("delete from antri_pemilihan_dpjp"); // Example: Clear specific queue table
+                  // Sequel.queryu("insert into antri_pemilihan_dpjp values('"+tbSurat.getValueAt(tbSurat.getSelectedRow(),0).toString()+"','"+tbSurat.getValueAt(tbSurat.getSelectedRow(),1).toString()+"')");
+ 
+                  // Buat tabel bukti spesifik jika belum ada, misal: surat_pemilihan_dpjp_bukti
+                  Sequel.queryu("delete from surat_pemilihan_dpjp_bukti where no_surat='"+tbSurat.getValueAt(tbSurat.getSelectedRow(),0).toString()+"'");
+                  // You might need to launch a separate capture frame/dialog here.
+ 
+                  // Beri pesan yang lebih sesuai
+                  JOptionPane.showMessageDialog(rootPane,"Nomor surat "+tbSurat.getValueAt(tbSurat.getSelectedRow(),0).toString()+" siap untuk pengambilan bukti/scan.\nSilahkan gunakan modul/aplikasi pengambilan gambar terpisah.");
              }else{
                  JOptionPane.showMessageDialog(rootPane,"Silahkan pilih data surat pada tabel terlebih dahulu..!!");
              }
@@ -1159,23 +1220,20 @@
  
      private void BtnPrint1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPrint1ActionPerformed
          // This button is now labeled "View" in the initComponents.
-         // It likely should just display the photo in a larger view or external viewer if needed.
-         // The original code here printed the *Persetujuan Umum* report again, which is incorrect for this button.
          if(tbSurat.getSelectedRow()>-1){
              if(lokasifile.equals("")){
                  JOptionPane.showMessageDialog(null,"Maaf, Belum ada bukti/scan surat yang tersimpan..!!!!");
              }else{
-                 // Example: Open image in default system viewer (requires Desktop support)
                   try {
-                      // You need to construct the full path or URL to the image file based on lokasifile and your server setup
-                      // This assumes lokasifile is just the filename and it's served via web.
-                      String imageUrl = "http://"+koneksiDB.HOSTHYBRIDWEB()+":"+koneksiDB.PORTWEB()+"/"+koneksiDB.HYBRIDWEB()+"/persetujuanumum/"+lokasifile;
+                      // Pastikan path folder sesuai dengan setup server Anda
+                      // Contoh: Jika file ada di folder 'buktidpjp' di dalam webapps/berkasweb
+                      String folderBukti = "buktidpjp"; // Ganti jika nama foldernya berbeda
+                      String imageUrl = "http://"+koneksiDB.HOSTHYBRIDWEB()+":"+koneksiDB.PORTWEB()+"/"+koneksiDB.HYBRIDWEB()+"/"+folderBukti+"/"+lokasifile;
                       java.awt.Desktop.getDesktop().browse(java.net.URI.create(imageUrl));
                   } catch (Exception ex) {
                       JOptionPane.showMessageDialog(null,"Gagal membuka file: "+ex);
                       System.out.println("Error opening photo: "+ ex);
                   }
-                  // Remove the incorrect report printing code that was here.
              }
          }else{
              JOptionPane.showMessageDialog(null,"Maaf, silahkan pilih data surat pada tabel terlebih dahulu..!!!!");
@@ -1261,16 +1319,14 @@
      private widget.Table tbSurat;
      // End of variables declaration//GEN-END:variables
  
-     // tampil(), emptTeks(), getData(), isRawat(), isPasien(), setNoRm(), isForm(), isCek(), ganti(), hapus()
-     // remain the same as the previous DPJP version (without photo panel)
- 
      public void tampil() {
          Valid.tabelKosong(tabMode);
          try{
               // Updated SELECT query for surat_pemilihan_dpjp and joins
              String sql = "SELECT s.no_surat, s.no_rawat, s.tanggal AS tgl_surat, s.no_rkm_medis, p.nm_pasien, " +
-                          "p.tgl_lahir, s.nama_pj, s.alamat_pj, s.bertindak_atas, s.kd_dokter, d.nm_dokter, " + // Added alamat_pj, kd_dokter, nm_dokter
-                          "s.nip, pt.nama AS nama_petugas " + // Removed columns not in new table
+                          "DATE_FORMAT(p.tgl_lahir,'%d-%m-%Y') as tgl_lahir, " + // Format tanggal lahir
+                          "s.nama_pj, s.alamat_pj, s.bertindak_atas, s.kd_dokter, d.nm_dokter, " +
+                          "s.nip, pt.nama AS nama_petugas " +
                           "FROM surat_pemilihan_dpjp s " +
                           "INNER JOIN reg_periksa rp ON s.no_rawat = rp.no_rawat " +
                           "INNER JOIN pasien p ON s.no_rkm_medis = p.no_rkm_medis " +
@@ -1282,7 +1338,7 @@
                  sql += "AND (s.no_surat LIKE ? OR s.no_rawat LIKE ? OR s.no_rkm_medis LIKE ? OR p.nm_pasien LIKE ? " +
                         "OR s.nama_pj LIKE ? OR d.nm_dokter LIKE ? OR pt.nama LIKE ?) "; // Updated search fields
              }
-             sql += "ORDER BY s.tanggal, s.no_surat"; // Use s.tanggal
+             sql += "ORDER BY s.tanggal DESC, s.no_surat DESC"; // Use s.tanggal, order descending for recent first
  
              ps=koneksi.prepareStatement(sql);
              try {
@@ -1303,7 +1359,7 @@
                      // Updated tabMode.addRow to match new columns
                      tabMode.addRow(new String[]{
                          rs.getString("no_surat"), rs.getString("no_rawat"), rs.getString("no_rkm_medis"),
-                         rs.getString("nm_pasien"), rs.getString("tgl_lahir"), rs.getString("tgl_surat"),
+                         rs.getString("nm_pasien"), rs.getString("tgl_lahir"), Valid.SetTgl(rs.getString("tgl_surat")), // Format tgl_surat
                          rs.getString("nama_pj"), rs.getString("alamat_pj"), rs.getString("bertindak_atas"),
                          rs.getString("kd_dokter"), rs.getString("nm_dokter"), rs.getString("nip"),
                          rs.getString("nama_petugas")
@@ -1333,15 +1389,19 @@
          JK.setText("");
          NamaPJ.setText("");
          AlamatPJ.setText("");
-         BertindakAtas.setSelectedIndex(0);
+         BertindakAtas.setSelectedIndex(0); // Default to "Diri Sendiri"
          KdDokter.setText("");
          NmDokter.setText("");
          Tanggal.setDate(new Date());
          Valid.autoNomer3("select ifnull(MAX(CONVERT(RIGHT(no_surat,4),signed)),0) from surat_pemilihan_dpjp where tanggal='"+Valid.SetTgl(Tanggal.getSelectedItem()+"")+"' ",
                  "SDPJP"+Tanggal.getSelectedItem().toString().substring(6,10)+Tanggal.getSelectedItem().toString().substring(3,5)+Tanggal.getSelectedItem().toString().substring(0,2),4,NoSurat);
-         TNoRw.requestFocus();
          LoadHTML2.setText("<html><body><center><br><br><font face='tahoma' size='2' color='#434343'>Kosong</font></center></body></html>"); // Clear photo preview
          lokasifile = ""; // Reset location file
+ 
+         // Panggil isPasien setelah mengosongkan field dan set default combobox
+         isPasien(); // This will handle the initial state (NamaPJ & AlamatPJ should be editable as TNoRw is empty)
+ 
+         TNoRw.requestFocus();
      }
  
  
@@ -1355,20 +1415,23 @@
              Valid.SetTgl(Tanggal,tbSurat.getValueAt(tbSurat.getSelectedRow(),5).toString());
              NamaPJ.setText(tbSurat.getValueAt(tbSurat.getSelectedRow(),6).toString());
              AlamatPJ.setText(tbSurat.getValueAt(tbSurat.getSelectedRow(),7).toString());
-             BertindakAtas.setSelectedItem(tbSurat.getValueAt(tbSurat.getSelectedRow(),8).toString());
+             BertindakAtas.setSelectedItem(tbSurat.getValueAt(tbSurat.getSelectedRow(),8).toString()); // Load first
              KdDokter.setText(tbSurat.getValueAt(tbSurat.getSelectedRow(),9).toString());
              NmDokter.setText(tbSurat.getValueAt(tbSurat.getSelectedRow(),10).toString());
              NIP.setText(tbSurat.getValueAt(tbSurat.getSelectedRow(),11).toString());
              NamaPetugas.setText(tbSurat.getValueAt(tbSurat.getSelectedRow(),12).toString());
              // Load patient JK separately if needed for display
              JK.setText(Sequel.cariIsi("select jk from pasien where no_rkm_medis=?", TNoRM.getText()));
+ 
+             isPasien(); // ****** Panggil isPasien SETELAH BertindakAtas di-set ******
          }
      }
  
      private void isRawat() {
          try {
              ps=koneksi.prepareStatement(
-                     "select reg_periksa.no_rkm_medis,pasien.nm_pasien,pasien.jk,pasien.tgl_lahir,reg_periksa.tgl_registrasi " +
+                     "select reg_periksa.no_rkm_medis,pasien.nm_pasien,pasien.jk, " +
+                     "DATE_FORMAT(pasien.tgl_lahir,'%d-%m-%Y') as tgl_lahir, reg_periksa.tgl_registrasi " + // Format tgl lahir
                      "from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
                      "where reg_periksa.no_rawat=?");
              try {
@@ -1384,6 +1447,7 @@
                      TPasien.setText("");
                      JK.setText("");
                      LahirPasien.setText("");
+                     JOptionPane.showMessageDialog(null, "Data Pasien dengan No. Rawat tersebut tidak ditemukan.");
                  }
              } catch (Exception e) {
                  System.out.println("Notif (isRawat): "+e);
@@ -1396,15 +1460,40 @@
          }
      }
  
+     // ****** START: Modified isPasien Method ******
      private void isPasien() {
-         if(BertindakAtas.getSelectedItem().toString().equals("Diri Sendiri")) {
-             if(!TNoRw.getText().trim().equals("") && !TPasien.getText().trim().equals("")) {
+         if (BertindakAtas.getSelectedItem() == null) return; // Hindari NullPointerException saat inisialisasi awal
+ 
+         if (BertindakAtas.getSelectedItem().toString().equals("Diri Sendiri")) {
+             // Hanya isi jika No Rawat & Nama Pasien sudah terisi
+             if (!TNoRw.getText().trim().isEmpty() && !TPasien.getText().trim().isEmpty()) {
                  NamaPJ.setText(TPasien.getText());
                  AlamatPJ.setText(Sequel.cariIsi("select alamat from pasien where no_rkm_medis=?", TNoRM.getText()));
+                 NamaPJ.setEditable(false); // Non-aktifkan field
+                 AlamatPJ.setEditable(false); // Non-aktifkan field
+             } else {
+                 // Jika data pasien belum ada tapi dipilih "Diri Sendiri", kosongkan dan enable
+                 NamaPJ.setText("");
+                 AlamatPJ.setText("");
+                 NamaPJ.setEditable(true);
+                 AlamatPJ.setEditable(true);
              }
+         } else {
+             // Jika bukan "Diri Sendiri", kosongkan dan enable field
+             // Jangan kosongkan jika NamaPJ sudah diisi manual sebelumnya dan hanya ganti pilihan lain
+             // if (NamaPJ.getText().isEmpty() || BertindakAtas.getSelectedIndex() != 0) { // Kosongkan jika memang kosong atau baru ganti dari diri sendiri
+                 NamaPJ.setText("");
+                 AlamatPJ.setText("");
+             //}
+             NamaPJ.setEditable(true);
+             AlamatPJ.setEditable(true);
+             // Jika diperlukan, set fokus ke NamaPJ saat pilihan selain "Diri Sendiri"
+             // if (!NamaPJ.isFocusOwner() && ChkInput.isSelected()) { // Cek jika form input aktif
+             //     NamaPJ.requestFocusInWindow();
+             // }
          }
-         // Do not automatically clear/enable fields when switching away
      }
+     // ****** END: Modified isPasien Method ******
  
  
      public void setNoRm(String norwt,Date tgl2) {
@@ -1412,18 +1501,63 @@
          TCari.setText(norwt);
          DTPCari2.setDate(tgl2);
          isRawat();
-         isPasien();
-         ChkInput.setSelected(true);
+         // isPasien() dipanggil setelah isRawat() dan setelah BertindakAtas di-set jika getData() dipanggil
+         // Tidak perlu dipanggil di sini secara eksplisit sebelum tampil()
+ 
+         ChkInput.setSelected(true); // Mungkin ingin buka form input secara default
          isForm();
          tampil(); // Load data for this norwt
+ 
+         if (tabMode.getRowCount() == 0) { // <--- PERBAIKAN DI SINI (Menggunakan == 0)
+             // Jika TIDAK ADA data surat ditemukan untuk No Rawat tsb
+             emptTeks(); // Kosongkan form input
+             TNoRw.setText(norwt); // Tetapkan No Rawat lagi (karena emptTeks() mengosongkannya)
+             isRawat(); // Ambil data pasien lagi (karena emptTeks() mengosongkannya)
+             isPasien(); // Atur NamaPJ/AlamatPJ lagi sesuai kondisi (mungkin "Diri Sendiri")
+             setDefaultDPJP(norwt); // Set default DPJP bahkan jika surat belum ada
+             // Mungkin beri pesan bahwa surat belum dibuat?
+             // JOptionPane.showMessageDialog(rootPane, "Belum ada Surat Pemilihan DPJP untuk pasien ini.");
+             Tanggal.requestFocus(); // Fokus ke tanggal untuk input baru
+         } else {
+             // Jika ADA data surat ditemukan
+             tbSurat.setRowSelectionInterval(0, 0); // Pilih baris pertama
+             getData(); // Tampilkan data dari baris yang dipilih
+             try {
+                 isPhoto(); // Siapkan panel foto
+                 if (ChkAccor.isSelected()) { // Hanya panggil jika panel terbuka
+                     panggilPhoto(); // Coba tampilkan foto jika ada
+                 }
+             } catch (Exception e) {
+                 System.out.println("Error saat menampilkan foto di setNoRm: "+e);
+             }
+         }
+     }
+ 
+     private void setDefaultDPJP(String norwt) {
+        String kd_dokter_ranap = Sequel.cariIsi("select kd_dokter from kamar_inap where no_rawat=? order by tgl_masuk desc, jam_masuk desc limit 1", norwt);
+        if (!kd_dokter_ranap.isEmpty()) {
+            KdDokter.setText(kd_dokter_ranap);
+            NmDokter.setText(dokter.tampil3(kd_dokter_ranap));
+        } else {
+             // Jika tidak ada di ranap, coba cari di reg_periksa
+             String kd_dokter_reg = Sequel.cariIsi("select kd_dokter from reg_periksa where no_rawat=?", norwt);
+             if (!kd_dokter_reg.isEmpty()) {
+                 KdDokter.setText(kd_dokter_reg);
+                 NmDokter.setText(dokter.tampil3(kd_dokter_reg));
+             } else {
+                 KdDokter.setText(""); // Kosongkan jika tidak ketemu
+                 NmDokter.setText("");
+             }
+        }
      }
  
      private void isForm(){
          if(ChkInput.isSelected()==true){
              ChkInput.setVisible(false);
-             PanelInput.setPreferredSize(new Dimension(WIDTH,185));
+             PanelInput.setPreferredSize(new Dimension(WIDTH,185)); // Sesuaikan tinggi panel input
              FormInput.setVisible(true);
              ChkInput.setVisible(true);
+             BtnBatal.requestFocus(); // Fokus ke tombol batal saat form input dibuka
          }else if(ChkInput.isSelected()==false){
              ChkInput.setVisible(false);
              PanelInput.setPreferredSize(new Dimension(WIDTH,20));
@@ -1434,13 +1568,18 @@
  
  
      public void isCek(){
-         BtnSimpan.setEnabled(akses.getsurat_persetujuan_umum()); // *** Needs new access right ***
-         BtnHapus.setEnabled(akses.getsurat_persetujuan_umum());   // *** Needs new access right ***
-         BtnEdit.setEnabled(akses.getsurat_persetujuan_umum());    // *** Needs new access right ***
-         BtnPrint.setEnabled(akses.getsurat_persetujuan_umum());   // *** Needs new access right ***
-         // Photo buttons might need separate access rights if applicable
-         btnAmbil.setEnabled(akses.getsurat_persetujuan_umum()); // Example: Reuse consent right? Or add new one?
-         BtnPrint1.setEnabled(akses.getsurat_persetujuan_umum());// Example: Reuse consent right? Or add new one?
+          // ****** Ganti Hak Akses Jika Diperlukan ******
+         // Sesuaikan dengan nama hak akses yang benar di database Anda untuk modul ini
+         // Misalnya, jika hak aksesnya adalah 'surat_pemilihan_dpjp'
+         boolean aksesSuratDPJP = akses.getadmin() || akses.getsurat_persetujuan_umum(); // Contoh penggunaan hak akses 'surat_pemilihan_dpjp'
+ 
+         BtnSimpan.setEnabled(aksesSuratDPJP);
+         BtnHapus.setEnabled(aksesSuratDPJP);
+         BtnEdit.setEnabled(aksesSuratDPJP);
+         BtnPrint.setEnabled(aksesSuratDPJP);
+         btnAmbil.setEnabled(aksesSuratDPJP); // Sesuaikan jika perlu hak akses berbeda
+         BtnPrint1.setEnabled(aksesSuratDPJP); // Sesuaikan jika perlu hak akses berbeda
+         // ****** Ganti Hak Akses Jika Diperlukan ******
  
          if(akses.getjml2()>=1){
              NIP.setEditable(false);
@@ -1449,6 +1588,7 @@
              NamaPetugas.setText(petugas.tampil3(NIP.getText()));
              if(NamaPetugas.getText().equals("")){
                  NIP.setText("");
+                 JOptionPane.showMessageDialog(null,"User login tidak terdaftar sebagai petugas!");
              }
          }
      }
@@ -1460,19 +1600,20 @@
              tbSurat.getValueAt(tbSurat.getSelectedRow(),0).toString() // WHERE clause uses original NoSurat
          })==true){
              // Update table model remains same as previous DPJP version
-             tbSurat.setValueAt(NoSurat.getText(),tbSurat.getSelectedRow(),0);
-             tbSurat.setValueAt(TNoRw.getText(),tbSurat.getSelectedRow(),1);
-             tbSurat.setValueAt(TNoRM.getText(),tbSurat.getSelectedRow(),2);
-             tbSurat.setValueAt(TPasien.getText(),tbSurat.getSelectedRow(),3);
-             tbSurat.setValueAt(LahirPasien.getText(),tbSurat.getSelectedRow(),4);
-             tbSurat.setValueAt(Valid.SetTgl(Tanggal.getSelectedItem()+""),tbSurat.getSelectedRow(),5);
-             tbSurat.setValueAt(NamaPJ.getText(),tbSurat.getSelectedRow(),6);
-             tbSurat.setValueAt(AlamatPJ.getText(),tbSurat.getSelectedRow(),7);
-             tbSurat.setValueAt(BertindakAtas.getSelectedItem().toString(),tbSurat.getSelectedRow(),8);
-             tbSurat.setValueAt(KdDokter.getText(),tbSurat.getSelectedRow(),9);
-             tbSurat.setValueAt(NmDokter.getText(),tbSurat.getSelectedRow(),10);
-             tbSurat.setValueAt(NIP.getText(),tbSurat.getSelectedRow(),11);
-             tbSurat.setValueAt(NamaPetugas.getText(),tbSurat.getSelectedRow(),12);
+             int row = tbSurat.getSelectedRow();
+             tbSurat.setValueAt(NoSurat.getText(),row,0);
+             tbSurat.setValueAt(TNoRw.getText(),row,1);
+             tbSurat.setValueAt(TNoRM.getText(),row,2);
+             tbSurat.setValueAt(TPasien.getText(),row,3);
+             tbSurat.setValueAt(LahirPasien.getText(),row,4);
+             tbSurat.setValueAt(Valid.SetTgl(Tanggal.getSelectedItem()+""),row,5);
+             tbSurat.setValueAt(NamaPJ.getText(),row,6);
+             tbSurat.setValueAt(AlamatPJ.getText(),row,7);
+             tbSurat.setValueAt(BertindakAtas.getSelectedItem().toString(),row,8);
+             tbSurat.setValueAt(KdDokter.getText(),row,9);
+             tbSurat.setValueAt(NmDokter.getText(),row,10);
+             tbSurat.setValueAt(NIP.getText(),row,11);
+             tbSurat.setValueAt(NamaPetugas.getText(),row,12);
              emptTeks();
          }
      }
@@ -1481,19 +1622,22 @@
          // Fetch the no_surat before potentially deleting the photo link
          String noSuratToDelete = tbSurat.getValueAt(tbSurat.getSelectedRow(), 0).toString();
  
-         // Delete from the main table first
-         if(Sequel.queryu2tf("delete from surat_pemilihan_dpjp where no_surat=?",1,new String[]{
-             noSuratToDelete
-         })==true){
-              // Optionally, delete the associated photo record if it exists
-              // *** WARNING: This targets the original photo table. Adapt if using a different table. ***
-             Sequel.queryu2("delete from surat_pemilihan_dpjp_bukti where no_surat=?", 1, new String[]{noSuratToDelete});
+         // Konfirmasi sebelum hapus
+         int reply = JOptionPane.showConfirmDialog(rootPane,"Yakin ingin menghapus data surat "+noSuratToDelete+"?","Konfirmasi Hapus",JOptionPane.YES_NO_OPTION);
+         if (reply == JOptionPane.YES_OPTION) {
+             // Delete from the main table first
+             if(Sequel.queryu2tf("delete from surat_pemilihan_dpjp where no_surat=?",1,new String[]{
+                 noSuratToDelete
+             })==true){
+                  // Hapus juga bukti jika ada (gunakan tabel yang benar)
+                 Sequel.queryu2("delete from surat_pemilihan_dpjp_bukti where no_surat=?", 1, new String[]{noSuratToDelete});
  
-             tabMode.removeRow(tbSurat.getSelectedRow());
-             LCount.setText(""+tabMode.getRowCount());
-             emptTeks();
-         }else{
-             JOptionPane.showMessageDialog(null,"Gagal menghapus data surat pemilihan DPJP..!!");
+                 tabMode.removeRow(tbSurat.getSelectedRow());
+                 LCount.setText(""+tabMode.getRowCount());
+                 emptTeks();
+             }else{
+                 JOptionPane.showMessageDialog(null,"Gagal menghapus data surat pemilihan DPJP..!!");
+             }
          }
      }
  
@@ -1513,13 +1657,14 @@
      }
  
      private void panggilPhoto() {
-         // This method fetches the photo based on no_surat, assuming it's stored
-         // in the 'surat_persetujuan_umum_pembuat_pernyataan' table.
-         // Adapt the table name if you store DPJP photos elsewhere.
+         // Method ini mengambil foto berdasarkan no_surat
+         // Pastikan nama tabel bukti dan nama kolomnya benar
          if(FormPhoto.isVisible()==true && tbSurat.getSelectedRow() > -1){
              lokasifile="";
              try {
-                  // *** WARNING: Query targets the original photo table. Adapt if needed. ***
+                  // *** Ganti nama tabel dan kolom jika berbeda ***
+                  // Tabel contoh: surat_pemilihan_dpjp_bukti
+                  // Kolom contoh: photo
                  ps=koneksi.prepareStatement(
                      "select photo from surat_pemilihan_dpjp_bukti where no_surat=?");
                  try {
@@ -1531,7 +1676,10 @@
                              lokasifile="";
                              LoadHTML2.setText("<html><body><center><br><br><font face='tahoma' size='2' color='#434343'>Photo/Scan Belum Tersedia</font></center></body></html>");
                          }else{
-                             LoadHTML2.setText("<html><body><center><img src='http://"+koneksiDB.HOSTHYBRIDWEB()+":"+koneksiDB.PORTWEB()+"/"+koneksiDB.HYBRIDWEB()+"/persetujuanumum/"+lokasifile+"' alt='photo' width='450' height='450'/></center></body></html>"); // Adjusted size
+                             // *** Sesuaikan nama folder di server web ***
+                             // Contoh: Jika file disimpan di folder 'buktidpjp' di dalam webapps/berkasweb
+                              String folderBukti = "buktidpjp"; // Ganti nama folder jika perlu
+                              LoadHTML2.setText("<html><body><center><img src='http://"+koneksiDB.HOSTHYBRIDWEB()+":"+koneksiDB.PORTWEB()+"/"+koneksiDB.HYBRIDWEB()+"/"+folderBukti+"/"+lokasifile+"' alt='photo' width='450' height='450'/></center></body></html>"); // Adjusted size
                          }
                      }else{
                          lokasifile="";
@@ -1547,6 +1695,7 @@
                  }
              } catch (Exception e) {
                  System.out.println("Notif Prepare Photo Load: "+e);
+                 LoadHTML2.setText("<html><body><center><br><br><font face='tahoma' size='2' color='#434343'>Gagal Memuat Photo</font></center></body></html>");
              }
          } else {
               LoadHTML2.setText("<html><body><center><br><br><font face='tahoma' size='2' color='#434343'>Photo/Scan Belum Tersedia</font></center></body></html>");
