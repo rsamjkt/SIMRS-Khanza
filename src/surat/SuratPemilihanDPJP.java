@@ -1182,32 +1182,23 @@
      }//GEN-LAST:event_ChkAccorActionPerformed
  
      private void btnAmbilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAmbilActionPerformed
-         // This logic might need adjustment depending on how you intend to capture/link the photo
-         // Currently, it assumes an "antripersetujuanumum" table and clearing "surat_persetujuan_umum_pembuat_pernyataan"
-         // Consider if you need similar temporary/queue tables for DPJP photo capture.
-         if(tabMode.getRowCount()==0){
-             JOptionPane.showMessageDialog(null,"Maaf, tabel masih kosong...!!!!");
-             TCari.requestFocus();
-         }else{
-             if(tbSurat.getSelectedRow()>-1){
-                  // *** WARNING: This logic below is from the original Persetujuan Umum. ***
-                  // *** It targets tables potentially unrelated to DPJP selection directly. ***
-                  // *** You may need to modify or replace this logic based on your actual photo capture workflow for DPJP. ***
- 
-                  // Buat tabel antrian spesifik jika belum ada, misal: antri_pemilihan_dpjp
-                  // Sequel.queryu("delete from antri_pemilihan_dpjp"); // Example: Clear specific queue table
-                  // Sequel.queryu("insert into antri_pemilihan_dpjp values('"+tbSurat.getValueAt(tbSurat.getSelectedRow(),0).toString()+"','"+tbSurat.getValueAt(tbSurat.getSelectedRow(),1).toString()+"')");
- 
-                  // Buat tabel bukti spesifik jika belum ada, misal: surat_pemilihan_dpjp_bukti
-                  Sequel.queryu("delete from surat_pemilihan_dpjp_bukti where no_surat='"+tbSurat.getValueAt(tbSurat.getSelectedRow(),0).toString()+"'");
-                  // You might need to launch a separate capture frame/dialog here.
- 
-                  // Beri pesan yang lebih sesuai
-                  JOptionPane.showMessageDialog(rootPane,"Nomor surat "+tbSurat.getValueAt(tbSurat.getSelectedRow(),0).toString()+" siap untuk pengambilan bukti/scan.\nSilahkan gunakan modul/aplikasi pengambilan gambar terpisah.");
-             }else{
-                 JOptionPane.showMessageDialog(rootPane,"Silahkan pilih data surat pada tabel terlebih dahulu..!!");
-             }
-         }
+                                       
+    if(tabMode.getRowCount()==0){
+        JOptionPane.showMessageDialog(null,"Maaf, data sudah habis...!!!!");
+        TCari.requestFocus();
+    }else{
+        if(tbSurat.getSelectedRow()>-1){
+            Sequel.queryu("delete from antripemilihandpjp");
+            Sequel.queryu("insert into antripemilihandpjp values('"+tbSurat.getValueAt(tbSurat.getSelectedRow(),0).toString()+"','"+tbSurat.getValueAt(tbSurat.getSelectedRow(),1).toString()+"')");
+            Sequel.queryu("delete from surat_pemilihan_dpjp_bukti where no_surat='"+tbSurat.getValueAt(tbSurat.getSelectedRow(),0).toString()+"'");
+            
+            // Opsional: Tambahkan pesan konfirmasi
+            JOptionPane.showMessageDialog(rootPane,"Nomor surat "+tbSurat.getValueAt(tbSurat.getSelectedRow(),0).toString()+" siap untuk pengambilan bukti/scan.");
+        }else{
+            JOptionPane.showMessageDialog(rootPane,"Silahkan pilih data surat pada tabel terlebih dahulu..!!");
+        }
+    }
+
      }//GEN-LAST:event_btnAmbilActionPerformed
  
      private void BtnRefreshPhoto1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnRefreshPhoto1ActionPerformed
@@ -1219,25 +1210,67 @@
      }//GEN-LAST:event_BtnRefreshPhoto1ActionPerformed
  
      private void BtnPrint1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPrint1ActionPerformed
-         // This button is now labeled "View" in the initComponents.
-         if(tbSurat.getSelectedRow()>-1){
-             if(lokasifile.equals("")){
-                 JOptionPane.showMessageDialog(null,"Maaf, Belum ada bukti/scan surat yang tersimpan..!!!!");
-             }else{
-                  try {
-                      // Pastikan path folder sesuai dengan setup server Anda
-                      // Contoh: Jika file ada di folder 'buktidpjp' di dalam webapps/berkasweb
-                      String folderBukti = "buktidpjp"; // Ganti jika nama foldernya berbeda
-                      String imageUrl = "http://"+koneksiDB.HOSTHYBRIDWEB()+":"+koneksiDB.PORTWEB()+"/"+koneksiDB.HYBRIDWEB()+"/"+folderBukti+"/"+lokasifile;
-                      java.awt.Desktop.getDesktop().browse(java.net.URI.create(imageUrl));
-                  } catch (Exception ex) {
-                      JOptionPane.showMessageDialog(null,"Gagal membuka file: "+ex);
-                      System.out.println("Error opening photo: "+ ex);
-                  }
-             }
-         }else{
-             JOptionPane.showMessageDialog(null,"Maaf, silahkan pilih data surat pada tabel terlebih dahulu..!!!!");
-         }
+      if(tbSurat.getSelectedRow()>-1){
+    if(lokasifile.equals("")){
+        JOptionPane.showMessageDialog(null,"Maaf, Silahkan ambil photo bukti pemilihan DPJP terlebih dahulu..!!!!");
+    }else{
+        Map<String, Object> param = new HashMap<>();
+        param.put("namars",akses.getnamars());
+        param.put("alamatrs",akses.getalamatrs());
+        param.put("kotars",akses.getkabupatenrs());
+        param.put("propinsirs",akses.getpropinsirs());
+        param.put("kontakrs",akses.getkontakrs());
+        param.put("emailrs",akses.getemailrs());
+        param.put("logo",Sequel.cariGambar("select setting.logo from setting"));
+        param.put("photo","http://"+koneksiDB.HOSTHYBRIDWEB()+":"+koneksiDB.PORTWEB()+"/"+koneksiDB.HYBRIDWEB()+"/pemilihanDPJP/"+lokasifile);
+        
+        // Karena tabel hanya memiliki 13 kolom, kita perlu mengambil NIP langsung dari tabel database
+        // daripada mengakses indeks 16 dan 17 yang tidak ada
+        String noSurat = tbSurat.getValueAt(tbSurat.getSelectedRow(),0).toString();
+        String tanggalSurat = tbSurat.getValueAt(tbSurat.getSelectedRow(),2).toString(); // Perkiraan indeks untuk tanggal
+        
+        // Ambil NIP dan nama petugas langsung dari database
+        String nip = Sequel.cariIsi("SELECT nip FROM surat_pemilihan_dpjp WHERE no_surat='"+noSurat+"'");
+        String namaPetugas = Sequel.cariIsi("SELECT petugas.nama FROM surat_pemilihan_dpjp INNER JOIN petugas ON surat_pemilihan_dpjp.nip=petugas.nip WHERE surat_pemilihan_dpjp.no_surat='"+noSurat+"'");
+        
+        // Ambil sidik jari berdasarkan NIP yang didapat
+        String finger = Sequel.cariIsi("SELECT sha1(sidikjari.sidikjari) FROM sidikjari INNER JOIN pegawai ON pegawai.id=sidikjari.id WHERE pegawai.nik=?", nip);
+        
+        //param.put("finger","Dikeluarkan di "+akses.getnamars()+", Kabupaten/Kota "+akses.getkabupatenrs()+"\nDitandatangani secara elektronik oleh "+namaPetugas+"\nID "+(finger.equals("")?nip:finger)+"\n"+Valid.SetTgl3(tanggalSurat));
+        param.put("finger_petugas","Dikeluarkan di "+akses.getnamars()+", Kabupaten/Kota "+akses.getkabupatenrs()+"\nDitandatangani secara elektronik oleh "+namaPetugas+"\nID "+(finger.equals("")?nip:finger)+"\n"+Valid.SetTgl3(tanggalSurat));
+        Valid.MyReportqry("rptSuratPemilihanDPJP.jasper","report","::[ Surat Pemilihan DPJP ]::",
+            "SELECT " +
+            "rp.no_rawat, " +
+            "p.no_rkm_medis, " +
+            "p.nm_pasien, " +
+            "IF(p.jk='L','LAKI-LAKI','PEREMPUAN') AS jk, " +
+            "p.umur, " +
+            "DATE_FORMAT(p.tgl_lahir,'%d-%m-%Y') AS tgl_lahir, " +
+            "CONCAT(p.alamat,', ',kel.nm_kel,', ',kec.nm_kec,', ',kab.nm_kab) AS alamat_pasien, " +
+            "p.no_tlp, " +
+            "DATE_FORMAT(spdj.tanggal,'%d-%m-%Y') AS tanggal_surat, " +
+            "spdj.tanggal AS tanggal_surat_orig, " +
+            "spdj.no_surat, " +
+            "spdj.nama_pj, " +
+            "spdj.alamat_pj, " +
+            "spdj.bertindak_atas, " +
+            "spdj.kd_dokter, " +
+            "d.nm_dokter, " +
+            "spdj.nip, " +
+            "ptgs.nama AS nama_petugas " +
+            "FROM reg_periksa rp " +
+            "INNER JOIN pasien p ON rp.no_rkm_medis = p.no_rkm_medis " +
+            "INNER JOIN kelurahan kel ON p.kd_kel = kel.kd_kel " +
+            "INNER JOIN kecamatan kec ON p.kd_kec = kec.kd_kec " +
+            "INNER JOIN kabupaten kab ON p.kd_kab = kab.kd_kab " +
+            "INNER JOIN surat_pemilihan_dpjp spdj ON rp.no_rawat = spdj.no_rawat " +
+            "INNER JOIN dokter d ON spdj.kd_dokter = d.kd_dokter " +
+            "INNER JOIN petugas ptgs ON spdj.nip = ptgs.nip " +
+            "WHERE spdj.no_surat='"+noSurat+"'",param);
+    }
+}else{
+    JOptionPane.showMessageDialog(null,"Maaf, silahkan pilih data terlebih dahulu..!!!!");
+      }
      }//GEN-LAST:event_BtnPrint1ActionPerformed
      //</editor-fold>
  
@@ -1657,51 +1690,47 @@
      }
  
      private void panggilPhoto() {
-         // Method ini mengambil foto berdasarkan no_surat
-         // Pastikan nama tabel bukti dan nama kolomnya benar
-         if(FormPhoto.isVisible()==true && tbSurat.getSelectedRow() > -1){
-             lokasifile="";
-             try {
-                  // *** Ganti nama tabel dan kolom jika berbeda ***
-                  // Tabel contoh: surat_pemilihan_dpjp_bukti
-                  // Kolom contoh: photo
-                 ps=koneksi.prepareStatement(
-                     "select photo from surat_pemilihan_dpjp_bukti where no_surat=?");
-                 try {
-                     ps.setString(1,tbSurat.getValueAt(tbSurat.getSelectedRow(),0).toString()); // Use No Surat from DPJP table
-                     rs=ps.executeQuery();
-                     if(rs.next()){
-                         lokasifile=rs.getString("photo");
-                         if(lokasifile==null || lokasifile.isEmpty() || lokasifile.equals("-")){
-                             lokasifile="";
-                             LoadHTML2.setText("<html><body><center><br><br><font face='tahoma' size='2' color='#434343'>Photo/Scan Belum Tersedia</font></center></body></html>");
-                         }else{
-                             // *** Sesuaikan nama folder di server web ***
-                             // Contoh: Jika file disimpan di folder 'buktidpjp' di dalam webapps/berkasweb
-                              String folderBukti = "buktidpjp"; // Ganti nama folder jika perlu
-                              LoadHTML2.setText("<html><body><center><img src='http://"+koneksiDB.HOSTHYBRIDWEB()+":"+koneksiDB.PORTWEB()+"/"+koneksiDB.HYBRIDWEB()+"/"+folderBukti+"/"+lokasifile+"' alt='photo' width='450' height='450'/></center></body></html>"); // Adjusted size
-                         }
-                     }else{
-                         lokasifile="";
-                         LoadHTML2.setText("<html><body><center><br><br><font face='tahoma' size='2' color='#434343'>Photo/Scan Belum Tersedia</font></center></body></html>");
-                     }
-                 } catch (Exception e) {
-                     lokasifile="";
-                     System.out.println("Notif Photo Load: "+e);
-                      LoadHTML2.setText("<html><body><center><br><br><font face='tahoma' size='2' color='#434343'>Gagal Memuat Photo</font></center></body></html>");
-                 } finally{
-                     if(rs!=null){ rs.close(); }
-                     if(ps!=null){ ps.close(); }
-                 }
-             } catch (Exception e) {
-                 System.out.println("Notif Prepare Photo Load: "+e);
-                 LoadHTML2.setText("<html><body><center><br><br><font face='tahoma' size='2' color='#434343'>Gagal Memuat Photo</font></center></body></html>");
-             }
-         } else {
-              LoadHTML2.setText("<html><body><center><br><br><font face='tahoma' size='2' color='#434343'>Photo/Scan Belum Tersedia</font></center></body></html>");
-              lokasifile = "";
-         }
-     }
+    
+    if(FormPhoto.isVisible()==true && tbSurat.getSelectedRow() > -1){
+        lokasifile="";
+        try {
+            ps=koneksi.prepareStatement("select photo from surat_pemilihan_dpjp_bukti where no_surat=?");
+            try {
+                ps.setString(1,tbSurat.getValueAt(tbSurat.getSelectedRow(),0).toString());
+                rs=ps.executeQuery();
+                if(rs.next()){
+                    if(rs.getString("photo")==null || rs.getString("photo").equals("") || rs.getString("photo").equals("-")){
+                        lokasifile="";
+                        LoadHTML2.setText("<html><body><center><br><br><font face='tahoma' size='2' color='#434343'>Bukti/Scan Belum Tersedia</font></center></body></html>");
+                    }else{
+                        lokasifile=rs.getString("photo");
+                        LoadHTML2.setText("<html><body><center><img src='http://"+koneksiDB.HOSTHYBRIDWEB()+":"+koneksiDB.PORTWEB()+"/"+koneksiDB.HYBRIDWEB()+"/pemilihanDPJP/"+lokasifile+"' alt='photo' width='450' height='450'/></center></body></html>");
+                    }  
+                }else{
+                    lokasifile="";
+                    LoadHTML2.setText("<html><body><center><br><br><font face='tahoma' size='2' color='#434343'>Bukti/Scan Belum Tersedia</font></center></body></html>");
+                }
+            } catch (Exception e) {
+                lokasifile="";
+                System.out.println("Notif Photo Load: "+e);
+                LoadHTML2.setText("<html><body><center><br><br><font face='tahoma' size='2' color='#434343'>Gagal Memuat Bukti/Scan</font></center></body></html>");
+            } finally{
+                if(rs!=null){
+                    rs.close();
+                }
+                if(ps!=null){
+                    ps.close();
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Notif Prepare Photo Load: "+e);
+            LoadHTML2.setText("<html><body><center><br><br><font face='tahoma' size='2' color='#434343'>Gagal Memuat Bukti/Scan</font></center></body></html>");
+        }
+    } else {
+        LoadHTML2.setText("<html><body><center><br><br><font face='tahoma' size='2' color='#434343'>Bukti/Scan Belum Tersedia</font></center></body></html>");
+        lokasifile = "";
+    }
+}
      //</editor-fold>
  
  }
