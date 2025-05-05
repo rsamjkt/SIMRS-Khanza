@@ -247,6 +247,7 @@ import surat.SuratPersetujuanPenundaanPelayanan;
 import surat.SuratPersetujuanRawatInap;
 import surat.SuratPersetujuanUmum;
 import surat.SuratPemilihanDPJP;
+import surat.SuratPernyataanPengambilanSampleSHK;
 import surat.SuratPulangAtasPermintaanSendiri;
 import surat.SuratSakit;
 import surat.SuratSakitPihak2;
@@ -1150,6 +1151,7 @@ public final class DlgReg extends javax.swing.JDialog {
         MnCetakSuratCovid = new javax.swing.JMenuItem();
         MnPersetujuanUmum = new javax.swing.JMenuItem();
         MnPemilihanDPJP = new javax.swing.JMenuItem();
+        MnPernyataanPengambilanSampleSHK = new javax.swing.JMenuItem();
         MnPersetujuanPenolakanTindakan = new javax.swing.JMenuItem();
         MnPulangAtasPermintaanSendiri = new javax.swing.JMenuItem();
         MnPernyataanPasienUmum = new javax.swing.JMenuItem();
@@ -3743,6 +3745,22 @@ public final class DlgReg extends javax.swing.JDialog {
             }
         });
         MnSuratSurat.add(MnPemilihanDPJP);
+        
+        MnPernyataanPengambilanSampleSHK.setBackground(new java.awt.Color(255, 255, 254));
+        MnPernyataanPengambilanSampleSHK.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        MnPernyataanPengambilanSampleSHK.setForeground(new java.awt.Color(50, 50, 50));
+        MnPernyataanPengambilanSampleSHK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/category.png"))); // NOI18N
+        MnPernyataanPengambilanSampleSHK.setText("Pengambilan Sample SHK");
+        MnPernyataanPengambilanSampleSHK.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        MnPernyataanPengambilanSampleSHK.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        MnPernyataanPengambilanSampleSHK.setName("MnPernyataanPengambilanSampleSHK"); // NOI18N
+        MnPernyataanPengambilanSampleSHK.setPreferredSize(new java.awt.Dimension(170, 26));
+        MnPernyataanPengambilanSampleSHK.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MnPernyataanPengambilanSampleSHKActionPerformed(evt);
+            }
+        });
+        MnSuratSurat.add(MnPernyataanPengambilanSampleSHK);
 
         MnPersetujuanPenolakanTindakan.setBackground(new java.awt.Color(255, 255, 254));
         MnPersetujuanPenolakanTindakan.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
@@ -13470,6 +13488,29 @@ private void MnLaporanRekapKunjunganBulananPoliActionPerformed(java.awt.event.Ac
             }
         }
     }//GEN-LAST:event_MnPersetujuanUmumActionPerformed
+    
+    private void MnPernyataanPengambilanSampleSHKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnPersetujuanUmumActionPerformed
+        if(tabMode.getRowCount()==0){
+            JOptionPane.showMessageDialog(null,"Maaf, data registrasi sudah habis...!!!!");
+            TNoRM.requestFocus();
+        }else if(TPasien.getText().trim().equals("")){
+            JOptionPane.showMessageDialog(null,"Maaf, Silahkan anda pilih dulu data pasien dengan menklik data pada table...!!!");
+            tbPetugas.requestFocus();
+        }else{
+            if(tbPetugas.getSelectedRow()!= -1){
+                this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                SuratPernyataanPengambilanSampleSHK form=new SuratPernyataanPengambilanSampleSHK(null,false);
+                form.isCek();
+                form.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
+                form.setLocationRelativeTo(internalFrame1);
+                form.setVisible(true);
+                form.emptTeks();
+                form.setNoRm(TNoRw.getText(),DTPCari2.getDate());
+                form.tampil();
+                this.setCursor(Cursor.getDefaultCursor());
+            }
+        }
+    }//GEN-LAST:event_MnPersetujuanUmumActionPerformed
 
     private void MnTransferAntarRuangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnTransferAntarRuangActionPerformed
         if(tabMode.getRowCount()==0){
@@ -16158,6 +16199,7 @@ private void MnLaporanRekapKunjunganBulananPoliActionPerformed(java.awt.event.Ac
     private javax.swing.JMenuItem MnPernyataanPembiayaanNaikKelas;
     private javax.swing.JMenuItem MnPersetujuanUmum;
     private javax.swing.JMenuItem MnPemilihanDPJP;
+    private javax.swing.JMenuItem MnPernyataanPengambilanSampleSHK;
     private javax.swing.JMenu MnPilihBilling;
     private javax.swing.JMenuItem MnPoliInternal;
     private javax.swing.JMenuItem MnPulangAtasPermintaanSendiri;

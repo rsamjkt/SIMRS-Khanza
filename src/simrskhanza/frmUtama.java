@@ -796,6 +796,7 @@ import laporan.DlgLamaPelayananPasien;
 import laporan.DlgLaporanPenyakitPolri;
 import laporan.DlgLaporanPenyakitTNI;
 import laporan.DlgOperasiPerBulan;
+import laporan.DlgPelayananCSSD;
 import laporan.DlgPelayananLabMB;
 import laporan.DlgPelayananLabPA;
 import laporan.DlgPelayananOperasi;
@@ -2114,7 +2115,7 @@ public class frmUtama extends javax.swing.JFrame {
 
         tanggal.setEditable(false);
         tanggal.setForeground(new java.awt.Color(50, 70, 50));
-        tanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "01/05/2025" }));
+        tanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "04/03/2025" }));
         tanggal.setDisplayFormat("dd/MM/yyyy");
         tanggal.setName("tanggal"); // NOI18N
         tanggal.setOpaque(false);
@@ -7494,7 +7495,7 @@ public class frmUtama extends javax.swing.JFrame {
         jLabel7.setForeground(new java.awt.Color(50, 50, 50));
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/file-edit-16x16.png"))); // NOI18N
-        jLabel7.setText("Dikembangkan Ulang oleh Randy Mandala - V.02.05.25");
+        jLabel7.setText(" Didesain & dibuat oleh Khanza.Soft Media");
         jLabel7.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         jLabel7.setIconTextGap(3);
         jLabel7.setName("jLabel7"); // NOI18N
@@ -7533,7 +7534,7 @@ public class frmUtama extends javax.swing.JFrame {
         jLabel11.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel11.setForeground(new java.awt.Color(50, 50, 50));
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel11.setText("Kami Hadir Untuk Anda");
+        jLabel11.setText("Your Businis Solution");
         jLabel11.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jLabel11.setName("jLabel11"); // NOI18N
         jLabel11.setPreferredSize(new java.awt.Dimension(430, 30));
@@ -7544,7 +7545,7 @@ public class frmUtama extends javax.swing.JFrame {
         jLabel8.setForeground(new java.awt.Color(50, 50, 50));
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/yaski_icon.png"))); // NOI18N
-        jLabel8.setText("EMR - RSAM");
+        jLabel8.setText("Khanza HMS+, Hospital Management System");
         jLabel8.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         jLabel8.setName("jLabel8"); // NOI18N
         panelJudul.add(jLabel8);
@@ -8335,7 +8336,7 @@ public class frmUtama extends javax.swing.JFrame {
         jMenu4.setForeground(new java.awt.Color(255, 255, 253));
         jMenu4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/63.png"))); // NOI18N
         jMenu4.setMnemonic('G');
-        jMenu4.setText("EMR-RSAM");
+        jMenu4.setText("Tentang Program");
         jMenu4.setToolTipText("Alt+G");
         jMenu4.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
         jMenu4.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -22549,6 +22550,17 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
         this.setCursor(Cursor.getDefaultCursor());
     }
     
+    private void btnLamaPelayananCSSDActionPerformed(java.awt.event.ActionEvent evt) {                                                       
+        isTutup();
+        DlgHome.dispose();
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        DlgPelayananCSSD aplikasi=new DlgPelayananCSSD(this,false);
+        aplikasi.setSize(PanelUtama.getWidth(), PanelUtama.getHeight());
+        aplikasi.setLocationRelativeTo(PanelUtama);
+        aplikasi.setVisible(true);
+        this.setCursor(Cursor.getDefaultCursor());
+    } 
+    
     /**
     * @param args the command line arguments
     */
@@ -23252,7 +23264,7 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
             btnPenilaianBayiBaruLahir,btnPengeluaranPengeluaran,btnSkriningDiabetesMelitus,btnLaporanTindakan,btnPelaksanaanInformasiEdukasi,btnLayananKedokteranFisikRehabilitasi,
             btnSkriningKesehatanGigiMulutBalita,btnSkriningAnemia,btnPermintaanLayananProgramKFR,btnLayananProgramKFR,btnSkriningHipertensi,btnSkriningKesehatanPenglihatan,
             btnCatatanObservasiHemodialisa,btnSkriningKesehatanGigiMulutDewasa,btnSkriningRisikoKankerServiks,btnCatatanCairanHemodialisa,btnSkriningKesehatanGigiMulutLansia,
-            btnSkriningIndraPendengaran,btnCatatanPengkajianPaskaOperasi,btnSirkulasiInventarisCSSD,btnSkriningFrailtySyndrome;
+            btnSkriningIndraPendengaran,btnCatatanPengkajianPaskaOperasi,btnSirkulasiInventarisCSSD,btnSkriningFrailtySyndrome,btnLamaPelayananCSSD;
     
     public void isWall(){
         try{            
@@ -23287,7 +23299,7 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
                 }
             }                 
         }catch(Exception e){
-            System.out.println("Notifikasi : Silahkan Set Aplikasi "+e);
+            System.out.println("Notifikasi : Silahkan hubungi administrator ");
         }
     }
 
@@ -25183,6 +25195,11 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
             
             if(akses.getlama_operasi()==true){  
                 Panelmenu.add(btnLamaOperasi);                 
+                jmlmenu++;
+            }
+            
+            if(akses.getlama_pelayanan_cssd()==true){  
+                Panelmenu.add(btnLamaPelayananCSSD);                 
                 jmlmenu++;
             }
             
@@ -30730,6 +30747,11 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
         
         if(akses.getlama_operasi()==true){  
             Panelmenu.add(btnLamaOperasi);                 
+            jmlmenu++;
+        }
+        
+        if(akses.getlama_pelayanan_cssd()==true){  
+            Panelmenu.add(btnLamaPelayananCSSD);                 
             jmlmenu++;
         }
         
@@ -36987,6 +37009,13 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
         if(akses.getlama_operasi()==true){  
             if(btnLamaOperasi.getText().toLowerCase().trim().contains(TCari.getText().toLowerCase().trim())){
                 Panelmenu.add(btnLamaOperasi);                 
+                jmlmenu++;
+            }                
+        }
+        
+        if(akses.getlama_pelayanan_cssd()==true){  
+            if(btnLamaPelayananCSSD.getText().toLowerCase().trim().contains(TCari.getText().toLowerCase().trim())){
+                Panelmenu.add(btnLamaPelayananCSSD);                 
                 jmlmenu++;
             }                
         }
@@ -43819,6 +43848,14 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
         btnLamaPelayananPoli.setName("btnLamaPelayananPoli"); 
         btnLamaPelayananPoli.setPreferredSize(new java.awt.Dimension(200, 90));
         btnLamaPelayananPoli.addActionListener(this::btnLamaPelayananPoliActionPerformed);
+        
+        btnLamaPelayananCSSD = new widget.ButtonBig();
+        btnLamaPelayananCSSD.setIcon(new javax.swing.ImageIcon(getClass().getResource("/48x48/Gnome-X-Office-Address-Book-48.png"))); 
+        btnLamaPelayananCSSD.setText("Lama Pelayanan CSSD");
+        btnLamaPelayananCSSD.setIconTextGap(0);
+        btnLamaPelayananCSSD.setName("btnLamaPelayananCSSD"); 
+        btnLamaPelayananCSSD.setPreferredSize(new java.awt.Dimension(200, 90));
+        btnLamaPelayananCSSD.addActionListener(this::btnLamaPelayananCSSDActionPerformed);
         
         btnHemodialisa = new widget.ButtonBig();
         btnHemodialisa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/48x48/iconfinder_32_Disease_infected_infection_kidney_6088186.png"))); 
