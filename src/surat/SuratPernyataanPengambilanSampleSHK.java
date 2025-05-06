@@ -650,7 +650,7 @@
         FormInput.add(jLabel27);
         jLabel27.setBounds(0, 70, 100, 23);
 
-        NamaIbu.setEditable(false);
+        NamaIbu.setEditable(true);
         NamaIbu.setHighlighter(null);
         NamaIbu.setName("NamaIbu"); // NOI18N
         FormInput.add(NamaIbu);
@@ -661,7 +661,7 @@
         FormInput.add(jLabel28);
         jLabel28.setBounds(430, 70, 100, 23);
 
-        NamaAyah.setEditable(false);
+        NamaAyah.setEditable(true);
         NamaAyah.setHighlighter(null);
         NamaAyah.setName("NamaAyah"); // NOI18N
         FormInput.add(NamaAyah);
@@ -672,7 +672,7 @@
         FormInput.add(jLabel29);
         jLabel29.setBounds(0, 100, 100, 23);
 
-        AlamatOrtu.setEditable(false);
+        AlamatOrtu.setEditable(true);
         AlamatOrtu.setHighlighter(null);
         AlamatOrtu.setName("AlamatOrtu"); // NOI18N
         FormInput.add(AlamatOrtu);
@@ -683,7 +683,7 @@
         FormInput.add(jLabel30);
         jLabel30.setBounds(430, 40, 100, 23);
 
-        NoTelp.setEditable(false);
+        NoTelp.setEditable(true);
         NoTelp.setHighlighter(null);
         NoTelp.setName("NoTelp"); // NOI18N
         FormInput.add(NoTelp);
@@ -720,13 +720,13 @@
             }
         });
         FormInput.add(cmbJamSample);
-        cmbJamSample.setBounds(274, 160, 45, 23);
+        cmbJamSample.setBounds(274, 160, 65, 23);
 
         jLabel33.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel33.setText(":");
         jLabel33.setName("jLabel33"); // NOI18N
         FormInput.add(jLabel33);
-        jLabel33.setBounds(319, 160, 10, 23);
+        jLabel33.setBounds(344, 160, 10, 23);
 
         cmbMntSample.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "00" }));
         cmbMntSample.setName("cmbMntSample"); // NOI18N
@@ -736,13 +736,13 @@
             }
         });
         FormInput.add(cmbMntSample);
-        cmbMntSample.setBounds(329, 160, 45, 23);
+        cmbMntSample.setBounds(359, 160, 65, 23); // Beri lebar sama
 
         jLabel34.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel34.setText(":");
         jLabel34.setName("jLabel34"); // NOI18N
         FormInput.add(jLabel34);
-        jLabel34.setBounds(374, 160, 10, 23);
+        jLabel34.setBounds(429, 160, 10, 23);
 
         cmbDtkSample.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "00" }));
         cmbDtkSample.setName("cmbDtkSample"); // NOI18N
@@ -752,7 +752,7 @@
             }
         });
         FormInput.add(cmbDtkSample);
-        cmbDtkSample.setBounds(384, 160, 45, 23);
+        cmbDtkSample.setBounds(444, 160, 65, 23); // Beri lebar sama
 
         jLabel35.setText("Tempat Sampel :");
         jLabel35.setName("jLabel35"); // NOI18N
@@ -1258,7 +1258,7 @@
 
                 Sequel.queryu("delete from antripernyataanshk");
                 Sequel.queryu2("insert into antripernyataanshk values(?,?)", 2, new String[]{noPernyataan, noRawat});
-                Sequel.queryu2("delete from surat_pernyataan_shk_bukti where no_pernyataan=?", 1, new String[]{noPernyataan});
+                
 
                 JOptionPane.showMessageDialog(rootPane,"Nomor Pernyataan "+ noPernyataan +" siap untuk pengambilan bukti/scan.");
             }else{
@@ -1301,8 +1301,8 @@
 
                 // Ganti "rptSuratPernyataanSHK.jasper" jika ada report khusus view photo
                 Valid.MyReportqry("rptSuratPernyataanSHK.jasper","report","::[ Bukti Surat Pernyataan SHK ]::",
-                    "SELECT s.no_pernyataan, s.no_rawat, rp.no_rkm_medis, p.nm_pasien AS nama_bayi, " +
-                    "p.tgl_lahir AS tgl_lahir_bayi, COALESCE(pb.jam_lahir,'00:00:00') AS jam_lahir_bayi, " +
+                    "SELECT s.no_pernyataan, s.no_rawat, rp.no_rkm_medis, p.nm_pasien AS nama_bayi, p.jk, " +
+                    "p.tgl_lahir AS tgl_lahir_bayi, COALESCE(pb.jam_lahir,'00:00:00') AS jam_lahir, " +
                     "s.nama_ibu, s.nama_ayah, s.alamat_orangtua, s.no_telp_orangtua, " +
                     "s.tgl_pernyataan, s.tgl_pengambilan_sample, s.jam_pengambilan_sample, s.tempat_pengambilan, " +
                     "s.nip_petugas, pt.nama AS nama_petugas " +
