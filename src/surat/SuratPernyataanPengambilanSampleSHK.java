@@ -1747,7 +1747,7 @@
 
      public void isCek(){
           // Sesuaikan Hak Akses jika perlu
-         boolean aksesSuratSHK = akses.getadmin() || akses.getsurat_keterangan_rawat_inap(); // Ganti dg hak akses relevan
+         boolean aksesSuratSHK = akses.getadmin() || akses.getsurat_persetujuan_umum(); // Ganti dg hak akses relevan
 
          BtnSimpan.setEnabled(aksesSuratSHK);
          BtnHapus.setEnabled(aksesSuratSHK);
