@@ -20,7 +20,7 @@
     <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
-    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,1,59,0,0,3,-119"/>
+    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,1,59,0,0,4,21"/>
   </AuxValues>
 
   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
@@ -106,7 +106,7 @@
                     </Property>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="1">
-                        <StringItem index="0" value="23-02-2025"/>
+                        <StringItem index="0" value="06-05-2025"/>
                       </StringArray>
                     </Property>
                     <Property name="displayFormat" type="java.lang.String" value="dd-MM-yyyy"/>
@@ -134,7 +134,7 @@
                     </Property>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="1">
-                        <StringItem index="0" value="23-02-2025"/>
+                        <StringItem index="0" value="06-05-2025"/>
                       </StringArray>
                     </Property>
                     <Property name="displayFormat" type="java.lang.String" value="dd-MM-yyyy"/>
@@ -396,7 +396,7 @@
                     </Constraint>
                   </Constraints>
                 </Component>
-                <Component class="javax.swing.JLabel" name="LCountPemasukanLain">
+                <Component class="javax.swing.JLabel" name="LCountBayarDapur">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Tahoma" size="12" style="0"/>
@@ -406,7 +406,7 @@
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="2"/>
                     <Property name="text" type="java.lang.String" value="0"/>
-                    <Property name="name" type="java.lang.String" value="LCountPemasukanLain" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="LCountBayarDapur" noResource="true"/>
                     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                       <Dimension value="[180, 23]"/>
                     </Property>
@@ -438,7 +438,7 @@
                     </Constraint>
                   </Constraints>
                 </Component>
-                <Component class="javax.swing.JLabel" name="LCountDeposit">
+                <Component class="javax.swing.JLabel" name="LCountBayarJM">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Tahoma" size="12" style="0"/>
@@ -448,7 +448,7 @@
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="2"/>
                     <Property name="text" type="java.lang.String" value="0"/>
-                    <Property name="name" type="java.lang.String" value="LCountDeposit" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="LCountBayarJM" noResource="true"/>
                     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                       <Dimension value="[180, 23]"/>
                     </Property>
@@ -480,7 +480,7 @@
                     </Constraint>
                   </Constraints>
                 </Component>
-                <Component class="javax.swing.JLabel" name="LCountPiutangDibayar">
+                <Component class="javax.swing.JLabel" name="LCountPengeluaranHarian">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Tahoma" size="12" style="0"/>
@@ -490,7 +490,7 @@
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="2"/>
                     <Property name="text" type="java.lang.String" value="0"/>
-                    <Property name="name" type="java.lang.String" value="LCountPiutangDibayar" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="LCountPengeluaranHarian" noResource="true"/>
                     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                       <Dimension value="[180, 23]"/>
                     </Property>
@@ -645,9 +645,9 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="widget.Table" name="tbPemasukanLain">
+                <Component class="widget.Table" name="tbBayarPesanDapur">
                   <Properties>
-                    <Property name="name" type="java.lang.String" value="tbPemasukanLain" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="tbBayarPesanDapur" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -674,9 +674,9 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="widget.Table" name="tbDeposit">
+                <Component class="widget.Table" name="tbBayarJM">
                   <Properties>
-                    <Property name="name" type="java.lang.String" value="tbDeposit" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="tbBayarJM" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -703,9 +703,9 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="widget.Table" name="tbPiutangDibayar">
+                <Component class="widget.Table" name="tbPengeluaranHarian">
                   <Properties>
-                    <Property name="name" type="java.lang.String" value="tbPiutangDibayar" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="tbPengeluaranHarian" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>
