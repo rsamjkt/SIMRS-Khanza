@@ -292,7 +292,17 @@ public class koneksiDB {
         }
         return var;
     }
-    
+    public static String MAX_EDIT_TIME(){
+    String var;
+    try (FileInputStream fis = new FileInputStream("setting/database.xml")) {
+        Properties prop = new Properties();
+        prop.loadFromXML(fis);
+        var=prop.getProperty("MAX_EDIT_TIME");
+    }catch(Exception e){
+        var="7776000"; 
+    }
+    return var;
+}
     public static String CONSIDAPIBPJS(){
         try (FileInputStream fis = new FileInputStream("setting/database.xml")) {
             prop.loadFromXML(fis);

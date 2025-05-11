@@ -1409,7 +1409,7 @@ public final class sekuel {
             waktumulai = formattanggal.parse(tanggalmulai);
             kegiatan = formattanggal.parse(tanggalinputdata);
             bedawaktu = (kegiatan.getTime()-waktumulai.getTime())/1000;
-            if(bedawaktu>2592000){
+            if(bedawaktu>7776000){
                 bool=false;
                 JOptionPane.showMessageDialog(null,"Maaf, perubahan data / penghapusan data tidak boleh lebih dari 30 Hari !");
             }else{
