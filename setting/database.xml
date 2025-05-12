@@ -221,9 +221,9 @@
     <entry key="CLOUDFLAREBUCKETNAME">attaakai</entry>
     <entry key="CLOUDFLAREREGION">auto</entry>
     
-    <entry key="URLAPISERTISIGN">https://api-stag.sertisign.id/v2/poa/multiple-signing-qr-multiple</entry>
+    <entry key="URLAPISERTISIGN">https://api-stag.sertisign.id/v2/poa/signing-qr</entry>
     <entry key="APIKEYSERTISIGN">mtodloKhyhM2aWtv3HkaryYsH2zCQ5mfSwv6Xzri0N/fPs1jM1X2nJlZRuIe1+n7</entry>
-    <entry key="URLDOKUMENSERTISIGN">https://sertisign.com/webhook</entry>
+    <entry key="URLDOKUMENSERTISIGN">https://sign.akai.my.id/webhook</entry>
     
     
 </properties>
