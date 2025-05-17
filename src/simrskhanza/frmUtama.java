@@ -769,6 +769,7 @@ import keuangan.KeuanganHutangDapurBelumLunas;
 import keuangan.KeuanganNilaiPiutangPerJenisBayarPerBulan;
 import keuangan.KeuanganPengajuanBiaya;
 import keuangan.KeuanganPersetujuanPengajuanBiaya;
+import keuangan.KeuanganPiutangJasaPerusahaan;
 import keuangan.KeuanganRekapPengajuanBiaya;
 import keuangan.KeuanganRingkasanHutangVendorDapur;
 import keuangan.KeuanganRingkasanJasaTindakan;
@@ -1045,81 +1046,111 @@ import setting.DlgSetHargaToko;
 import simrskhanza.DlgAbout;
 import simrskhanza.DlgAbout;
 import simrskhanza.DlgAbout;
+import simrskhanza.DlgAbout;
+import simrskhanza.DlgBahasa;
 import simrskhanza.DlgBahasa;
 import simrskhanza.DlgBahasa;
 import simrskhanza.DlgBahasa;
 import simrskhanza.DlgCacatFisik;
 import simrskhanza.DlgCacatFisik;
 import simrskhanza.DlgCacatFisik;
+import simrskhanza.DlgCacatFisik;
+import simrskhanza.DlgCariPeriksaLab;
 import simrskhanza.DlgCariPeriksaLab;
 import simrskhanza.DlgCariPeriksaLab;
 import simrskhanza.DlgCariPeriksaLab;
 import simrskhanza.DlgCariPeriksaLabMB;
 import simrskhanza.DlgCariPeriksaLabMB;
 import simrskhanza.DlgCariPeriksaLabMB;
+import simrskhanza.DlgCariPeriksaLabMB;
+import simrskhanza.DlgCariPeriksaLabPA;
 import simrskhanza.DlgCariPeriksaLabPA;
 import simrskhanza.DlgCariPeriksaLabPA;
 import simrskhanza.DlgCariPeriksaLabPA;
 import simrskhanza.DlgCariPeriksaRadiologi;
 import simrskhanza.DlgCariPeriksaRadiologi;
 import simrskhanza.DlgCariPeriksaRadiologi;
+import simrskhanza.DlgCariPeriksaRadiologi;
+import simrskhanza.DlgCariTagihanOperasi;
 import simrskhanza.DlgCariTagihanOperasi;
 import simrskhanza.DlgCariTagihanOperasi;
 import simrskhanza.DlgCariTagihanOperasi;
 import simrskhanza.DlgDpjp;
 import simrskhanza.DlgDpjp;
 import simrskhanza.DlgDpjp;
+import simrskhanza.DlgDpjp;
+import simrskhanza.DlgGolonganPolri;
 import simrskhanza.DlgGolonganPolri;
 import simrskhanza.DlgGolonganPolri;
 import simrskhanza.DlgGolonganPolri;
 import simrskhanza.DlgGolonganTNI;
 import simrskhanza.DlgGolonganTNI;
 import simrskhanza.DlgGolonganTNI;
+import simrskhanza.DlgGolonganTNI;
+import simrskhanza.DlgIGD;
 import simrskhanza.DlgIGD;
 import simrskhanza.DlgIGD;
 import simrskhanza.DlgIGD;
 import simrskhanza.DlgIKBBayi;
 import simrskhanza.DlgIKBBayi;
 import simrskhanza.DlgIKBBayi;
+import simrskhanza.DlgIKBBayi;
+import simrskhanza.DlgJabatanPolri;
 import simrskhanza.DlgJabatanPolri;
 import simrskhanza.DlgJabatanPolri;
 import simrskhanza.DlgJabatanPolri;
 import simrskhanza.DlgJabatanTNI;
 import simrskhanza.DlgJabatanTNI;
 import simrskhanza.DlgJabatanTNI;
+import simrskhanza.DlgJabatanTNI;
+import simrskhanza.DlgKasirRalan;
+import simrskhanza.DlgLhtCatatanPasien;
 import simrskhanza.DlgLhtCatatanPasien;
 import simrskhanza.DlgLhtCatatanPasien;
 import simrskhanza.DlgLhtCatatanPasien;
 import simrskhanza.DlgPangkatPolri;
 import simrskhanza.DlgPangkatPolri;
 import simrskhanza.DlgPangkatPolri;
+import simrskhanza.DlgPangkatPolri;
+import simrskhanza.DlgPangkatTNI;
 import simrskhanza.DlgPangkatTNI;
 import simrskhanza.DlgPangkatTNI;
 import simrskhanza.DlgPangkatTNI;
 import simrskhanza.DlgPasienMati;
 import simrskhanza.DlgPasienMati;
 import simrskhanza.DlgPasienMati;
+import simrskhanza.DlgPasienMati;
+import simrskhanza.DlgPemberianDiet;
 import simrskhanza.DlgPemberianDiet;
 import simrskhanza.DlgPemberianDiet;
 import simrskhanza.DlgPemberianDiet;
 import simrskhanza.DlgPenanggungJawab;
 import simrskhanza.DlgPenanggungJawab;
 import simrskhanza.DlgPenanggungJawab;
+import simrskhanza.DlgPenanggungJawab;
 import simrskhanza.DlgPerusahaan;
 import simrskhanza.DlgPerusahaan;
 import simrskhanza.DlgPerusahaan;
+import simrskhanza.DlgPerusahaan;
+import simrskhanza.DlgRawatJalan;
+import simrskhanza.DlgReg;
+import simrskhanza.DlgRujuk;
 import simrskhanza.DlgRujuk;
 import simrskhanza.DlgRujuk;
 import simrskhanza.DlgRujuk;
 import simrskhanza.DlgRujukMasuk;
 import simrskhanza.DlgRujukMasuk;
 import simrskhanza.DlgRujukMasuk;
+import simrskhanza.DlgRujukMasuk;
+import simrskhanza.DlgSatuanPolri;
 import simrskhanza.DlgSatuanPolri;
 import simrskhanza.DlgSatuanPolri;
 import simrskhanza.DlgSatuanPolri;
 import simrskhanza.DlgSatuanTNI;
 import simrskhanza.DlgSatuanTNI;
 import simrskhanza.DlgSatuanTNI;
+import simrskhanza.DlgSatuanTNI;
+import simrskhanza.DlgSuku;
 import simrskhanza.DlgSuku;
 import simrskhanza.DlgSuku;
 import simrskhanza.DlgSuku;
@@ -2119,7 +2150,7 @@ public class frmUtama extends javax.swing.JFrame {
 
         tanggal.setEditable(false);
         tanggal.setForeground(new java.awt.Color(50, 70, 50));
-        tanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "04/03/2025" }));
+        tanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "15/05/2025" }));
         tanggal.setDisplayFormat("dd/MM/yyyy");
         tanggal.setName("tanggal"); // NOI18N
         tanggal.setOpaque(false);
@@ -22618,6 +22649,18 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
         this.setCursor(Cursor.getDefaultCursor());
     }
     
+    private void btnPiutangJasaPerusahaanActionPerformed(java.awt.event.ActionEvent evt) {                                                        
+        isTutup();
+        DlgHome.dispose();
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        KeuanganPiutangJasaPerusahaan aplikasi=new KeuanganPiutangJasaPerusahaan(this,false);
+        aplikasi.isCek();
+        aplikasi.setSize(PanelUtama.getWidth(), PanelUtama.getHeight());
+        aplikasi.setLocationRelativeTo(PanelUtama);
+        aplikasi.setVisible(true);
+        this.setCursor(Cursor.getDefaultCursor());
+    }
+    
     /**
     * @param args the command line arguments
     */
@@ -23322,7 +23365,7 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
             btnSkriningKesehatanGigiMulutBalita,btnSkriningAnemia,btnPermintaanLayananProgramKFR,btnLayananProgramKFR,btnSkriningHipertensi,btnSkriningKesehatanPenglihatan,
             btnCatatanObservasiHemodialisa,btnSkriningKesehatanGigiMulutDewasa,btnSkriningRisikoKankerServiks,btnCatatanCairanHemodialisa,btnSkriningKesehatanGigiMulutLansia,
             btnSkriningIndraPendengaran,btnCatatanPengkajianPaskaOperasi,btnSirkulasiInventarisCSSD,btnSkriningFrailtySyndrome,btnLamaPelayananCSSD,btnCatatanObservasiBayi,
-            btnRiwayatSuratPeringatan,btnMasterKesimpulanAnjuranMCU,btnKategoriPiutangJasaPerusahaan;
+            btnRiwayatSuratPeringatan,btnMasterKesimpulanAnjuranMCU,btnKategoriPiutangJasaPerusahaan,btnPiutangJasaPerusahaan;
     
     public void isWall(){
         try{            
@@ -25626,6 +25669,11 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
             
             if(akses.getkategori_piutang_jasa_perusahaan()==true){
                 Panelmenu.add(btnKategoriPiutangJasaPerusahaan);
+                jmlmenu++;
+            }
+            
+            if(akses.getpiutang_jasa_perusahaan()==true){
+                Panelmenu.add(btnPiutangJasaPerusahaan);
                 jmlmenu++;
             }
 
@@ -31177,6 +31225,11 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
         
         if(akses.getkategori_piutang_jasa_perusahaan()==true){
             Panelmenu.add(btnKategoriPiutangJasaPerusahaan);
+            jmlmenu++;
+        }
+        
+        if(akses.getpiutang_jasa_perusahaan()==true){
+            Panelmenu.add(btnPiutangJasaPerusahaan);
             jmlmenu++;
         }
 
@@ -37627,6 +37680,13 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
         if(akses.getkategori_piutang_jasa_perusahaan()==true){
             if(btnKategoriPiutangJasaPerusahaan.getText().toLowerCase().trim().contains(TCari.getText().toLowerCase().trim())){
                 Panelmenu.add(btnKategoriPiutangJasaPerusahaan);
+                jmlmenu++;
+            }                
+        }
+        
+        if(akses.getpiutang_jasa_perusahaan()==true){
+            if(btnPiutangJasaPerusahaan.getText().toLowerCase().trim().contains(TCari.getText().toLowerCase().trim())){
+                Panelmenu.add(btnPiutangJasaPerusahaan);
                 jmlmenu++;
             }                
         }
@@ -47638,5 +47698,13 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
         btnKategoriPiutangJasaPerusahaan.setName("btnKategoriPiutangJasaPerusahaan");
         btnKategoriPiutangJasaPerusahaan.setPreferredSize(new java.awt.Dimension(200, 90));
         btnKategoriPiutangJasaPerusahaan.addActionListener(this::btnKategoriPiutangJasaPerusahaanActionPerformed);
+        
+        btnPiutangJasaPerusahaan = new widget.ButtonBig();
+        btnPiutangJasaPerusahaan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/48x48/1889200_bag_coins_finance_saving_bank_icon.png"))); 
+        btnPiutangJasaPerusahaan.setText("Piutang Jasa Perusahaan");
+        btnPiutangJasaPerusahaan.setIconTextGap(0);
+        btnPiutangJasaPerusahaan.setName("btnPiutangJasaPerusahaan");
+        btnPiutangJasaPerusahaan.setPreferredSize(new java.awt.Dimension(200, 90));
+        btnPiutangJasaPerusahaan.addActionListener(this::btnPiutangJasaPerusahaanActionPerformed);
     }
 }
