@@ -11,7 +11,7 @@
  Target Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
  File Encoding         : 65001
 
- Date: 04/06/2025 08:43:54
+ Date: 04/06/2025 13:52:47
 */
 
 SET NAMES utf8mb4;
@@ -30,6 +30,8 @@ CREATE TABLE `bridging_sertisign` (
   `sertisign_api_url` varchar(512) DEFAULT NULL COMMENT 'URL dokumen dari API SertifiSign (sebelum di MinIO)',
   `signed_document_url_minio` varchar(512) DEFAULT NULL COMMENT 'URL dokumen yang sudah ditandatangani dan diupload ke MinIO S3',
   `filename_minio` varchar(255) DEFAULT NULL COMMENT 'Nama file dokumen di MinIO S3',
+  `synology_file_path` varchar(512) DEFAULT NULL COMMENT 'Path lengkap file di Synology NAS',
+  `google_drive_url` varchar(512) DEFAULT NULL COMMENT 'URL file di Google Drive',
   `status_tte` varchar(50) NOT NULL DEFAULT 'PENDING' COMMENT 'Status TTE (PENDING, SENT_TO_SERTISIGN, WAITING_CALLBACK, PDF_GEN_FAILED, API_SEND_FAILED, NO_SIGNER_EMAIL, TTE_SUCCESS, TTE_PARTIAL, TTE_FAILED, TTE_S3_UPLOAD_FAILED)',
   `keterangan` varchar(500) DEFAULT NULL COMMENT 'Keterangan tambahan mengenai status TTE',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'Timestamp pembuatan record',
@@ -49,6 +51,6 @@ CREATE TABLE `bridging_sertisign` (
   KEY `idx_bs_transaction_id` (`transaction_id_sertisign`) USING BTREE,
   KEY `idx_bs_status_tte` (`status_tte`) USING BTREE,
   KEY `idx_bs_created_at` (`created_at`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=267 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=271 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
 SET FOREIGN_KEY_CHECKS = 1;

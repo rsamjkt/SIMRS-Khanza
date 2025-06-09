@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : produ
- Source Server Type    : MySQL
+ Source Server         : serverDevAtta-ygakseIP
+ Source Server Type    : MariaDB
  Source Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
- Source Host           : 10.0.2.5:3306
- Source Schema         : sik
+ Source Host           : 10.0.2.121:3306
+ Source Schema         : sikrsamlegacy2
 
- Target Server Type    : MySQL
+ Target Server Type    : MariaDB
  Target Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
  File Encoding         : 65001
 
- Date: 11/04/2025 14:36:24
+ Date: 06/06/2025 15:35:17
 */
 
 SET NAMES utf8mb4;
@@ -59,19 +59,20 @@ CREATE TABLE `pasien` (
   `kd_prop` int(11) NOT NULL,
   `propinsipj` varchar(30) NOT NULL,
   PRIMARY KEY (`no_rkm_medis`),
-  KEY `kd_pj` (`kd_pj`),
-  KEY `kd_kec` (`kd_kec`),
-  KEY `kd_kab` (`kd_kab`),
-  KEY `nm_pasien` (`nm_pasien`),
-  KEY `alamat` (`alamat`),
-  KEY `kd_kel_2` (`kd_kel`),
-  KEY `no_ktp` (`no_ktp`),
-  KEY `no_peserta` (`no_peserta`),
-  KEY `perusahaan_pasien` (`perusahaan_pasien`),
-  KEY `suku_bangsa` (`suku_bangsa`),
-  KEY `bahasa_pasien` (`bahasa_pasien`),
-  KEY `cacat_fisik` (`cacat_fisik`),
-  KEY `kd_prop` (`kd_prop`),
+  KEY `kd_pj` (`kd_pj`) USING BTREE,
+  KEY `kd_kec` (`kd_kec`) USING BTREE,
+  KEY `kd_kab` (`kd_kab`) USING BTREE,
+  KEY `nm_pasien` (`nm_pasien`) USING BTREE,
+  KEY `alamat` (`alamat`) USING BTREE,
+  KEY `kd_kel_2` (`kd_kel`) USING BTREE,
+  KEY `no_ktp` (`no_ktp`) USING BTREE,
+  KEY `no_peserta` (`no_peserta`) USING BTREE,
+  KEY `perusahaan_pasien` (`perusahaan_pasien`) USING BTREE,
+  KEY `suku_bangsa` (`suku_bangsa`) USING BTREE,
+  KEY `bahasa_pasien` (`bahasa_pasien`) USING BTREE,
+  KEY `cacat_fisik` (`cacat_fisik`) USING BTREE,
+  KEY `kd_prop` (`kd_prop`) USING BTREE,
+  KEY `idx_pasien_rkm_nama` (`no_rkm_medis`,`nm_pasien`) USING BTREE,
   CONSTRAINT `pasien_ibfk_1` FOREIGN KEY (`kd_pj`) REFERENCES `penjab` (`kd_pj`) ON UPDATE CASCADE,
   CONSTRAINT `pasien_ibfk_2` FOREIGN KEY (`kd_kel`) REFERENCES `kelurahan` (`kd_kel`) ON UPDATE CASCADE,
   CONSTRAINT `pasien_ibfk_3` FOREIGN KEY (`kd_kec`) REFERENCES `kecamatan` (`kd_kec`) ON UPDATE CASCADE,
@@ -81,6 +82,6 @@ CREATE TABLE `pasien` (
   CONSTRAINT `pasien_ibfk_7` FOREIGN KEY (`bahasa_pasien`) REFERENCES `bahasa_pasien` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `pasien_ibfk_8` FOREIGN KEY (`cacat_fisik`) REFERENCES `cacat_fisik` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `pasien_ibfk_9` FOREIGN KEY (`kd_prop`) REFERENCES `propinsi` (`kd_prop`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci ROW_FORMAT=DYNAMIC;
 
 SET FOREIGN_KEY_CHECKS = 1;
