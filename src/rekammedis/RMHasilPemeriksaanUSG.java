@@ -1719,7 +1719,8 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
     }//GEN-LAST:event_TanggalKeyPressed
 
     private void MnPenilaianMedisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnPenilaianMedisActionPerformed
-        usg = koneksiDB.CLOUDFLARER2HOST()+Sequel.cariIsi("select lokasi_gambar from gambar_radiologi where no_rawat='"+TNoRw.getText()+"'")+"";
+        // [DIUBAH] Mengambil 'photo' dari 'hasil_pemeriksaan_usg_gambar', LIMIT 1 untuk mengambil satu gambar perwakilan
+usg = koneksiDB.CLOUDFLARER2HOST()+Sequel.cariIsi("select photo from hasil_pemeriksaan_usg_gambar where no_rawat='"+TNoRw.getText()+"' limit 1")+"";
         
         if(tbObat.getSelectedRow()>-1){
             Map<String, Object> param = new HashMap<>();
@@ -1945,12 +1946,11 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
             HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
             
             ps = koneksi.prepareStatement(
-                "SELECT pasien.no_rkm_medis, pasien.nm_pasien, pasien.no_tlp, gambar_radiologi.lokasi_gambar " +
-                "FROM gambar_radiologi " +
-                "INNER JOIN reg_periksa ON gambar_radiologi.no_rawat = reg_periksa.no_rawat " +
+                "SELECT pasien.no_rkm_medis, pasien.nm_pasien, pasien.no_tlp, hpg.photo " +
+                "FROM hasil_pemeriksaan_usg_gambar hpg " +
+                "INNER JOIN reg_periksa ON hpg.no_rawat = reg_periksa.no_rawat " +
                 "INNER JOIN pasien ON reg_periksa.no_rkm_medis = pasien.no_rkm_medis " +
-                "WHERE reg_periksa.no_rawat = ? " +
-                "GROUP BY gambar_radiologi.lokasi_gambar"
+                "WHERE reg_periksa.no_rawat = ?"
             );
 
             ps.setString(1, tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString());
@@ -1967,7 +1967,8 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
                     }
                     
                     // Gunakan generatePresignedUrl yang sudah ada
-                    String urlHasil = koneksiDB.CLOUDFLARER2HOST() +"/"+ rs.getString("lokasi_gambar");
+                    // [DIUBAH] Menggunakan nama kolom 'photo' dari query yang baru
+                    String urlHasil = koneksiDB.CLOUDFLARER2HOST() +"/"+ rs.getString("photo");
                     System.out.println("Generated S3 URL: " + urlHasil);
 
                     JSONObject jsonRequest = new JSONObject();
@@ -2428,15 +2429,16 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
     private void panggilPhoto() {
     if (FormPhoto.isVisible() == true) {
         try {
-            ps = koneksi.prepareStatement("SELECT gambar_radiologi.lokasi_gambar FROM gambar_radiologi WHERE gambar_radiologi.no_rawat=?");
+            // [DIUBAH] Mengambil satu gambar perwakilan dari tabel baru untuk ditampilkan di GUI
+ps = koneksi.prepareStatement("SELECT photo FROM hasil_pemeriksaan_usg_gambar WHERE no_rawat=? LIMIT 1");
             try {
                 ps.setString(1, tbObat.getValueAt(tbObat.getSelectedRow(), 0).toString());
                 rs = ps.executeQuery();
                 if (rs.next()) {
-                    if (rs.getString("lokasi_gambar").equals("") || rs.getString("lokasi_gambar").equals("-")) {
+                    if (rs.getString("photo").equals("") || rs.getString("photo").equals("-")) {
                         LoadHTML2.setText("<html><body><center><br><br><font face='tahoma' size='2' color='#434343'>Kosong</font></center></body></html>");
                     } else {
-                        String objectKey = rs.getString("lokasi_gambar");
+                        String objectKey = rs.getString("photo");
                         String presignedUrl = generatePresignedUrl(objectKey);
                         LoadHTML2.setText("<html><body><center><a href='" + presignedUrl + 
                             "'><img src='" + presignedUrl + 
