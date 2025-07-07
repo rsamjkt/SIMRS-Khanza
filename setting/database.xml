@@ -222,5 +222,11 @@
     <entry key="APIKEYSERTISIGN">mtodloKhyhM2aWtv3HkaryYsH2zCQ5mfSwv6Xzri0N/fPs1jM1X2nJlZRuIe1+n7</entry>
     <entry key="URLDOKUMENSERTISIGN">https://sign.akai.my.id/webhook/post-webhook-sertisign.php</entry>
     
+    <entry key="HOSTDUTAPARKING">5k7+C7EnUw9nUv2Nix+DBA==</entry>
+    <entry key="DATABASEDUTAPARKING">o4cUZDSdQxLPdcZer/pr1PnCrQNrd08+Hrx8Y/fi7Os=</entry>
+    <entry key="PORTDUTAPARKING">nioxtijcpDaKSUiUiP5FAg==</entry>
+    <entry key="USERDUTAPARKING">kMR3WfAwUK6MbhCyydxa0g==</entry>
+    <entry key="PASDUTAPARKING">l4nh5eVYrLAER/I2A4b3Tw==</entry>
+    
     
 </properties>

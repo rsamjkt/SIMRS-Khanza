@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : produ
- Source Server Type    : MySQL
+ Source Server         : serverDevAtta-ygakseIP
+ Source Server Type    : MariaDB
  Source Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
- Source Host           : 10.0.2.5:3306
- Source Schema         : sik
+ Source Host           : 10.0.2.121:3306
+ Source Schema         : sikrsamlegacy2
 
- Target Server Type    : MySQL
+ Target Server Type    : MariaDB
  Target Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
  File Encoding         : 65001
 
- Date: 11/04/2025 14:37:36
+ Date: 20/06/2025 12:50:33
 */
 
 SET NAMES utf8mb4;
@@ -42,16 +42,17 @@ CREATE TABLE `reg_periksa` (
   `status_bayar` enum('Sudah Bayar','Belum Bayar') NOT NULL,
   `status_poli` enum('Lama','Baru') NOT NULL,
   PRIMARY KEY (`no_rawat`),
-  KEY `no_rkm_medis` (`no_rkm_medis`),
-  KEY `kd_poli` (`kd_poli`),
-  KEY `kd_pj` (`kd_pj`),
-  KEY `status_lanjut` (`status_lanjut`),
-  KEY `kd_dokter` (`kd_dokter`),
-  KEY `status_bayar` (`status_bayar`),
+  KEY `no_rkm_medis` (`no_rkm_medis`) USING BTREE,
+  KEY `kd_poli` (`kd_poli`) USING BTREE,
+  KEY `kd_pj` (`kd_pj`) USING BTREE,
+  KEY `status_lanjut` (`status_lanjut`) USING BTREE,
+  KEY `kd_dokter` (`kd_dokter`) USING BTREE,
+  KEY `status_bayar` (`status_bayar`) USING BTREE,
+  KEY `idx_reg_periksa_rawat_rkm` (`no_rawat`,`no_rkm_medis`,`kd_poli`,`kd_pj`) USING BTREE,
   CONSTRAINT `reg_periksa_ibfk_3` FOREIGN KEY (`kd_poli`) REFERENCES `poliklinik` (`kd_poli`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `reg_periksa_ibfk_4` FOREIGN KEY (`kd_dokter`) REFERENCES `dokter` (`kd_dokter`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `reg_periksa_ibfk_6` FOREIGN KEY (`kd_pj`) REFERENCES `penjab` (`kd_pj`) ON UPDATE CASCADE,
+  CONSTRAINT `reg_periksa_ibfk_6` FOREIGN KEY (`kd_pj`) REFERENCES `penjab` (`kd_pj`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `reg_periksa_ibfk_7` FOREIGN KEY (`no_rkm_medis`) REFERENCES `pasien` (`no_rkm_medis`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci ROW_FORMAT=DYNAMIC;
 
 SET FOREIGN_KEY_CHECKS = 1;
