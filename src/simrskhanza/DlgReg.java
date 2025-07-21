@@ -16692,6 +16692,7 @@ private void MnPernyataanPengambilanSampleSHKActionPerformed(java.awt.event.Acti
                             i=0;
                             while(rs.next()){
                                 Object[] row = new Object[]{
+                                    false,
                                     rs.getString("no_rawat"),rs.getString("tgl_registrasi"),
                                     rs.getString("jam_reg"),rs.getString("kd_dokter"),
                                     rs.getString("nm_dokter"),rs.getString("no_rkm_medis"),
