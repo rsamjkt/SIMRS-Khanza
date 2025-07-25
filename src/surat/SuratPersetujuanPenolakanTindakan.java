@@ -50,8 +50,6 @@ public final class SuratPersetujuanPenolakanTindakan extends javax.swing.JDialog
     private PreparedStatement ps;
     private ResultSet rs;
     private int i=0;
-    private DlgCariPetugas petugas=new DlgCariPetugas(null,false);
-    private MasterCariTemplatePersetujuanPenolakanTindakan template=new MasterCariTemplatePersetujuanPenolakanTindakan(null,false);
     private StringBuilder htmlContent;
     private String pilihan="";
     private DlgCariDokter dokter=new DlgCariDokter(null,false);
@@ -237,29 +235,6 @@ public final class SuratPersetujuanPenolakanTindakan extends javax.swing.JDialog
             });
         }
         
-        petugas.addWindowListener(new WindowListener() {
-            @Override
-            public void windowOpened(WindowEvent e) {}
-            @Override
-            public void windowClosing(WindowEvent e) {}
-            @Override
-            public void windowClosed(WindowEvent e) {
-                if(petugas.getTable().getSelectedRow()!= -1){
-                    KdPerawat.setText(petugas.getTable().getValueAt(petugas.getTable().getSelectedRow(),0).toString());
-                    NmPerawat.setText(petugas.getTable().getValueAt(petugas.getTable().getSelectedRow(),1).toString());
-                    KdPerawat.requestFocus();
-                }
-            }
-            @Override
-            public void windowIconified(WindowEvent e) {}
-            @Override
-            public void windowDeiconified(WindowEvent e) {}
-            @Override
-            public void windowActivated(WindowEvent e) {}
-            @Override
-            public void windowDeactivated(WindowEvent e) {}
-        });
-        
         dokter.addWindowListener(new WindowListener() {
             @Override
             public void windowOpened(WindowEvent e) {}
@@ -272,38 +247,6 @@ public final class SuratPersetujuanPenolakanTindakan extends javax.swing.JDialog
                     NmDokter.setText(dokter.getTable().getValueAt(dokter.getTable().getSelectedRow(),1).toString());
                     KdDokter.requestFocus();
                 }
-            }
-            @Override
-            public void windowIconified(WindowEvent e) {}
-            @Override
-            public void windowDeiconified(WindowEvent e) {}
-            @Override
-            public void windowActivated(WindowEvent e) {}
-            @Override
-            public void windowDeactivated(WindowEvent e) {}
-        });
-        
-        template.addWindowListener(new WindowListener() {
-            @Override
-            public void windowOpened(WindowEvent e) {}
-            @Override
-            public void windowClosing(WindowEvent e) {}
-            @Override
-            public void windowClosed(WindowEvent e) {
-                if(template.getTable().getSelectedRow()!= -1){                   
-                    Diagnosa.setText(template.getTable().getValueAt(template.getTable().getSelectedRow(),1).toString());
-                    TindakanKedokteran.setText(template.getTable().getValueAt(template.getTable().getSelectedRow(),2).toString());
-                    IndikasiTindakan.setText(template.getTable().getValueAt(template.getTable().getSelectedRow(),3).toString());
-                    TataCara.setText(template.getTable().getValueAt(template.getTable().getSelectedRow(),4).toString());
-                    Tujuan.setText(template.getTable().getValueAt(template.getTable().getSelectedRow(),5).toString());
-                    Risiko.setText(template.getTable().getValueAt(template.getTable().getSelectedRow(),6).toString());
-                    Komplikasi.setText(template.getTable().getValueAt(template.getTable().getSelectedRow(),7).toString());
-                    Prognosis.setText(template.getTable().getValueAt(template.getTable().getSelectedRow(),8).toString());
-                    AlternatifResiko.setText(template.getTable().getValueAt(template.getTable().getSelectedRow(),9).toString());
-                    LainLain.setText(template.getTable().getValueAt(template.getTable().getSelectedRow(),10).toString());
-                    Biaya.setText(template.getTable().getValueAt(template.getTable().getSelectedRow(),11).toString());
-                } 
-                LainLain.requestFocus();
             }
             @Override
             public void windowIconified(WindowEvent e) {}
@@ -764,7 +707,7 @@ public final class SuratPersetujuanPenolakanTindakan extends javax.swing.JDialog
         HubunganDenganPasien.setBounds(179, 490, 140, 23);
 
         TglPernyataan.setForeground(new java.awt.Color(50, 70, 50));
-        TglPernyataan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "16-10-2023" }));
+        TglPernyataan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "22-07-2025" }));
         TglPernyataan.setDisplayFormat("dd-MM-yyyy");
         TglPernyataan.setName("TglPernyataan"); // NOI18N
         TglPernyataan.setOpaque(false);
@@ -1096,7 +1039,7 @@ public final class SuratPersetujuanPenolakanTindakan extends javax.swing.JDialog
         jLabel39.setBounds(460, 490, 90, 23);
 
         TglLahirPenerima.setForeground(new java.awt.Color(50, 70, 50));
-        TglLahirPenerima.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "16-10-2023" }));
+        TglLahirPenerima.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "22-07-2025" }));
         TglLahirPenerima.setDisplayFormat("dd-MM-yyyy");
         TglLahirPenerima.setName("TglLahirPenerima"); // NOI18N
         TglLahirPenerima.setOpaque(false);
@@ -1264,13 +1207,13 @@ public final class SuratPersetujuanPenolakanTindakan extends javax.swing.JDialog
         panelGlass9.setPreferredSize(new java.awt.Dimension(44, 44));
         panelGlass9.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 5, 9));
 
-        jLabel19.setText("Tgl.Asuhan :");
+        jLabel19.setText("Tanggal :");
         jLabel19.setName("jLabel19"); // NOI18N
-        jLabel19.setPreferredSize(new java.awt.Dimension(70, 23));
+        jLabel19.setPreferredSize(new java.awt.Dimension(60, 23));
         panelGlass9.add(jLabel19);
 
         DTPCari1.setForeground(new java.awt.Color(50, 70, 50));
-        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "16-10-2023" }));
+        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "22-07-2025" }));
         DTPCari1.setDisplayFormat("dd-MM-yyyy");
         DTPCari1.setName("DTPCari1"); // NOI18N
         DTPCari1.setOpaque(false);
@@ -1284,7 +1227,7 @@ public final class SuratPersetujuanPenolakanTindakan extends javax.swing.JDialog
         panelGlass9.add(jLabel21);
 
         DTPCari2.setForeground(new java.awt.Color(50, 70, 50));
-        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "16-10-2023" }));
+        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "22-07-2025" }));
         DTPCari2.setDisplayFormat("dd-MM-yyyy");
         DTPCari2.setName("DTPCari2"); // NOI18N
         DTPCari2.setOpaque(false);
@@ -1297,7 +1240,7 @@ public final class SuratPersetujuanPenolakanTindakan extends javax.swing.JDialog
         panelGlass9.add(jLabel6);
 
         TCari.setName("TCari"); // NOI18N
-        TCari.setPreferredSize(new java.awt.Dimension(195, 23));
+        TCari.setPreferredSize(new java.awt.Dimension(205, 23));
         TCari.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 TCariKeyPressed(evt);
@@ -1971,8 +1914,6 @@ public final class SuratPersetujuanPenolakanTindakan extends javax.swing.JDialog
                 panggilPhoto();
             } catch (java.lang.NullPointerException e) {
             }
-             // Tambahkan pemanggilan getData() di sini:
-            getData(); // <---- TAMBAHKAN BARIS INI
             if((evt.getClickCount()==2)&&(tbObat.getSelectedColumn()==0)){
                 TabRawat.setSelectedIndex(0);
             }
@@ -2079,6 +2020,29 @@ public final class SuratPersetujuanPenolakanTindakan extends javax.swing.JDialog
     }//GEN-LAST:event_JKPenerimaKeyPressed
 
     private void BtnPerawatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPerawatActionPerformed
+        DlgCariPetugas petugas=new DlgCariPetugas(null,false);
+        petugas.addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) {}
+            @Override
+            public void windowClosing(WindowEvent e) {}
+            @Override
+            public void windowClosed(WindowEvent e) {
+                if(petugas.getTable().getSelectedRow()!= -1){
+                    KdPerawat.setText(petugas.getTable().getValueAt(petugas.getTable().getSelectedRow(),0).toString());
+                    NmPerawat.setText(petugas.getTable().getValueAt(petugas.getTable().getSelectedRow(),1).toString());
+                    KdPerawat.requestFocus();
+                }
+            }
+            @Override
+            public void windowIconified(WindowEvent e) {}
+            @Override
+            public void windowDeiconified(WindowEvent e) {}
+            @Override
+            public void windowActivated(WindowEvent e) {}
+            @Override
+            public void windowDeactivated(WindowEvent e) {}
+        });
         petugas.isCek();
         petugas.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
         petugas.setLocationRelativeTo(internalFrame1);
@@ -2206,6 +2170,38 @@ public final class SuratPersetujuanPenolakanTindakan extends javax.swing.JDialog
     }//GEN-LAST:event_BtnRefreshPhoto1ActionPerformed
 
     private void BtnTemplateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnTemplateActionPerformed
+        MasterCariTemplatePersetujuanPenolakanTindakan template=new MasterCariTemplatePersetujuanPenolakanTindakan(null,false);
+        template.addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) {}
+            @Override
+            public void windowClosing(WindowEvent e) {}
+            @Override
+            public void windowClosed(WindowEvent e) {
+                if(template.getTable().getSelectedRow()!= -1){                   
+                    Diagnosa.setText(template.getTable().getValueAt(template.getTable().getSelectedRow(),1).toString());
+                    TindakanKedokteran.setText(template.getTable().getValueAt(template.getTable().getSelectedRow(),2).toString());
+                    IndikasiTindakan.setText(template.getTable().getValueAt(template.getTable().getSelectedRow(),3).toString());
+                    TataCara.setText(template.getTable().getValueAt(template.getTable().getSelectedRow(),4).toString());
+                    Tujuan.setText(template.getTable().getValueAt(template.getTable().getSelectedRow(),5).toString());
+                    Risiko.setText(template.getTable().getValueAt(template.getTable().getSelectedRow(),6).toString());
+                    Komplikasi.setText(template.getTable().getValueAt(template.getTable().getSelectedRow(),7).toString());
+                    Prognosis.setText(template.getTable().getValueAt(template.getTable().getSelectedRow(),8).toString());
+                    AlternatifResiko.setText(template.getTable().getValueAt(template.getTable().getSelectedRow(),9).toString());
+                    LainLain.setText(template.getTable().getValueAt(template.getTable().getSelectedRow(),10).toString());
+                    Biaya.setText(template.getTable().getValueAt(template.getTable().getSelectedRow(),11).toString());
+                } 
+                LainLain.requestFocus();
+            }
+            @Override
+            public void windowIconified(WindowEvent e) {}
+            @Override
+            public void windowDeiconified(WindowEvent e) {}
+            @Override
+            public void windowActivated(WindowEvent e) {}
+            @Override
+            public void windowDeactivated(WindowEvent e) {}
+        });
         template.isCek();
         template.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
         template.setLocationRelativeTo(internalFrame1);
@@ -2603,44 +2599,21 @@ public final class SuratPersetujuanPenolakanTindakan extends javax.swing.JDialog
     }
     
     public void isCek(){
-    // Tetapkan status tombol Simpan, Hapus, Edit berdasarkan hak akses
-    // Bagian ini tidak diubah karena berkaitan dengan izin aksi, bukan pemilihan dokter.
-    BtnSimpan.setEnabled(akses.getpersetujuan_penolakan_tindakan());
-    BtnHapus.setEnabled(akses.getpersetujuan_penolakan_tindakan());
-    BtnEdit.setEnabled(akses.getpersetujuan_penolakan_tindakan());
-    // Anda memiliki BtnEdit.setEnabled dua kali, saya biarkan satu saja.
-    // Jika ini mengontrol tombol lain, sesuaikan.
-
-    // --- Bagian yang Diubah ---
-    // Hapus blok if yang membatasi pemilihan dokter hanya untuk user dokter.
-    // Sekarang, semua user akan memiliki field dokter yang bisa diedit dan tombol pilih dokter yang aktif.
-
-    /* Blok kode lama yang dihapus/dikomentari:
-    if(akses.getjml2()>=1){ // Kondisi ini membatasi hanya untuk user dokter
-        KdDokter.setEditable(false); // Membuat field kode dokter tidak bisa diedit
-        BtnDokter.setEnabled(false); // Menonaktifkan tombol pilih dokter
-        KdDokter.setText(akses.getkode()); // Mengisi kode dokter otomatis sesuai user login
-        NmDokter.setText(dokter.tampil3(KdDokter.getText())); // Menampilkan nama dokter otomatis
-        if(NmDokter.getText().equals("")){ // Pengecekan jika user login bukan dokter valid
-            KdDokter.setText("");
-            JOptionPane.showMessageDialog(null,"User login bukan Dokter...!!");
-        }
+        BtnSimpan.setEnabled(akses.getpersetujuan_penolakan_tindakan());
+        BtnHapus.setEnabled(akses.getpersetujuan_penolakan_tindakan());
+        BtnEdit.setEnabled(akses.getpersetujuan_penolakan_tindakan());
+        BtnEdit.setEnabled(akses.getpersetujuan_penolakan_tindakan());
+        if(akses.getjml2()>=1){
+            KdDokter.setEditable(false);
+            BtnDokter.setEnabled(false);
+            KdDokter.setText(akses.getkode());
+            NmDokter.setText(dokter.tampil3(KdDokter.getText()));
+            if(NmDokter.getText().equals("")){
+                KdDokter.setText("");
+                JOptionPane.showMessageDialog(null,"User login bukan Dokter...!!");
+            }
+        }            
     }
-    */
-
-    // Pastikan field Kode Dokter selalu bisa diedit dan Tombol Pilih Dokter selalu aktif
-    // untuk semua user, terlepas dari status login mereka.
-    KdDokter.setEditable(true);
-    BtnDokter.setEnabled(true);
-
-    // Opsional: Anda mungkin ingin membersihkan field dokter saat form diinisialisasi
-    // atau saat user baru dipilih, tergantung alur kerja aplikasi Anda.
-    // Contoh:
-    // if (kondisi_inisialisasi_atau_user_baru) {
-    //     KdDokter.setText("");
-    //     NmDokter.setText("");
-    // }
-}
     
     public void setTampil(){
        TabRawat.setSelectedIndex(1);
@@ -2658,111 +2631,18 @@ public final class SuratPersetujuanPenolakanTindakan extends javax.swing.JDialog
         }
     }
 
-        private void ganti() {
-        // 1. Pastikan ada baris yang dipilih
-        if (tbObat.getSelectedRow() == -1) {
-            JOptionPane.showMessageDialog(rootPane, "Silahkan anda pilih data terlebih dahulu..!!");
-            return; // Keluar jika tidak ada baris dipilih
-        }
-
-        // 2. Validasi field input teks (biarkan seperti sebelumnya)
-        if(TNoRM.getText().trim().equals("")){
-            Valid.textKosong(TNoRw,"Nama Pasien");
-            return;
-        }else if(NmDokter.getText().trim().equals("")){
-            Valid.textKosong(BtnDokter,"Dokter");
-            return;
-        }else if(Diagnosa.getText().trim().equals("")){
-            Valid.textKosong(Diagnosa,"Diagnosa");
-            return;
-        }else if(TindakanKedokteran.getText().trim().equals("")){
-            Valid.textKosong(TindakanKedokteran,"Tindakan");
-            return;
-        }else if(PenerimaInformasi.getText().trim().equals("")){
-            Valid.textKosong(PenerimaInformasi,"Penerima Informasi");
-            return;
-        }else if(NmPerawat.getText().trim().equals("")){
-            Valid.textKosong(NmPerawat,"Saksi II Perawat");
-            return;
-        }else if(SaksiKeluarga.getText().trim().equals("")){
-            Valid.textKosong(SaksiKeluarga,"Saksi I Keluarga");
-            return;
-        }else if(Biaya.getText().trim().equals("")){
-            Valid.textKosong(Biaya,"Biaya");
-            return;
-        }
-        // --- Akhir Validasi ---
-
-        // 3. Eksekusi UPDATE, ambil nilai boolean dari tabel
-        if(Sequel.mengedittf("persetujuan_penolakan_tindakan","no_pernyataan=?", // kondisi WHERE
-            // Daftar kolom yang di-SET
-            "no_pernyataan=?,no_rawat=?,tanggal=?," +
-            "diagnosa=?,diagnosa_konfirmasi=?," + // Kolom Boolean
-            "tindakan=?,tindakan_konfirmasi=?," + // Kolom Boolean
-            "indikasi_tindakan=?,indikasi_tindakan_konfirmasi=?," + // Kolom Boolean
-            "tata_cara=?,tata_cara_konfirmasi=?," + // Kolom Boolean
-            "tujuan=?,tujuan_konfirmasi=?," + // Kolom Boolean
-            "risiko=?,risiko_konfirmasi=?," + // Kolom Boolean
-            "komplikasi=?,komplikasi_konfirmasi=?," + // Kolom Boolean
-            "prognosis=?,prognosis_konfirmasi=?," + // Kolom Boolean
-            "alternatif_dan_risikonya=?,alternatif_konfirmasi=?," + // Kolom Boolean
-            "lain_lain=?,lain_lain_konfirmasi=?," + // Kolom Boolean
-            "biaya=?,biaya_konfirmasi=?," + // Kolom Boolean
-            "kd_dokter=?,nip=?,penerima_informasi=?,alasan_diwakilkan_penerima_informasi=?," +
-            "jk_penerima_informasi=?,tanggal_lahir_penerima_informasi=?,umur_penerima_informasi=?," +
-            "alamat_penerima_informasi=?,no_hp=?,hubungan_penerima_informasi=?," +
-            "pernyataan=?,saksi_keluarga=?",
-            38, // Jumlah total parameter (?)
-            new String[]{
-                // Nilai untuk kolom yang di-SET (HARUS SESUAI URUTAN DI ATAS)
-                NoPenyataan.getText(), // no_pernyataan
-                TNoRw.getText(), // no_rawat
-                Valid.SetTgl(TglPernyataan.getSelectedItem()+""), // tanggal
-                Diagnosa.getText(), // diagnosa
-                // Ambil nilai boolean DARI TABEL untuk baris terpilih, konversi ke String
-                String.valueOf((Boolean)tbObat.getValueAt(tbObat.getSelectedRow(), 8)), // diagnosa_konfirmasi (index 8)
-                TindakanKedokteran.getText(), // tindakan
-                String.valueOf((Boolean)tbObat.getValueAt(tbObat.getSelectedRow(), 10)), // tindakan_konfirmasi (index 10)
-                IndikasiTindakan.getText(), // indikasi_tindakan
-                String.valueOf((Boolean)tbObat.getValueAt(tbObat.getSelectedRow(), 12)), // indikasi_tindakan_konfirmasi (index 12)
-                TataCara.getText(), // tata_cara
-                String.valueOf((Boolean)tbObat.getValueAt(tbObat.getSelectedRow(), 14)), // tata_cara_konfirmasi (index 14)
-                Tujuan.getText(), // tujuan
-                String.valueOf((Boolean)tbObat.getValueAt(tbObat.getSelectedRow(), 16)), // tujuan_konfirmasi (index 16)
-                Risiko.getText(), // risiko
-                String.valueOf((Boolean)tbObat.getValueAt(tbObat.getSelectedRow(), 18)), // risiko_konfirmasi (index 18)
-                Komplikasi.getText(), // komplikasi
-                String.valueOf((Boolean)tbObat.getValueAt(tbObat.getSelectedRow(), 20)), // komplikasi_konfirmasi (index 20)
-                Prognosis.getText(), // prognosis
-                String.valueOf((Boolean)tbObat.getValueAt(tbObat.getSelectedRow(), 22)), // prognosis_konfirmasi (index 22)
-                AlternatifResiko.getText(), // alternatif_dan_risikonya
-                String.valueOf((Boolean)tbObat.getValueAt(tbObat.getSelectedRow(), 24)), // alternatif_konfirmasi (index 24)
-                LainLain.getText(), // lain_lain
-                String.valueOf((Boolean)tbObat.getValueAt(tbObat.getSelectedRow(), 26)), // lain_lain_konfirmasi (index 26)
-                Biaya.getText(), // biaya
-                String.valueOf((Boolean)tbObat.getValueAt(tbObat.getSelectedRow(), 28)), // biaya_konfirmasi (index 28)
-                // Lanjutan field lainnya
-                KdDokter.getText(), // kd_dokter
-                KdPerawat.getText(), // nip
-                PenerimaInformasi.getText(), // penerima_informasi
-                AlasanDiwakilkan.getText(), // alasan_diwakilkan_penerima_informasi
-                JKPenerima.getSelectedItem().toString().substring(0,1), // jk_penerima_informasi
-                Valid.SetTgl(TglLahirPenerima.getSelectedItem()+""), // tanggal_lahir_penerima_informasi
-                UmurPenerima.getText(), // umur_penerima_informasi
-                AlamatPenerima.getText(), // alamat_penerima_informasi
-                NoHPPenerima.getText(), // no_hp
-                HubunganDenganPasien.getSelectedItem().toString(), // hubungan_penerima_informasi
-                "Belum Dikonfirmasi", // pernyataan (sesuaikan jika bisa diedit)
-                SaksiKeluarga.getText(), // saksi_keluarga
-
-                // Nilai untuk kondisi WHERE (Primary Key)
-                tbObat.getValueAt(tbObat.getSelectedRow(),0).toString() // no_pernyataan di WHERE clause
+    private void ganti() {
+        if(Sequel.mengedittf("persetujuan_penolakan_tindakan","no_pernyataan=?","no_pernyataan=?,no_rawat=?,tanggal=?,diagnosa=?,diagnosa_konfirmasi=?,tindakan=?,tindakan_konfirmasi=?,indikasi_tindakan=?,indikasi_tindakan_konfirmasi=?,tata_cara=?,tata_cara_konfirmasi=?,tujuan=?,tujuan_konfirmasi=?,risiko=?,risiko_konfirmasi=?,komplikasi=?,komplikasi_konfirmasi=?,prognosis=?,prognosis_konfirmasi=?,alternatif_dan_risikonya=?,alternatif_konfirmasi=?,biaya=?,biaya_konfirmasi=?,lain_lain=?,lain_lain_konfirmasi=?,kd_dokter=?,nip=?,penerima_informasi=?,alasan_diwakilkan_penerima_informasi=?,jk_penerima_informasi=?,tanggal_lahir_penerima_informasi=?,umur_penerima_informasi=?,alamat_penerima_informasi=?,no_hp=?,hubungan_penerima_informasi=?,pernyataan=?,saksi_keluarga=?",38,new String[]{
+                NoPenyataan.getText(),TNoRw.getText(),Valid.SetTgl(TglPernyataan.getSelectedItem()+""),Diagnosa.getText(),"false",TindakanKedokteran.getText(),"false",
+                IndikasiTindakan.getText(),"false",TataCara.getText(),"false",Tujuan.getText(),"false",Risiko.getText(),"false",Komplikasi.getText(),"false",Prognosis.getText(), 
+                "false",AlternatifResiko.getText(),"false",Biaya.getText(),"false",LainLain.getText(),"false",KdDokter.getText(),KdPerawat.getText(),PenerimaInformasi.getText(),
+                AlasanDiwakilkan.getText(),JKPenerima.getSelectedItem().toString().substring(0,1),Valid.SetTgl(TglLahirPenerima.getSelectedItem()+""),UmurPenerima.getText(),
+                AlamatPenerima.getText(),NoHPPenerima.getText(),HubunganDenganPasien.getSelectedItem().toString(),"Belum Dikonfirmasi",SaksiKeluarga.getText(),
+                tbObat.getValueAt(tbObat.getSelectedRow(),0).toString()
             })==true){
-               tampil(); // Refresh tabel
-               emptTeks(); // Kosongkan form input
-               TabRawat.setSelectedIndex(1); // Pindah ke tab data
-        } else {
-            JOptionPane.showMessageDialog(null,"Gagal menyimpan perubahan."); // Pesan jika gagal
+               tampil();
+               emptTeks();
+               TabRawat.setSelectedIndex(1);
         }
     }
     
