@@ -1332,17 +1332,35 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
         }else if(Kesimpulan.getText().trim().equals("")){
             Valid.textKosong(Kesimpulan,"Kesimpulan");
         }else{
-            if(Sequel.menyimpantf("hasil_pemeriksaan_usg","?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?","No.Rawat",24,new String[]{
-                    TNoRw.getText(),Valid.SetTgl(Tanggal.getSelectedItem()+"")+" "+Tanggal.getSelectedItem().toString().substring(11,19),KdDokter.getText(),
-                    UsiaKehamilanHpht.getText(),Janin.getSelectedItem().toString(),
-                    JumlahJanin.getSelectedItem().toString(),Lokasi.getSelectedItem().toString(),Letak.getSelectedItem().toString(),
-                    HR.getText(),Presentasi.getSelectedItem().toString(),UkuranKantong.getText(),UkuranBokong.getText(),
-                    DiameterBiparietal.getText(),PanjangFemur.getText(),LingkarAbdomen.getText(),TafsiranBerat.getText(),
-                    DiagnosaKlinis.getText(),Plasenta.getText(),DerajatMaturitas.getSelectedItem().toString(),JumlahAir.getSelectedItem().toString(),
-                    PeluangSex.getSelectedItem().toString(),IndexCairan.getText(),Kelainan.getText(),Kesimpulan.getText()
-                })==true){
-                    emptTeks();
-            }
+            if(Sequel.menyimpantf("hasil_pemeriksaan_usg","?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?","No.Rawat",25,new String[]{
+        TNoRw.getText(),
+        Valid.SetTgl(Tanggal.getSelectedItem()+"")+" "+Tanggal.getSelectedItem().toString().substring(11,19),
+        KdDokter.getText(),
+        UsiaKehamilanHpht.getText(),
+        Janin.getSelectedItem().toString(),
+        JumlahJanin.getSelectedItem().toString(),
+        Lokasi.getSelectedItem().toString(),
+        Letak.getSelectedItem().toString(),
+        HR.getText(),
+        Presentasi.getSelectedItem().toString(),
+        UkuranKantong.getText(),
+        UkuranBokong.getText(),
+        DiameterBiparietal.getText(),
+        PanjangFemur.getText(),
+        LingkarAbdomen.getText(),
+        TafsiranBerat.getText(),
+        DiagnosaKlinis.getText(),
+        Plasenta.getText(),
+        DerajatMaturitas.getSelectedItem().toString(),
+        JumlahAir.getSelectedItem().toString(),
+        PeluangSex.getSelectedItem().toString(),
+        IndexCairan.getText(),
+        Kelainan.getText(),
+        Kesimpulan.getText(),
+        "" // <-- [PERBAIKAN] Nilai untuk kolom ke-25 'kiriman_dari' ditambahkan
+    })==true){
+        emptTeks();
+}
         }
     
 }//GEN-LAST:event_BtnSimpanActionPerformed
@@ -2397,20 +2415,42 @@ usg = koneksiDB.CLOUDFLARER2HOST()+Sequel.cariIsi("select photo from hasil_pemer
     }
 
     private void ganti() {
-        if(Sequel.mengedittf("hasil_pemeriksaan_usg","no_rawat=?","no_rawat=?,tanggal=?,kd_dokter=?,    diagnosa_klinis=?,kiriman_dari=?,hta=?,kantong_gestasi=?,ukuran_bokongkepala=?,"+
-                "diameter_biparietal=?,panjang_femur=?,lingkar_abdomen=?,tafsiran_berat_janin=?,plasenta_berimplatansi=?,derajat_maturitas=?,"+
-                "jumlah_air_ketuban=?,indek_cairan_ketuban=?,kelainan_kongenital=?,peluang_sex=?,kesimpulan=?",22,new String[]{
-                TNoRw.getText(),Valid.SetTgl(Tanggal.getSelectedItem()+"")+" "+Tanggal.getSelectedItem().toString().substring(11,19),KdDokter.getText(),
-                DiagnosaKlinis.getText(),HR.getText(),UkuranKantong.getText(),UkuranBokong.getText(),
-                DiameterBiparietal.getText(),PanjangFemur.getText(),LingkarAbdomen.getText(),TafsiranBerat.getText(),
-                Plasenta.getText(),DerajatMaturitas.getSelectedItem().toString(),JumlahAir.getSelectedItem().toString(),IndexCairan.getText(),
-                Kelainan.getText(),PeluangSex.getSelectedItem().toString(),Kesimpulan.getText(),tbObat.getValueAt(tbObat.getSelectedRow(),0).toString()
-            })==true){
-               tampil();
-               emptTeks();
-               TabRawat.setSelectedIndex(1);
-        }
+    // [PERBAIKAN] Query UPDATE ini sekarang benar dan mencakup semua kolom
+    if(Sequel.mengedittf("hasil_pemeriksaan_usg","no_rawat=?","no_rawat=?, tanggal=?, kd_dokter=?, usiakehamilanhpht=?, janin=?, jumlahjanin=?, lokasi=?, letakjanin=?, "+
+            "frekuensi_hr=?, presentasi=?, kantong_gestasi=?, ukuran_bokongkepala=?, diameter_biparietal=?, panjang_femur=?, lingkar_abdomen=?, tafsiran_berat_janin=?, "+
+            "diagnosa_klinis=?, plasenta_berimplatansi=?, derajat_maturitas=?, jumlah_air_ketuban=?, peluang_sex=?, indek_cairan_ketuban=?, kelainan_kongenital=?, kesimpulan=?, kiriman_dari=?", 26, new String[]{
+            TNoRw.getText(),
+            Valid.SetTgl(Tanggal.getSelectedItem()+"")+" "+Tanggal.getSelectedItem().toString().substring(11,19),
+            KdDokter.getText(),
+            UsiaKehamilanHpht.getText(),
+            Janin.getSelectedItem().toString(),
+            JumlahJanin.getSelectedItem().toString(),
+            Lokasi.getSelectedItem().toString(),
+            Letak.getSelectedItem().toString(),
+            HR.getText(),
+            Presentasi.getSelectedItem().toString(),
+            UkuranKantong.getText(),
+            UkuranBokong.getText(),
+            DiameterBiparietal.getText(),
+            PanjangFemur.getText(),
+            LingkarAbdomen.getText(),
+            TafsiranBerat.getText(),
+            DiagnosaKlinis.getText(),
+            Plasenta.getText(),
+            DerajatMaturitas.getSelectedItem().toString(),
+            JumlahAir.getSelectedItem().toString(),
+            PeluangSex.getSelectedItem().toString(),
+            IndexCairan.getText(),
+            Kelainan.getText(),
+            Kesimpulan.getText(),
+            "", // Nilai untuk kolom 'kiriman_dari' saat mengedit
+            tbObat.getValueAt(tbObat.getSelectedRow(),0).toString() // Ini untuk kondisi WHERE no_rawat=?
+        })==true){
+           tampil();
+           emptTeks();
+           TabRawat.setSelectedIndex(1);
     }
+}
     
     private void isPhoto(){
         if(ChkAccor.isSelected()==true){

@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : serverDevAtta-ygakseIP
- Source Server Type    : MariaDB
+ Source Server         : produ
+ Source Server Type    : MySQL
  Source Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
- Source Host           : 10.0.2.121:3306
- Source Schema         : sikrsamlegacy2
+ Source Host           : 10.0.2.5:3306
+ Source Schema         : sikrs4m2106
 
- Target Server Type    : MariaDB
+ Target Server Type    : MySQL
  Target Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
  File Encoding         : 65001
 
- Date: 05/07/2025 10:44:45
+ Date: 10/09/2025 15:21:52
 */
 
 SET NAMES utf8mb4;
@@ -46,6 +46,7 @@ CREATE TABLE `hasil_pemeriksaan_usg` (
   `indek_cairan_ketuban` varchar(150) DEFAULT NULL,
   `kelainan_kongenital` varchar(150) DEFAULT NULL,
   `kesimpulan` text DEFAULT NULL,
+  `kiriman_dari` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`no_rawat`) USING BTREE,
   KEY `kd_dokter` (`kd_dokter`) USING BTREE,
   CONSTRAINT `hasil_pemeriksaan_usg_ibfk_1` FOREIGN KEY (`no_rawat`) REFERENCES `reg_periksa` (`no_rawat`) ON DELETE CASCADE ON UPDATE CASCADE,
