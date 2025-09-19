@@ -11,24 +11,20 @@
  Target Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
  File Encoding         : 65001
 
- Date: 16/09/2025 08:51:36
+ Date: 16/09/2025 08:56:20
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
--- Table structure for antripendaftaran_nomor
+-- Table structure for reset_log
 -- ----------------------------
-DROP TABLE IF EXISTS `antripendaftaran_nomor`;
-CREATE TABLE `antripendaftaran_nomor` (
-  `nomor` char(5) NOT NULL,
-  `status` enum('0','1','2','3') DEFAULT NULL,
-  `jam` datetime NOT NULL,
-  `loket` varchar(100) DEFAULT NULL,
-  `waktu_panggil` datetime DEFAULT NULL,
-  PRIMARY KEY (`nomor`,`jam`),
-  KEY `nomor` (`nomor`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+DROP TABLE IF EXISTS `reset_log`;
+CREATE TABLE `reset_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tanggal_reset` date NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=758 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;

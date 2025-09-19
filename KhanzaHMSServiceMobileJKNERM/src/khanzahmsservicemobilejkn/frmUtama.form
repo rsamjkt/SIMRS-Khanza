@@ -91,6 +91,16 @@
             </Property>
           </Properties>
         </Component>
+        <!-- TOMBOL BARU DITAMBAHKAN DI SINI -->
+        <Component class="javax.swing.JButton" name="BtnSapuManual">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Sapu Manual"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BtnSapuManualActionPerformed"/>
+          </Events>
+        </Component>
+        <!-- AKHIR DARI TOMBOL BARU -->
         <Component class="javax.swing.JButton" name="jButton1">
           <Properties>
             <Property name="text" type="java.lang.String" value="Keluar"/>
