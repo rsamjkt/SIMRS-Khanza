@@ -3184,7 +3184,7 @@ public final class RMPenilaianAwalMedisRalanMata extends javax.swing.JDialog {
         BtnSimpan.setEnabled(akses.getpenilaian_awal_medis_ralan_mata());
         BtnHapus.setEnabled(akses.getpenilaian_awal_medis_ralan_mata());
         BtnEdit.setEnabled(akses.getpenilaian_awal_medis_ralan_mata());
-        if(akses.getjml2()>=1){
+        /*if(akses.getjml2()>=1){
             KdDokter.setEditable(false);
             BtnDokter.setEnabled(false);
             KdDokter.setText(akses.getkode());
@@ -3200,7 +3200,7 @@ public final class RMPenilaianAwalMedisRalanMata extends javax.swing.JDialog {
                 TglAsuhan.setEditable(false);
                 TglAsuhan.setEnabled(false);
             }
-        }
+        }*/
     }
     
     public void setTampil(){

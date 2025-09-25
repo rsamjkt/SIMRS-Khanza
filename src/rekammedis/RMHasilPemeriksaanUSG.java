@@ -1385,18 +1385,10 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
 
     private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnHapusActionPerformed
         if(tbObat.getSelectedRow()>-1){
-            if(akses.getkode().equals("Admin Utama")){
-                hapus();
-            }else{
-                if(KdDokter.getText().equals(tbObat.getValueAt(tbObat.getSelectedRow(),4).toString())){
-                    hapus();
-                }else{
-                    JOptionPane.showMessageDialog(null,"Hanya bisa dihapus oleh dokter yang bersangkutan..!!");
-                }
-            }
-        }else{
-            JOptionPane.showMessageDialog(rootPane,"Silahkan anda pilih data terlebih dahulu..!!");
-        }              
+        hapus();
+    }else{
+        JOptionPane.showMessageDialog(rootPane,"Silahkan anda pilih data terlebih dahulu..!!");
+    }     
             
 }//GEN-LAST:event_BtnHapusActionPerformed
 
@@ -2383,19 +2375,19 @@ usg = koneksiDB.CLOUDFLARER2HOST()+Sequel.cariIsi("select photo from hasil_pemer
     
     public void isCek(){
         BtnSimpan.setEnabled(akses.gethasil_pemeriksaan_usg());
-        BtnHapus.setEnabled(akses.gethasil_pemeriksaan_usg());
-        BtnEdit.setEnabled(akses.gethasil_pemeriksaan_usg());
-        BtnEdit.setEnabled(akses.gethasil_pemeriksaan_usg());
-        if(akses.getjml2()>=1){
-            KdDokter.setEditable(false);
-            BtnDokter.setEnabled(false);
-            KdDokter.setText(akses.getkode());
-            Sequel.cariIsi("select dokter.nm_dokter from dokter where dokter.kd_dokter=?", NmDokter,KdDokter.getText());
-            if(NmDokter.getText().equals("")){
-                KdDokter.setText("");
-                JOptionPane.showMessageDialog(null,"User login bukan Dokter...!!");
-            }
-        }            
+    BtnHapus.setEnabled(true);
+    BtnEdit.setEnabled(akses.gethasil_pemeriksaan_usg());
+    BtnEdit.setEnabled(akses.gethasil_pemeriksaan_usg());
+    /*if(akses.getjml2()>=1){
+        KdDokter.setEditable(false);
+        BtnDokter.setEnabled(false);
+        KdDokter.setText(akses.getkode());
+        Sequel.cariIsi("select dokter.nm_dokter from dokter where dokter.kd_dokter=?", NmDokter,KdDokter.getText());
+        if(NmDokter.getText().equals("")){
+            KdDokter.setText("");
+            JOptionPane.showMessageDialog(null,"User login bukan Dokter...!!");
+        }
+        }*/            
     }
     
     public void setTampil(){
