@@ -354,6 +354,12 @@
                             <li <?=$subhalaman=="AntrianEcho"?"class='active'":""?>>
                                 <a href="index.php?act=AntrianEcho&hal=AntrianTindakan">Echocardiografi</a>
                             </li>
+                            <li <?=$subhalaman=="AntrianSlitLamp"?"class='active'":""?>>
+                                <a href="index.php?act=AntrianSlitLamp&hal=AntrianTindakan">Slit Lamp</a>
+                            </li>
+                            <li <?=$subhalaman=="AntrianOCT"?"class='active'":""?>>
+                                <a href="index.php?act=AntrianOCT&hal=AntrianTindakan">OCT</a>
+                            </li>
                             <li <?=$subhalaman=="AntrianEndoskopiFaring"?"class='active'":""?>>
                                 <a href="index.php?act=AntrianEndoskopiFaring&hal=AntrianTindakan">Endoskopi Faring/Laringoskopi</a>
                             </li>
@@ -430,6 +436,9 @@
                             <li <?=$subhalaman=="PersetujuanRestrain"?"class='active'":""?>>
                                 <a href="index.php?act=PersetujuanRestrain&hal=Persetujuan">Persetujuan Restrain</a>
                             </li>
+                            <li <?=$subhalaman=="PersetujuanPemeriksaanHIV"?"class='active'":""?>>
+                                <a href="index.php?act=PersetujuanPemeriksaanHIV&hal=Persetujuan">Persetujuan Pemeriksaan HIV</a>
+                            </li>
                             <li <?=$subhalaman=="BuktiPelaksanaanEdukasi"?"class='active'":""?>>
                                 <a href="index.php?act=BuktiPelaksanaanEdukasi&hal=Persetujuan">Pelaksanaan Informasi/Edukasi</a>
                             </li>
@@ -438,6 +447,9 @@
                             </li>
                             <li <?=$subhalaman=="BuktiPelayananProgramKFR"?"class='active'":""?>>
                                 <a href="index.php?act=BuktiPelayananProgramKFR&hal=Persetujuan">Layanan Program KFR</a>
+                            </li>
+                            <li <?=$subhalaman=="PernyataanMemilihDPJP"?"class='active'":""?>>
+                                <a href="index.php?act=PernyataanMemilihDPJP&hal=Persetujuan">Pernyataan Memilih DPJP</a>
                             </li>
                         </ul>
                     </li>

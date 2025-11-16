@@ -5,13 +5,13 @@
  Source Server Type    : MariaDB
  Source Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
  Source Host           : 10.0.2.121:3306
- Source Schema         : sikrsamlegacy2
+ Source Schema         : sikrsamlegacy3
 
  Target Server Type    : MariaDB
  Target Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
  File Encoding         : 65001
 
- Date: 20/06/2025 12:50:33
+ Date: 11/10/2025 11:29:35
 */
 
 SET NAMES utf8mb4;
@@ -49,6 +49,9 @@ CREATE TABLE `reg_periksa` (
   KEY `kd_dokter` (`kd_dokter`) USING BTREE,
   KEY `status_bayar` (`status_bayar`) USING BTREE,
   KEY `idx_reg_periksa_rawat_rkm` (`no_rawat`,`no_rkm_medis`,`kd_poli`,`kd_pj`) USING BTREE,
+  KEY `idx_reg_periksa_main` (`kd_pj`,`status_lanjut`,`tgl_registrasi`,`no_rawat`),
+  KEY `idx_status_lanjut_tgl_reg` (`status_lanjut`,`tgl_registrasi`),
+  KEY `idx_kd_pj` (`kd_pj`),
   CONSTRAINT `reg_periksa_ibfk_3` FOREIGN KEY (`kd_poli`) REFERENCES `poliklinik` (`kd_poli`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `reg_periksa_ibfk_4` FOREIGN KEY (`kd_dokter`) REFERENCES `dokter` (`kd_dokter`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `reg_periksa_ibfk_6` FOREIGN KEY (`kd_pj`) REFERENCES `penjab` (`kd_pj`) ON DELETE NO ACTION ON UPDATE CASCADE,

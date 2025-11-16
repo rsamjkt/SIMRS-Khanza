@@ -1,0 +1,44 @@
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : produ
+ Source Server Type    : MySQL
+ Source Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
+ Source Host           : 10.0.2.5:3306
+ Source Schema         : sikrs4m2106
+
+ Target Server Type    : MySQL
+ Target Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
+ File Encoding         : 65001
+
+ Date: 28/09/2025 07:49:34
+*/
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for permintaan_lab
+-- ----------------------------
+DROP TABLE IF EXISTS `permintaan_lab`;
+CREATE TABLE `permintaan_lab` (
+  `noorder` varchar(15) NOT NULL,
+  `no_rawat` varchar(17) NOT NULL,
+  `tgl_permintaan` date NOT NULL,
+  `jam_permintaan` time NOT NULL,
+  `tgl_sampel` date NOT NULL,
+  `jam_sampel` time NOT NULL,
+  `tgl_hasil` date NOT NULL,
+  `jam_hasil` time NOT NULL,
+  `dokter_perujuk` varchar(20) NOT NULL,
+  `status` enum('ralan','ranap') NOT NULL,
+  `informasi_tambahan` varchar(60) NOT NULL,
+  `diagnosa_klinis` varchar(80) NOT NULL,
+  PRIMARY KEY (`noorder`),
+  KEY `dokter_perujuk` (`dokter_perujuk`) USING BTREE,
+  KEY `no_rawat` (`no_rawat`) USING BTREE,
+  CONSTRAINT `permintaan_lab_ibfk_2` FOREIGN KEY (`dokter_perujuk`) REFERENCES `dokter` (`kd_dokter`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `permintaan_lab_ibfk_3` FOREIGN KEY (`no_rawat`) REFERENCES `reg_periksa` (`no_rawat`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci ROW_FORMAT=DYNAMIC;
+
+SET FOREIGN_KEY_CHECKS = 1;

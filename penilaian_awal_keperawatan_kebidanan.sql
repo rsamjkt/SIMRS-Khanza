@@ -11,7 +11,7 @@
  Target Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
  File Encoding         : 65001
 
- Date: 10/09/2025 08:42:51
+ Date: 19/10/2025 11:33:45
 */
 
 SET NAMES utf8mb4;
@@ -119,7 +119,7 @@ CREATE TABLE `penilaian_awal_keperawatan_kebidanan` (
   `hasil` enum('Tidak Beresiko (Tidak Ditemukan A Dan B)','Resiko Rendah (Ditemukan A/B)','Resiko Tinggi (Ditemukan A Dan B)') NOT NULL,
   `lapor` enum('Ya','Tidak') NOT NULL,
   `ket_lapor` varchar(10) NOT NULL,
-  `sg1` enum('Tidak','Tidak Yakin','Ya(1-5 Kg)','Ya(6-10Kg)','Ya(11-15Kg)','Ya(>15Kg)') NOT NULL,
+  `sg1` enum('Ya','Tidak','Tidak Yakin','Ya, 1-5 Kg','Ya, 6-10 Kg','Ya, 11-15 Kg','Ya, >15 Kg') NOT NULL,
   `nilai1` enum('0','1','2','3','4') NOT NULL,
   `sg2` enum('Ya','Tidak') NOT NULL,
   `nilai2` enum('0','1') NOT NULL,

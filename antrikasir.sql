@@ -11,7 +11,7 @@
  Target Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
  File Encoding         : 65001
 
- Date: 05/08/2025 15:14:31
+ Date: 28/09/2025 16:51:56
 */
 
 SET NAMES utf8mb4;
@@ -23,14 +23,12 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `antrikasir`;
 CREATE TABLE `antrikasir` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `no_rawat` varchar(20) NOT NULL,
-  `no_antrian` varchar(10) NOT NULL,
-  `kd_kasir` varchar(10) NOT NULL,
-  `nm_kasir` varchar(50) NOT NULL,
-  `tgl_antrian` date NOT NULL,
-  `status` enum('Menunggu','Dipanggil','Sedang Dilayani','Selesai') DEFAULT 'Menunggu',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
+  `no_rawat` varchar(17) NOT NULL,
+  `tgl_antri` date NOT NULL,
+  `jam_antri` time NOT NULL,
+  `status` enum('0','1','2','3','4') NOT NULL COMMENT '0: Menunggu, 1: Panggil Suara, 2: Sedang Dipanggil, 3: Selesai, 4: Terlewat',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `no_rawat_unique` (`no_rawat`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;

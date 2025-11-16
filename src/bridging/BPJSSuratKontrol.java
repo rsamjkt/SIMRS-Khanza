@@ -830,7 +830,9 @@ public class BPJSSuratKontrol extends javax.swing.JDialog {
             Valid.textKosong(KdDokter,"Dokter");
         }else if(NmPoli.getText().trim().equals("")||NmPoli.getText().trim().equals("")){
             Valid.textKosong(KdPoli,"Poli");
-        }else{
+            }else if(!isValidTanggalKontrol()){ // TAMBAHKAN VALIDASI INI
+        // Validasi gagal, tidak melanjutkan proses
+    }else{
             try {
                 headers = new HttpHeaders();
                 headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -1101,13 +1103,15 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     }//GEN-LAST:event_DTPTanggalKontrol2KeyPressed
 
     private void BtnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnEditActionPerformed
-        if(NoRawat.getText().trim().equals("")||NoSEP.getText().trim().equals("")){
-            Valid.textKosong(NoRawat,"pasien");
-        }else if(NmDokter.getText().trim().equals("")||KdDokter.getText().trim().equals("")){
-            Valid.textKosong(KdDokter,"Dokter");
-        }else if(NmPoli.getText().trim().equals("")||NmPoli.getText().trim().equals("")){
-            Valid.textKosong(KdPoli,"Poli");
-        }else{
+         if(NoRawat.getText().trim().equals("")||NoSEP.getText().trim().equals("")){
+        Valid.textKosong(NoRawat,"pasien");
+    }else if(NmDokter.getText().trim().equals("")||KdDokter.getText().trim().equals("")){
+        Valid.textKosong(KdDokter,"Dokter");
+    }else if(NmPoli.getText().trim().equals("")||NmPoli.getText().trim().equals("")){
+        Valid.textKosong(KdPoli,"Poli");
+    }else if(!isValidTanggalKontrol()){ // TAMBAHKAN VALIDASI INI
+        // Validasi gagal, tidak melanjutkan proses
+    }else{
             if(tbObat.getSelectedRow()!= -1){
                 try {
                     headers = new HttpHeaders();
@@ -1610,7 +1614,55 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             }
         }
     }
-    
+    private boolean isValidTanggalKontrol() {
+    try {
+        java.util.Date tglSurat = TanggalSurat.getDate();
+        java.util.Date tglKontrol = TanggalKontrol.getDate();
+        
+        if (tglSurat == null || tglKontrol == null) {
+            JOptionPane.showMessageDialog(null, "Tanggal Surat dan Tanggal Kontrol harus diisi!");
+            return false;
+        }
+        
+        // POLI MATA BEBAS - BOLEH TANGGAL BERAPA AJA
+        if (KdPoli.getText().trim().equalsIgnoreCase("MAT")) {
+            return true; // Langsung lolos validasi
+        }
+        
+        // Untuk poli lain, wajib H+8
+        long selisihMillis = tglKontrol.getTime() - tglSurat.getTime();
+        long selisihHari = selisihMillis / (1000 * 60 * 60 * 24);
+        
+        if (selisihHari < 8) {
+            JOptionPane.showMessageDialog(null, 
+                "Tanggal Kontrol harus minimal H+8 dari Tanggal Surat!\n" +
+                "Tanggal Surat: " + Valid.SetTgl(TanggalSurat.getSelectedItem()+"") + "\n" +
+                "Tanggal Kontrol minimal: " + getMinimalTanggalKontrol() + "\n\n" +
+                "Catatan: Pengecualian hanya berlaku untuk Poli Mata (MAT)",
+                "Validasi Tanggal", 
+                JOptionPane.WARNING_MESSAGE);
+            TanggalKontrol.requestFocus();
+            return false;
+        }
+        
+        return true;
+    } catch (Exception e) {
+        System.out.println("Error validasi tanggal: " + e);
+        return false;
+    }
+}
+
+private String getMinimalTanggalKontrol() {
+    try {
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.setTime(TanggalSurat.getDate());
+        cal.add(java.util.Calendar.DATE, 8);
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd-MM-yyyy");
+        return sdf.format(cal.getTime());
+    } catch (Exception e) {
+        return "";
+    }
+}
     private boolean isBooking(){
         status=true;
         kodedokter=Sequel.cariIsi("select maping_dokter_dpjpvclaim.kd_dokter from maping_dokter_dpjpvclaim where maping_dokter_dpjpvclaim.kd_dokter_bpjs=?",KdDokter.getText());
