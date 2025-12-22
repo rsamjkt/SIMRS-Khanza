@@ -1224,7 +1224,16 @@ public class koneksiDB {
         }
         return var;
     }
-    
+    public static String DICOMAET(){
+        try{
+            prop.loadFromXML(new FileInputStream("setting/database.xml"));
+            var=prop.getProperty("DICOMAET");
+        }catch(Exception e){
+            var="PACS"; // Default value jika tidak ditemukan
+        }
+        return var;
+    }
+
     public static String URLORTHANC(){
         try{
             prop.loadFromXML(new FileInputStream("setting/database.xml"));

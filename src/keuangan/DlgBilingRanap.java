@@ -5568,6 +5568,13 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
     }
 
     private void prosesCariService(){
+        // --- MODIFIKASI KHANZA.SOFT MEDIA START ---
+        // Cek dulu kode penjab pasien (BPJ atau bukan)
+        // Jika KD_PJ adalah BPJ, maka langsung keluar dari void (Service/Admin Rp 0)
+        String kode_penjab = Sequel.cariIsi("select kd_pj from reg_periksa where no_rawat=?",TNoRw.getText());
+        if(kode_penjab.trim().equals("BPJ")){
+            return;
+        }
         try {   
             if(ChkPiutang.isSelected()==false){
                 psservice=koneksi.prepareStatement("select * from set_service_ranap");

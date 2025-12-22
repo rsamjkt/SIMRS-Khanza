@@ -1234,11 +1234,14 @@ import viabarcode.LabKeslingCariHasilPengujianSampel;
 import viabarcode.LabKeslingCariPenugasanPengujianSampel;
 import viabarcode.LabKeslingCariPermintaanPengujianSampelDapatDilayani;
 import viabarcode.LabKeslingCariPermintaanPengujianSampelTidakDapatDilayani;
+import viabarcode.LabKeslingCariValidasiPengujianSampel;
+import viabarcode.LabKeslingCariVerifikasiPengujianSampel;
 import viabarcode.LabKeslingMasterSampelBakuMutu;
 import viabarcode.LabKeslingNilaiNormalBakuMutu;
 import viabarcode.LabKeslingParameterPengujian;
 import viabarcode.LabKeslingPelanggan;
 import viabarcode.LabKeslingPermintaanPengujianSampel;
+import viabarcode.LabKeslingRekapPelayanan;
 import ziscsr.ZISAtapRumahPenerimaDankes;
 import ziscsr.ZISDapurRumahPenerimaDankes;
 import ziscsr.ZISDindingRumahPenerimaDankes;
@@ -23197,6 +23200,42 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
         this.setCursor(Cursor.getDefaultCursor());
     }
     
+    private void btnLabKeslingVerifikasiPengujianSampelActionPerformed(java.awt.event.ActionEvent evt) {                                           
+        isTutup();
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        LabKeslingCariVerifikasiPengujianSampel form=new LabKeslingCariVerifikasiPengujianSampel(this,false);
+        form.isCek();
+        form.setSize(PanelUtama.getWidth(),PanelUtama.getHeight());
+        form.setLocationRelativeTo(PanelUtama);
+        form.setVisible(true);
+        DlgHome.dispose();
+        this.setCursor(Cursor.getDefaultCursor());
+    }
+    
+    private void btnLabKeslingValidasiPengujianSampelActionPerformed(java.awt.event.ActionEvent evt) {                                           
+        isTutup();
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        LabKeslingCariValidasiPengujianSampel form=new LabKeslingCariValidasiPengujianSampel(this,false);
+        form.isCek();
+        form.setSize(PanelUtama.getWidth(),PanelUtama.getHeight());
+        form.setLocationRelativeTo(PanelUtama);
+        form.setVisible(true);
+        DlgHome.dispose();
+        this.setCursor(Cursor.getDefaultCursor());
+    }
+    
+    private void btnLabKeslingRekapPelayananActionPerformed(java.awt.event.ActionEvent evt) {                                           
+        isTutup();
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        LabKeslingRekapPelayanan form=new LabKeslingRekapPelayanan(this,false);
+        form.isCek();
+        form.setSize(PanelUtama.getWidth(),PanelUtama.getHeight());
+        form.setLocationRelativeTo(PanelUtama);
+        form.setVisible(true);
+        DlgHome.dispose();
+        this.setCursor(Cursor.getDefaultCursor());
+    }
+    
     /**
     * @param args the command line arguments
     */
@@ -23908,7 +23947,8 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
             btnLabKeslingPelanggan,btnChecklistKriteriaMasukPICU,btnChecklistKriteriaKeluarPICU,btnLabKeslingSampelBakuMutu,btnSkriningInstrumenAMT,btnLabKeslingParameterPengujian,
             btnLabKeslingNilaiNormalBakuMutu,btnSkriningPneumoniaSeverityIndex,btnPenilaianAwalMedisRalanJantung,btnPenilaianAwalMedisRalanUrologi,btnHasilPemeriksaanTreadmill,
             btnHasilPemeriksaanECHOPediatrik,btnMasterTemplateInformasiEdukasi,btnSkriningInstrumenESAT,btnLabKeslingPermintaanPengujianSampel,btnPenilaianAwalMedisRanapJantung,
-            btnEEksekutif,btnLabKeslingPengujianSampelTidakDapatDilayani,btnLabKeslingPengujianSampelDapatDilayani,btnLabKeslingPenugasanPengujianSampel,btnLabKeslingHasilPengujianSampel;
+            btnEEksekutif,btnLabKeslingPengujianSampelTidakDapatDilayani,btnLabKeslingPengujianSampelDapatDilayani,btnLabKeslingPenugasanPengujianSampel,btnLabKeslingHasilPengujianSampel,
+            btnLabKeslingVerifikasiPengujianSampel,btnLabKeslingValidasiPengujianSampel,btnLabKeslingRekapPelayanan;
     
     public void isWall(){
         try{            
@@ -24241,6 +24281,21 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
             
             if((akses.gethasil_pengujian_sampel_lab_kesehatan_lingkungan()==true)||(akses.getverifikasi_pengujian_sampel_lab_kesehatan_lingkungan()==true)){
                 Panelmenu.add(btnLabKeslingHasilPengujianSampel);
+                jmlmenu++;
+            }
+            
+            if((akses.getverifikasi_pengujian_sampel_lab_kesehatan_lingkungan()==true)||(akses.getvalidasi_pengujian_sampel_lab_kesehatan_lingkungan()==true)){
+                Panelmenu.add(btnLabKeslingVerifikasiPengujianSampel);
+                jmlmenu++;
+            }
+            
+            if(akses.getvalidasi_pengujian_sampel_lab_kesehatan_lingkungan()==true){
+                Panelmenu.add(btnLabKeslingValidasiPengujianSampel);
+                jmlmenu++;
+            }
+            
+            if(akses.getrekap_pelayanan_lab_kesehatan_lingkungan()==true){
+                Panelmenu.add(btnLabKeslingRekapPelayanan);
                 jmlmenu++;
             }
         }else if(cmbMenu.getSelectedIndex()==2){ 
@@ -30056,6 +30111,21 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
         
         if((akses.gethasil_pengujian_sampel_lab_kesehatan_lingkungan()==true)||(akses.getverifikasi_pengujian_sampel_lab_kesehatan_lingkungan()==true)){
             Panelmenu.add(btnLabKeslingHasilPengujianSampel);
+            jmlmenu++;
+        }
+        
+        if((akses.getverifikasi_pengujian_sampel_lab_kesehatan_lingkungan()==true)||(akses.getvalidasi_pengujian_sampel_lab_kesehatan_lingkungan()==true)){
+            Panelmenu.add(btnLabKeslingVerifikasiPengujianSampel);
+            jmlmenu++;
+        }
+        
+        if(akses.getvalidasi_pengujian_sampel_lab_kesehatan_lingkungan()==true){
+            Panelmenu.add(btnLabKeslingValidasiPengujianSampel);
+            jmlmenu++;
+        }
+        
+        if(akses.getrekap_pelayanan_lab_kesehatan_lingkungan()==true){
+            Panelmenu.add(btnLabKeslingRekapPelayanan);
             jmlmenu++;
         }
 
@@ -35915,6 +35985,27 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
         if((akses.gethasil_pengujian_sampel_lab_kesehatan_lingkungan()==true)||(akses.getverifikasi_pengujian_sampel_lab_kesehatan_lingkungan()==true)){
             if(btnLabKeslingHasilPengujianSampel.getText().toLowerCase().trim().contains(TCari.getText().toLowerCase().trim())){
                 Panelmenu.add(btnLabKeslingHasilPengujianSampel);
+                jmlmenu++;
+            }
+        }
+        
+        if((akses.getverifikasi_pengujian_sampel_lab_kesehatan_lingkungan()==true)||(akses.getvalidasi_pengujian_sampel_lab_kesehatan_lingkungan()==true)){
+            if(btnLabKeslingVerifikasiPengujianSampel.getText().toLowerCase().trim().contains(TCari.getText().toLowerCase().trim())){
+                Panelmenu.add(btnLabKeslingVerifikasiPengujianSampel);
+                jmlmenu++;
+            }
+        }
+        
+        if((akses.getvalidasi_pengujian_sampel_lab_kesehatan_lingkungan()==true)){
+            if(btnLabKeslingValidasiPengujianSampel.getText().toLowerCase().trim().contains(TCari.getText().toLowerCase().trim())){
+                Panelmenu.add(btnLabKeslingValidasiPengujianSampel);
+                jmlmenu++;
+            }
+        }
+        
+        if(akses.getrekap_pelayanan_lab_kesehatan_lingkungan()==true){
+            if(btnLabKeslingRekapPelayanan.getText().toLowerCase().trim().contains(TCari.getText().toLowerCase().trim())){
+                Panelmenu.add(btnLabKeslingRekapPelayanan);
                 jmlmenu++;
             }
         }
@@ -49263,6 +49354,30 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
         btnLabKeslingHasilPengujianSampel.setName("btnLabKeslingHasilPengujianSampel");
         btnLabKeslingHasilPengujianSampel.setPreferredSize(new java.awt.Dimension(200, 90));
         btnLabKeslingHasilPengujianSampel.addActionListener(this::btnLabKeslingHasilPengujianSampelActionPerformed);
+        
+        btnLabKeslingVerifikasiPengujianSampel = new widget.ButtonBig();
+        btnLabKeslingVerifikasiPengujianSampel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/48x48/4698583_document_file_paper_pen_text_icon.png"))); 
+        btnLabKeslingVerifikasiPengujianSampel.setText("Data Verifikasi Pengujian Sampel Lab Kesling");
+        btnLabKeslingVerifikasiPengujianSampel.setIconTextGap(0);
+        btnLabKeslingVerifikasiPengujianSampel.setName("btnLabKeslingVerifikasiPengujianSampel");
+        btnLabKeslingVerifikasiPengujianSampel.setPreferredSize(new java.awt.Dimension(200, 90));
+        btnLabKeslingVerifikasiPengujianSampel.addActionListener(this::btnLabKeslingVerifikasiPengujianSampelActionPerformed);
+        
+        btnLabKeslingValidasiPengujianSampel = new widget.ButtonBig();
+        btnLabKeslingValidasiPengujianSampel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/48x48/paper_9683410.png"))); 
+        btnLabKeslingValidasiPengujianSampel.setText("Data Validasi Pengujian Sampel Lab Kesling");
+        btnLabKeslingValidasiPengujianSampel.setIconTextGap(0);
+        btnLabKeslingValidasiPengujianSampel.setName("btnLabKeslingValidasiPengujianSampel");
+        btnLabKeslingValidasiPengujianSampel.setPreferredSize(new java.awt.Dimension(200, 90));
+        btnLabKeslingValidasiPengujianSampel.addActionListener(this::btnLabKeslingValidasiPengujianSampelActionPerformed);
+        
+        btnLabKeslingRekapPelayanan = new widget.ButtonBig();
+        btnLabKeslingRekapPelayanan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/48x48/85334_file_open_icon.png"))); 
+        btnLabKeslingRekapPelayanan.setText("Rekap Pelayanan Lab Kesling");
+        btnLabKeslingRekapPelayanan.setIconTextGap(0);
+        btnLabKeslingRekapPelayanan.setName("btnLabKeslingRekapPelayanan");
+        btnLabKeslingRekapPelayanan.setPreferredSize(new java.awt.Dimension(200, 90));
+        btnLabKeslingRekapPelayanan.addActionListener(this::btnLabKeslingRekapPelayananActionPerformed);
         
         btnPenilaianAwalMedisRanapJantung = new widget.ButtonBig();
         btnPenilaianAwalMedisRanapJantung.setIcon(new javax.swing.ImageIcon(getClass().getResource("/48x48/6217204_anatomy_heart_human_medical_organ_icon.png"))); 

@@ -1178,6 +1178,7 @@ public final class DlgReg extends javax.swing.JDialog {
         MnPernyataanPembiayaanTindakan = new javax.swing.JMenuItem();
         MnPersetujuanRawatInap = new javax.swing.JMenuItem();
         MnPernyataanPembiayaanNaikKelas = new javax.swing.JMenuItem();
+        MnPernyataanPembiayaanNaikKelas = new javax.swing.JMenuItem();
         MnPersetujuanPenundaanPelayanan = new javax.swing.JMenuItem();
         MnPenolakanAnjuranMedis = new javax.swing.JMenuItem();
         jMenu8 = new javax.swing.JMenu();

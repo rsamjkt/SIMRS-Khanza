@@ -15,7 +15,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fungsi.WarnaTable;
 import fungsi.batasInput;
-import fungsi.koneksiDB;
 import fungsi.sekuel;
 import fungsi.validasi;
 import fungsi.akses;
@@ -27,7 +26,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.FileReader;
-import java.sql.Connection;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.JOptionPane;
@@ -182,10 +180,6 @@ public final class LabKeslingVerifikasiPengujianSampel extends javax.swing.JDial
         jLabel17 = new widget.Label();
         jLabel6 = new widget.Label();
         Catatan = new widget.TextBox();
-        jPanel1 = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
-        Scroll2 = new widget.ScrollPane();
-        tbVerifikasi = new widget.Table();
         panelGlass8 = new widget.panelisi();
         BtnSimpan = new widget.Button();
         BtnBatal = new widget.Button();
@@ -194,6 +188,9 @@ public final class LabKeslingVerifikasiPengujianSampel extends javax.swing.JDial
         LCount = new widget.Label();
         BtnCari = new widget.Button();
         BtnKeluar = new widget.Button();
+        jPanel3 = new javax.swing.JPanel();
+        Scroll2 = new widget.ScrollPane();
+        tbVerifikasi = new widget.Table();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -260,7 +257,7 @@ public final class LabKeslingVerifikasiPengujianSampel extends javax.swing.JDial
         PanelInput.add(jLabel9);
         jLabel9.setBounds(0, 10, 85, 23);
 
-        TanggalVerifikasi.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "14-11-2025" }));
+        TanggalVerifikasi.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "19-11-2025" }));
         TanggalVerifikasi.setDisplayFormat("dd-MM-yyyy");
         TanggalVerifikasi.setName("TanggalVerifikasi"); // NOI18N
         TanggalVerifikasi.setOpaque(false);
@@ -387,14 +384,14 @@ public final class LabKeslingVerifikasiPengujianSampel extends javax.swing.JDial
         PanelInput.add(jLabel16);
         jLabel16.setBounds(0, 100, 85, 23);
 
-        TglPengujian1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "14-11-2025 10:48:51" }));
+        TglPengujian1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "19-11-2025 12:58:21" }));
         TglPengujian1.setDisplayFormat("dd-MM-yyyy HH:mm:ss");
         TglPengujian1.setName("TglPengujian1"); // NOI18N
         TglPengujian1.setOpaque(false);
         PanelInput.add(TglPengujian1);
         TglPengujian1.setBounds(89, 100, 130, 23);
 
-        TglPengujian2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "14-11-2025 10:52:46" }));
+        TglPengujian2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "19-11-2025 12:58:21" }));
         TglPengujian2.setDisplayFormat("dd-MM-yyyy HH:mm:ss");
         TglPengujian2.setName("TglPengujian2"); // NOI18N
         TglPengujian2.setOpaque(false);
@@ -427,28 +424,6 @@ public final class LabKeslingVerifikasiPengujianSampel extends javax.swing.JDial
         FormInput.add(scrollInput, java.awt.BorderLayout.CENTER);
 
         internalFrame1.add(FormInput, java.awt.BorderLayout.PAGE_START);
-
-        jPanel1.setName("jPanel1"); // NOI18N
-        jPanel1.setOpaque(false);
-        jPanel1.setPreferredSize(new java.awt.Dimension(816, 102));
-        jPanel1.setLayout(new java.awt.BorderLayout());
-
-        jPanel3.setName("jPanel3"); // NOI18N
-        jPanel3.setOpaque(false);
-        jPanel3.setPreferredSize(new java.awt.Dimension(300, 102));
-        jPanel3.setLayout(new java.awt.BorderLayout(1, 1));
-
-        Scroll2.setName("Scroll2"); // NOI18N
-        Scroll2.setOpaque(true);
-
-        tbVerifikasi.setName("tbVerifikasi"); // NOI18N
-        Scroll2.setViewportView(tbVerifikasi);
-
-        jPanel3.add(Scroll2, java.awt.BorderLayout.CENTER);
-
-        jPanel1.add(jPanel3, java.awt.BorderLayout.CENTER);
-
-        internalFrame1.add(jPanel1, java.awt.BorderLayout.CENTER);
 
         panelGlass8.setName("panelGlass8"); // NOI18N
         panelGlass8.setPreferredSize(new java.awt.Dimension(55, 55));
@@ -557,6 +532,21 @@ public final class LabKeslingVerifikasiPengujianSampel extends javax.swing.JDial
 
         internalFrame1.add(panelGlass8, java.awt.BorderLayout.PAGE_END);
 
+        jPanel3.setName("jPanel3"); // NOI18N
+        jPanel3.setOpaque(false);
+        jPanel3.setPreferredSize(new java.awt.Dimension(300, 102));
+        jPanel3.setLayout(new java.awt.BorderLayout(1, 1));
+
+        Scroll2.setName("Scroll2"); // NOI18N
+        Scroll2.setOpaque(true);
+
+        tbVerifikasi.setName("tbVerifikasi"); // NOI18N
+        Scroll2.setViewportView(tbVerifikasi);
+
+        jPanel3.add(Scroll2, java.awt.BorderLayout.CENTER);
+
+        internalFrame1.add(jPanel3, java.awt.BorderLayout.CENTER);
+
         getContentPane().add(internalFrame1, java.awt.BorderLayout.CENTER);
 
         pack();
@@ -585,7 +575,7 @@ public final class LabKeslingVerifikasiPengujianSampel extends javax.swing.JDial
 
 private void BtnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCariActionPerformed
     this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));  
-    LabKeslingCariPenugasanPengujianSampel form=new LabKeslingCariPenugasanPengujianSampel(null,false);
+    LabKeslingCariVerifikasiPengujianSampel form=new LabKeslingCariVerifikasiPengujianSampel(null,false);
     form.isCek();
     form.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
     form.setLocationRelativeTo(this);
@@ -630,15 +620,15 @@ private void BtnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                 try {                    
                     Sequel.AutoComitFalse();
                     berhasil=true;
-                    if(Sequel.menyimpantf2("laborat_kesling_verifikasi_pengujian_sampel","?,?,?,?,?,?,?,'Belum Divalidasi'","No.Penugasan",7,new String[]{
+                    if(Sequel.menyimpantf2("labkesling_verifikasi_pengujian_sampel","?,?,?,?,?,?,?,'Belum Divalidasi'","No.Verifikasi",7,new String[]{
                             TNoPermintaan.getText(),TNoVerifikasi.getText(),KdPJ.getText(),Valid.SetTgl(TanggalVerifikasi.getSelectedItem()+"")+" "+CmbJam.getSelectedItem()+":"+CmbMenit.getSelectedItem()+":"+CmbDetik.getSelectedItem(),Catatan.getText(),
                             Valid.SetTgl(TglPengujian1.getSelectedItem()+"")+" "+TglPengujian1.getSelectedItem().toString().substring(11,19),Valid.SetTgl(TglPengujian2.getSelectedItem()+"")+" "+TglPengujian2.getSelectedItem().toString().substring(11,19)
                         })==true){
                         for(i=0;i<tbVerifikasi.getRowCount();i++){
-                            if(Sequel.menyimpantf2("laborat_kesling_detail_verifikasi_pengujian_sampel","?,?,?,?,?","Verifikasi",5,new String[]{
-                                TNoVerifikasi.getText(),tbVerifikasi.getValueAt(i,1).toString(),tbVerifikasi.getValueAt(i,6).toString(),tbVerifikasi.getValueAt(i,4).toString(),tbVerifikasi.getValueAt(i,5).toString()
+                            if(Sequel.menyimpantf2("labkesling_detail_verifikasi_pengujian_sampel","?,?,?,?,?,?","Verifikasi",6,new String[]{
+                                TNoVerifikasi.getText(),tbVerifikasi.getValueAt(i,0).toString(),tbVerifikasi.getValueAt(i,1).toString(),tbVerifikasi.getValueAt(i,6).toString(),tbVerifikasi.getValueAt(i,4).toString(),tbVerifikasi.getValueAt(i,5).toString()
                             })==true){
-                                Sequel.queryu("update laborat_kesling_hasil_pengujian_sampel set status='Sudah Diverifikasi' where no_penugasan='"+tbVerifikasi.getValueAt(i,0).toString()+"' and kode_parameter='"+tbVerifikasi.getValueAt(i,1).toString()+"'");
+                                Sequel.queryu("update labkesling_hasil_pengujian_sampel set status='Sudah Diverifikasi' where no_penugasan='"+tbVerifikasi.getValueAt(i,0).toString()+"' and kode_parameter='"+tbVerifikasi.getValueAt(i,1).toString()+"'");
                             }else{
                                 berhasil=false;
                             }                
@@ -825,7 +815,6 @@ private void BtnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
     private widget.Label jLabel6;
     private widget.Label jLabel7;
     private widget.Label jLabel9;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private widget.Label label11;
     private widget.panelisi panelGlass8;
@@ -955,7 +944,7 @@ private void BtnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
   
     private void autoNomor() {
         if(!KodeSampel.getText().trim().equals("")){
-            Valid.autoNomer3("select ifnull(MAX(CONVERT(RIGHT(laborat_kesling_verifikasi_pengujian_sampel.no_verifikasi,5),signed)),0) from laborat_kesling_verifikasi_pengujian_sampel inner join laborat_kesling_permintaan_pengujian_sampel on laborat_kesling_permintaan_pengujian_sampel.no_permintaan=laborat_kesling_verifikasi_pengujian_sampel.no_permintaan where date_format(laborat_kesling_verifikasi_pengujian_sampel.tanggal,'%Y')='"+TanggalVerifikasi.getSelectedItem().toString().substring(6,10)+"' and laborat_kesling_permintaan_pengujian_sampel.kode_sampel='"+KodeSampel.getText()+"'",KodeSampel.getText()+"/"+TanggalVerifikasi.getSelectedItem().toString().substring(6,10)+"/LHUS/",5,TNoVerifikasi);   
+            Valid.autoNomer3("select ifnull(MAX(CONVERT(RIGHT(labkesling_verifikasi_pengujian_sampel.no_verifikasi,5),signed)),0) from labkesling_verifikasi_pengujian_sampel inner join labkesling_permintaan_pengujian_sampel on labkesling_permintaan_pengujian_sampel.no_permintaan=labkesling_verifikasi_pengujian_sampel.no_permintaan where date_format(labkesling_verifikasi_pengujian_sampel.tanggal,'%Y')='"+TanggalVerifikasi.getSelectedItem().toString().substring(6,10)+"' and labkesling_permintaan_pengujian_sampel.kode_sampel='"+KodeSampel.getText()+"'",KodeSampel.getText()+"/"+TanggalVerifikasi.getSelectedItem().toString().substring(6,10)+"/LHUS/",5,TNoVerifikasi);   
         }        
     }
 }

@@ -27,7 +27,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.FileReader;
-import java.sql.Connection;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.JOptionPane;
@@ -48,7 +47,6 @@ public final class LabKeslingPenugasanPengujianSampel extends javax.swing.JDialo
     private final DefaultTableModel tabMode;
     private sekuel Sequel=new sekuel();
     private validasi Valid=new validasi();
-    private Connection koneksi=koneksiDB.condb();
     private boolean[] pilih; 
     private String[] Kode,NamaParameter,MetodePengujian,Satuan,Kategori;
     private int jml=0,i=0,index=0;
@@ -827,12 +825,12 @@ private void BtnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                 try {                    
                     berhasil=false;
                     Sequel.AutoComitFalse();
-                    if(Sequel.menyimpantf2("laborat_kesling_penugasan_pengujian_sampel","?,?,?,?,?,?,'Belum Keluar Hasil'","No.Penugasan",6,new String[]{
+                    if(Sequel.menyimpantf2("labkesling_penugasan_pengujian_sampel","?,?,?,?,?,?,'Belum Keluar Hasil'","No.Penugasan",6,new String[]{
                             TNoPermintaan.getText(),TNoPenugasan.getText(),KdPJ.getText(),KdAnalis.getText(),Valid.SetTgl(TanggalPenugasan.getSelectedItem()+"")+" "+CmbJam.getSelectedItem()+":"+CmbMenit.getSelectedItem()+":"+CmbDetik.getSelectedItem(),Catatan.getText()
                         })==true){
                         for(i=0;i<tbPermintaan.getRowCount();i++){ 
                             if(tbPermintaan.getValueAt(i,0).toString().equals("true")){
-                                Sequel.menyimpan2("laborat_kesling_detail_penugasan_pengujian_sampel","?,?","Penugasan",2,new String[]{
+                                Sequel.menyimpan2("labkesling_detail_penugasan_pengujian_sampel","?,?","Penugasan",2,new String[]{
                                     TNoPenugasan.getText(),tbPermintaan.getValueAt(i,1).toString()
                                 });
                             }                        
@@ -842,15 +840,15 @@ private void BtnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                             tbPermintaan.setValueAt(false,i,0);
                         }
                         berhasil=true;
-                        Sequel.queryu("update laborat_kesling_permintaan_pengujian_sampel_dilayani set status='Sudah Ada Penugasan' where no_permintaan='"+TNoPermintaan.getText()+"'");
+                        Sequel.queryu("update labkesling_permintaan_pengujian_sampel_dilayani set status='Sudah Ada Penugasan' where no_permintaan='"+TNoPermintaan.getText()+"'");
                     }else{
                         autoNomor();
-                        if(Sequel.menyimpantf2("laborat_kesling_penugasan_pengujian_sampel","?,?,?,?,?,?,'Belum Keluar Hasil'","No.Penugasan",6,new String[]{
+                        if(Sequel.menyimpantf2("labkesling_penugasan_pengujian_sampel","?,?,?,?,?,?,'Belum Keluar Hasil'","No.Penugasan",6,new String[]{
                             TNoPermintaan.getText(),TNoPenugasan.getText(),KdPJ.getText(),KdAnalis.getText(),Valid.SetTgl(TanggalPenugasan.getSelectedItem()+"")+" "+CmbJam.getSelectedItem()+":"+CmbMenit.getSelectedItem()+":"+CmbDetik.getSelectedItem(),Catatan.getText()
                         })==true){
                             for(i=0;i<tbPermintaan.getRowCount();i++){ 
                                 if(tbPermintaan.getValueAt(i,0).toString().equals("true")){
-                                    Sequel.menyimpan2("laborat_kesling_detail_penugasan_pengujian_sampel","?,?","Penugasan",2,new String[]{
+                                    Sequel.menyimpan2("labkesling_detail_penugasan_pengujian_sampel","?,?","Penugasan",2,new String[]{
                                         TNoPenugasan.getText(),tbPermintaan.getValueAt(i,1).toString()
                                     });
                                 }                        
@@ -860,15 +858,15 @@ private void BtnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                                 tbPermintaan.setValueAt(false,i,0);
                             }
                             berhasil=true;
-                            Sequel.queryu("update laborat_kesling_permintaan_pengujian_sampel_dilayani set status='Sudah Ada Penugasan' where no_permintaan='"+TNoPermintaan.getText()+"'");
+                            Sequel.queryu("update labkesling_permintaan_pengujian_sampel_dilayani set status='Sudah Ada Penugasan' where no_permintaan='"+TNoPermintaan.getText()+"'");
                         }else{
                             autoNomor();
-                            if(Sequel.menyimpantf2("laborat_kesling_penugasan_pengujian_sampel","?,?,?,?,?,?,'Belum Keluar Hasil'","No.Penugasan",6,new String[]{
+                            if(Sequel.menyimpantf2("labkesling_penugasan_pengujian_sampel","?,?,?,?,?,?,'Belum Keluar Hasil'","No.Penugasan",6,new String[]{
                                     TNoPermintaan.getText(),TNoPenugasan.getText(),KdPJ.getText(),KdAnalis.getText(),Valid.SetTgl(TanggalPenugasan.getSelectedItem()+"")+" "+CmbJam.getSelectedItem()+":"+CmbMenit.getSelectedItem()+":"+CmbDetik.getSelectedItem(),Catatan.getText()
                                 })==true){
                                 for(i=0;i<tbPermintaan.getRowCount();i++){ 
                                     if(tbPermintaan.getValueAt(i,0).toString().equals("true")){
-                                        Sequel.menyimpan2("laborat_kesling_detail_penugasan_pengujian_sampel","?,?","Penugasan",2,new String[]{
+                                        Sequel.menyimpan2("labkesling_detail_penugasan_pengujian_sampel","?,?","Penugasan",2,new String[]{
                                             TNoPenugasan.getText(),tbPermintaan.getValueAt(i,1).toString()
                                         });
                                     }                        
@@ -878,15 +876,15 @@ private void BtnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                                     tbPermintaan.setValueAt(false,i,0);
                                 }
                                 berhasil=true;
-                                Sequel.queryu("update laborat_kesling_permintaan_pengujian_sampel_dilayani set status='Sudah Ada Penugasan' where no_permintaan='"+TNoPermintaan.getText()+"'");
+                                Sequel.queryu("update labkesling_permintaan_pengujian_sampel_dilayani set status='Sudah Ada Penugasan' where no_permintaan='"+TNoPermintaan.getText()+"'");
                             }else{
                                 autoNomor();
-                                if(Sequel.menyimpantf2("laborat_kesling_penugasan_pengujian_sampel","?,?,?,?,?,?,'Belum Keluar Hasil'","No.Penugasan",6,new String[]{
+                                if(Sequel.menyimpantf2("labkesling_penugasan_pengujian_sampel","?,?,?,?,?,?,'Belum Keluar Hasil'","No.Penugasan",6,new String[]{
                                         TNoPermintaan.getText(),TNoPenugasan.getText(),KdPJ.getText(),KdAnalis.getText(),Valid.SetTgl(TanggalPenugasan.getSelectedItem()+"")+" "+CmbJam.getSelectedItem()+":"+CmbMenit.getSelectedItem()+":"+CmbDetik.getSelectedItem(),Catatan.getText()
                                     })==true){
                                     for(i=0;i<tbPermintaan.getRowCount();i++){ 
                                         if(tbPermintaan.getValueAt(i,0).toString().equals("true")){
-                                            Sequel.menyimpan2("laborat_kesling_detail_penugasan_pengujian_sampel","?,?","Penugasan",2,new String[]{
+                                            Sequel.menyimpan2("labkesling_detail_penugasan_pengujian_sampel","?,?","Penugasan",2,new String[]{
                                                 TNoPenugasan.getText(),tbPermintaan.getValueAt(i,1).toString()
                                             });
                                         }                        
@@ -896,7 +894,7 @@ private void BtnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                                         tbPermintaan.setValueAt(false,i,0);
                                     }
                                     berhasil=true;
-                                    Sequel.queryu("update laborat_kesling_permintaan_pengujian_sampel_dilayani set status='Sudah Ada Penugasan' where no_permintaan='"+TNoPermintaan.getText()+"'");
+                                    Sequel.queryu("update labkesling_permintaan_pengujian_sampel_dilayani set status='Sudah Ada Penugasan' where no_permintaan='"+TNoPermintaan.getText()+"'");
                                 }
                             } 
                         } 
@@ -1331,7 +1329,7 @@ private void BtnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
   
     private void autoNomor() {
         if(!KodeSampel.getText().trim().equals("")){
-            Valid.autoNomer3("select ifnull(MAX(CONVERT(RIGHT(laborat_kesling_penugasan_pengujian_sampel.no_penugasan,5),signed)),0) from laborat_kesling_penugasan_pengujian_sampel inner join laborat_kesling_permintaan_pengujian_sampel on laborat_kesling_permintaan_pengujian_sampel.no_permintaan=laborat_kesling_penugasan_pengujian_sampel.no_permintaan where date_format(laborat_kesling_penugasan_pengujian_sampel.tanggal,'%Y')='"+TanggalPenugasan.getSelectedItem().toString().substring(6,10)+"' and laborat_kesling_permintaan_pengujian_sampel.kode_sampel='"+KodeSampel.getText()+"'",KodeSampel.getText()+"/"+TanggalPenugasan.getSelectedItem().toString().substring(6,10)+"/STP/",5,TNoPenugasan);   
+            Valid.autoNomer3("select ifnull(MAX(CONVERT(RIGHT(labkesling_penugasan_pengujian_sampel.no_penugasan,5),signed)),0) from labkesling_penugasan_pengujian_sampel inner join labkesling_permintaan_pengujian_sampel on labkesling_permintaan_pengujian_sampel.no_permintaan=labkesling_penugasan_pengujian_sampel.no_permintaan where date_format(labkesling_penugasan_pengujian_sampel.tanggal,'%Y')='"+TanggalPenugasan.getSelectedItem().toString().substring(6,10)+"' and labkesling_permintaan_pengujian_sampel.kode_sampel='"+KodeSampel.getText()+"'",KodeSampel.getText()+"/"+TanggalPenugasan.getSelectedItem().toString().substring(6,10)+"/STP/",5,TNoPenugasan);   
         }        
     }
 }

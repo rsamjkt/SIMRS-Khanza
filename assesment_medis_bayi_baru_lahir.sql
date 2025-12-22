@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : serverDevAtta-ygakseIP
- Source Server Type    : MariaDB
+ Source Server         : produ
+ Source Server Type    : MySQL
  Source Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
- Source Host           : 10.0.2.121:3306
- Source Schema         : sikrsamlegacy
+ Source Host           : 10.0.2.5:3306
+ Source Schema         : sikrs4m2106
 
- Target Server Type    : MariaDB
+ Target Server Type    : MySQL
  Target Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
  File Encoding         : 65001
 
- Date: 04/03/2025 11:59:37
+ Date: 15/12/2025 14:05:22
 */
 
 SET NAMES utf8mb4;

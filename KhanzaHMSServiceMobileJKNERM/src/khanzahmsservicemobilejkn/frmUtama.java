@@ -51,8 +51,8 @@ public class frmUtama extends javax.swing.JFrame {
     // [BARU] Konstanta untuk Anggaran Waktu Pelayanan (dalam milidetik)
     private static final long MAX_TOTAL_SERVICE_MS = 35 * 60 * 1000;
     private static final long MAX_WAIT_POLI_MS = 15 * 60 * 1000;
-    private static final long MAX_SERVICE_POLI_MS = 10 * 60 * 1000;
-    private static final long MAX_WAIT_FARMASI_MS = 9 * 60 * 1000;   // Maksimal 15 menit untuk tunggu farmasi (Task 5 ke 6)
+    private static final long MAX_SERVICE_POLI_MS = 45 * 60 * 1000;
+    private static final long MAX_WAIT_FARMASI_MS = 15 * 60 * 1000;   // Maksimal 15 menit untuk tunggu farmasi (Task 5 ke 6)
     private static final long MAX_SERVICE_FARMASI_MS = 35 * 60 * 1000;
 
     /**
@@ -485,7 +485,7 @@ private Map<Integer, Date> buildPerfectTimeline(ResultSet rs, boolean forceCompl
              waktuPatokan.setTime(waktuTask7);
         } else if (forceComplete || (waktuTask7 != null && !waktuTask7.after(waktuPatokan.getTime()))) {
              // [MODIFIKASI] Menyesuaikan rentang waktu pelayanan farmasi menjadi 30-44 menit
-             waktuPatokan.setTime(generateRandomTimestamp(waktuPatokan, 30, 44));
+             waktuPatokan.setTime(generateRandomTimestamp(waktuPatokan, 15, 25));
         } else { return adjustTimelineForCompliance(timeline, waktuCheckin); }
         timeline.put(7, waktuPatokan.getTime());
     }
@@ -557,7 +557,7 @@ private Map<Integer, Date> buildPerfectTimeline(ResultSet rs, boolean forceCompl
             TeksArea.append("   ! Durasi Layanan Farmasi (" + (duration/60000) + " mnt) > " + (MAX_SERVICE_FARMASI_MS/60000) + " mnt. Menyesuaikan...\n");
             Calendar calMulai = Calendar.getInstance();
             calMulai.setTime(waktuMulai);
-            baseTime.setTime(generateRandomTimestamp(calMulai, 30, 44)); // Disesuaikan dengan rentang yang benar
+            baseTime.setTime(generateRandomTimestamp(calMulai, 15, 25)); // Disesuaikan dengan rentang yang benar
         } else {
             baseTime.setTime(originalTimeline.get(7));
         }

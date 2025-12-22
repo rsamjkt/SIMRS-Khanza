@@ -926,7 +926,7 @@ public final class DlgReg extends javax.swing.JDialog {
             public void keyReleased(KeyEvent e) {}
         });
         
-        DlgCatatan.setSize(595,34);        
+        DlgCatatan.setSize(595,340);        
                 
         try {
             aktifjadwal=koneksiDB.JADWALDOKTERDIREGISTRASI();
@@ -6318,7 +6318,7 @@ public final class DlgReg extends javax.swing.JDialog {
         DlgCatatan.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         DlgCatatan.setName("DlgCatatan"); // NOI18N
         DlgCatatan.setUndecorated(true);
-        DlgCatatan.setResizable(false);
+        DlgCatatan.setResizable(true);
 
         internalFrame6.setBorder(null);
         internalFrame6.setName("internalFrame6"); // NOI18N

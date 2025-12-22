@@ -8179,4 +8179,509 @@ public class frmUtama extends javax.swing.JFrame {
             System.out.println("Notifikasi : "+e);
         }
     }
+    /**
+     * Method untuk mengirim ImagingStudy ke Satu Sehat
+     * Berdasarkan logika dari create_servicerequest_usg.php
+     */
+    private void kirimImagingStudy() {
+        try {
+            TeksArea.append("=== Proses Kirim Imaging Study ===\n");
+            
+            // Query untuk mendapatkan data USG yang belum dikirim
+            ps = koneksi.prepareStatement(
+                "SELECT hpu.tanggal AS tgl_usg, hpu.no_rawat, p.nm_pasien, p.no_ktp AS ktp_pasien, " +
+                "d.nm_dokter, peg.no_ktp AS ktp_dokter, enc.id_encounter, " +
+                "loc.id_lokasi_satusehat, pol.nm_poli, " +
+                "hpu.kesimpulan, hpu.diagnosa_klinis, hpu.jenis_prestasi, hpu.jumlah_air_ketuban, " +
+                "hpu.kelainan_kongenital, sr.id_servicerequest, sr.accession_number " +
+                "FROM hasil_pemeriksaan_usg hpu " +
+                "INNER JOIN reg_periksa rp ON hpu.no_rawat = rp.no_rawat " +
+                "INNER JOIN pasien p ON rp.no_rkm_medis = p.no_rkm_medis " +
+                "INNER JOIN dokter d ON hpu.kd_dokter = d.kd_dokter " +
+                "INNER JOIN pegawai peg ON d.kd_dokter = peg.nik " +
+                "INNER JOIN poliklinik pol ON rp.kd_poli = pol.kd_poli " +
+                "INNER JOIN satu_sehat_mapping_lokasi_ralan loc ON pol.kd_poli = loc.kd_poli " +
+                "INNER JOIN satu_sehat_encounter enc ON rp.no_rawat = enc.no_rawat " +
+                "INNER JOIN satu_sehat_servicerequest_usg sr ON hpu.no_rawat = sr.no_rawat " +
+                "LEFT JOIN satu_sehat_imagingstudy_usg img ON hpu.no_rawat = img.no_rawat " +
+                "WHERE hpu.tanggal BETWEEN ? AND ? " +
+                "AND sr.id_servicerequest IS NOT NULL " +
+                "AND sr.id_servicerequest != '' " +
+                "AND img.id_imagingstudy IS NULL " +
+                "ORDER BY hpu.tanggal"
+            );
+            
+            ps.setString(1, Tanggal1.getText());
+            ps.setString(2, Tanggal2.getText());
+            rs = ps.executeQuery();
+            
+            int berhasil = 0;
+            int gagal = 0;
+            
+            while(rs.next()) {
+                String noRawat = rs.getString("no_rawat");
+                String ktpPasien = rs.getString("ktp_pasien");
+                String ktpDokter = rs.getString("ktp_dokter");
+                
+                if(ktpPasien == null || ktpPasien.isEmpty() || ktpDokter == null || ktpDokter.isEmpty()) {
+                    TeksArea.append("⚠ No.Rawat " + noRawat + " : NIK pasien/dokter kosong, dilewati\n");
+                    gagal++;
+                    continue;
+                }
+                
+                try {
+                    // Dapatkan ID Pasien dan Dokter dari Satu Sehat
+                    idpasien = cekViaSatuSehat.tampilIDPasien(ktpPasien);
+                    iddokter = cekViaSatuSehat.tampilIDPasien(ktpDokter);
+                    
+                    if(idpasien.isEmpty() || iddokter.isEmpty()) {
+                        TeksArea.append("⚠ No.Rawat " + noRawat + " : ID Pasien/Dokter tidak ditemukan di Satu Sehat\n");
+                        gagal++;
+                        continue;
+                    }
+                    
+                    // Kirim ImagingStudy
+                    boolean sukses = kirimImagingStudySatuSehat(rs);
+                    
+                    if(sukses) {
+                        berhasil++;
+                        TeksArea.append("✓ No.Rawat " + noRawat + " : ImagingStudy berhasil dikirim\n");
+                    } else {
+                        gagal++;
+                        TeksArea.append("✗ No.Rawat " + noRawat + " : ImagingStudy gagal dikirim\n");
+                    }
+                    
+                } catch(Exception e) {
+                    gagal++;
+                    TeksArea.append("✗ No.Rawat " + noRawat + " : Error - " + e.getMessage() + "\n");
+                }
+            }
+            
+            TeksArea.append("\n=== Ringkasan ===\n");
+            TeksArea.append("Berhasil: " + berhasil + "\n");
+            TeksArea.append("Gagal: " + gagal + "\n");
+            TeksArea.append("=================\n\n");
+            
+        } catch(Exception e) {
+            TeksArea.append("ERROR kirimImagingStudy: " + e.getMessage() + "\n");
+            e.printStackTrace();
+        } finally {
+            try {
+                if(rs != null) rs.close();
+                if(ps != null) ps.close();
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    /**
+     * Method untuk mengirim ImagingStudy ke API Satu Sehat
+     */
+    private boolean kirimImagingStudySatuSehat(ResultSet data) {
+        try {
+            String noRawat = data.getString("no_rawat");
+            String tglUsg = data.getString("tgl_usg");
+            String nmPasien = data.getString("nm_pasien");
+            String nmDokter = data.getString("nm_dokter");
+            String idEncounter = data.getString("id_encounter");
+            String idServiceRequest = data.getString("id_servicerequest");
+            String accessionNumber = data.getString("accession_number");
+            String idLokasiSatuSehat = data.getString("id_lokasi_satusehat");
+            String kesimpulan = data.getString("kesimpulan") != null ? data.getString("kesimpulan") : "";
+            
+            // Format datetime untuk started
+            String startedDateTime = tglUsg + "T00:00:00+07:00";
+            
+            // Buat JSON payload untuk ImagingStudy
+            headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.add("Authorization", "Bearer " + api.TokenSatuSehat());
+            
+            json = "{" +
+                    "\"resourceType\": \"ImagingStudy\"," +
+                    "\"identifier\": [" +
+                        "{" +
+                            "\"use\": \"official\"," +
+                            "\"system\": \"http://sys-ids.kemkes.go.id/acsn/" + koneksiDB.IDSATUSEHAT() + "\"," +
+                            "\"value\": \"" + accessionNumber + "\"" +
+                        "}" +
+                    "]," +
+                    "\"status\": \"available\"," +
+                    "\"subject\": {" +
+                        "\"reference\": \"Patient/" + idpasien + "\"," +
+                        "\"display\": \"" + nmPasien + "\"" +
+                    "}," +
+                    "\"encounter\": {" +
+                        "\"reference\": \"Encounter/" + idEncounter + "\"" +
+                    "}," +
+                    "\"started\": \"" + startedDateTime + "\"," +
+                    "\"basedOn\": [" +
+                        "{" +
+                            "\"reference\": \"ServiceRequest/" + idServiceRequest + "\"" +
+                        "}" +
+                    "]," +
+                    "\"interpreter\": [" +
+                        "{" +
+                            "\"reference\": \"Practitioner/" + iddokter + "\"," +
+                            "\"display\": \"" + nmDokter + "\"" +
+                        "}" +
+                    "]," +
+                    "\"location\": {" +
+                        "\"reference\": \"Location/" + idLokasiSatuSehat + "\"" +
+                    "}," +
+                    "\"reasonCode\": [" +
+                        "{" +
+                            "\"coding\": [" +
+                                "{" +
+                                    "\"system\": \"http://snomed.info/sct\"," +
+                                    "\"code\": \"127362006\"," +
+                                    "\"display\": \"Pregnancy ultrasonography (procedure)\"" +
+                                "}" +
+                            "]," +
+                            "\"text\": \"USG Obstetri\"" +
+                        "}" +
+                    "]," +
+                    "\"note\": [" +
+                        "{" +
+                            "\"text\": \"" + kesimpulan.replace("\"", "\\\"").replace("\n", " ") + "\"" +
+                        "}" +
+                    "]," +
+                    "\"numberOfSeries\": 1," +
+                    "\"numberOfInstances\": 1," +
+                    "\"procedureCode\": [" +
+                        "{" +
+                            "\"coding\": [" +
+                                "{" +
+                                    "\"system\": \"http://snomed.info/sct\"," +
+                                    "\"code\": \"168731009\"," +
+                                    "\"display\": \"Obstetric ultrasound scan (procedure)\"" +
+                                "}" +
+                            "]," +
+                            "\"text\": \"USG Obstetri\"" +
+                        "}" +
+                    "]," +
+                    "\"modality\": [" +
+                        "{" +
+                            "\"system\": \"http://dicom.nema.org/resources/ontology/DCM\"," +
+                            "\"code\": \"US\"," +
+                            "\"display\": \"Ultrasound\"" +
+                        "}" +
+                    "]" +
+                "}";
+            
+            TeksArea.append("Request JSON ImagingStudy: " + json + "\n");
+            
+            requestEntity = new HttpEntity(json, headers);
+            String response = api.getRest().exchange(
+                link + "/ImagingStudy", 
+                HttpMethod.POST, 
+                requestEntity, 
+                String.class
+            ).getBody();
+            
+            TeksArea.append("Response JSON: " + response + "\n");
+            
+            root = mapper.readTree(response);
+            JsonNode idNode = root.path("id");
+            
+            if(!idNode.asText().equals("")) {
+                // Simpan ke database
+                Sequel.menyimpan2(
+                    "satu_sehat_imagingstudy_usg",
+                    "?,?,?",
+                    "ImagingStudy USG",
+                    3,
+                    new String[]{
+                        noRawat,
+                        idNode.asText(),
+                        response
+                    }
+                );
+                return true;
+            }
+            
+            return false;
+            
+        } catch(Exception e) {
+            TeksArea.append("Error kirimImagingStudySatuSehat: " + e.getMessage() + "\n");
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    /**
+     * Method untuk trigger pengiriman DICOM ke Router
+     * Berdasarkan logika dari trigger_dicom_send.php
+     */
+    private void triggerDicomSend() {
+        try {
+            TeksArea.append("=== Proses Trigger DICOM Send ===\n");
+            
+            // Query untuk mendapatkan data yang sudah ada ServiceRequest tapi belum dikirim DICOM
+            ps = koneksi.prepareStatement(
+                "SELECT rp.no_rawat, rp.no_rkm_medis, rp.tgl_registrasi, p.nm_pasien, " +
+                "sr.id_servicerequest, sr.accession_number, " +
+                "IFNULL(dl.status, 'pending') as dicom_status " +
+                "FROM reg_periksa rp " +
+                "INNER JOIN pasien p ON rp.no_rkm_medis = p.no_rkm_medis " +
+                "INNER JOIN satu_sehat_servicerequest_usg sr ON rp.no_rawat = sr.no_rawat " +
+                "LEFT JOIN satu_sehat_dicom_log dl ON rp.no_rawat = dl.no_rawat " +
+                "WHERE rp.tgl_registrasi BETWEEN ? AND ? " +
+                "AND sr.id_servicerequest IS NOT NULL " +
+                "AND sr.id_servicerequest != '' " +
+                "AND (dl.status IS NULL OR dl.status = 'pending' OR dl.status = 'failed') " +
+                "ORDER BY rp.tgl_registrasi"
+            );
+            
+            ps.setString(1, Tanggal1.getText());
+            ps.setString(2, Tanggal2.getText());
+            rs = ps.executeQuery();
+            
+            int berhasil = 0;
+            int gagal = 0;
+            
+            while(rs.next()) {
+                String noRawat = rs.getString("no_rawat");
+                String noRkmMedis = rs.getString("no_rkm_medis");
+                String tglRegistrasi = rs.getString("tgl_registrasi");
+                String accessionNumber = rs.getString("accession_number");
+                
+                try {
+                    TeksArea.append("→ Memproses No.Rawat: " + noRawat + "\n");
+                    
+                    // LANGKAH 1: Cari Study ID di Orthanc
+                    String orthancStudyId = cariStudyDiOrthanc(noRkmMedis, tglRegistrasi);
+                    
+                    if(orthancStudyId == null || orthancStudyId.isEmpty()) {
+                        TeksArea.append("  ⚠ Study tidak ditemukan di Orthanc untuk RM: " + noRkmMedis + "\n");
+                        simpanLogDicom(noRawat, null, "failed", "Study tidak ditemukan di Orthanc");
+                        gagal++;
+                        continue;
+                    }
+                    
+                    TeksArea.append("  ✓ Study ditemukan: " + orthancStudyId + "\n");
+                    
+                    // LANGKAH 2: Modifikasi Study untuk menambahkan Accession Number
+                    String modifiedStudyId = sisipkanAccessionNumber(orthancStudyId, accessionNumber);
+                    
+                    if(modifiedStudyId == null || modifiedStudyId.isEmpty()) {
+                        TeksArea.append("  ✗ Gagal memodifikasi study\n");
+                        simpanLogDicom(noRawat, orthancStudyId, "failed", "Gagal modifikasi study");
+                        gagal++;
+                        continue;
+                    }
+                    
+                    TeksArea.append("  ✓ Study dimodifikasi: " + modifiedStudyId + "\n");
+                    
+                    // LANGKAH 3: Kirim ke DICOM Router
+                    boolean kirimSukses = kirimStudyKeDicomRouter(modifiedStudyId);
+                    
+                    if(kirimSukses) {
+                        String pesan = "Perintah kirim Study ID '" + modifiedStudyId + 
+                                     "' (Accession Number: " + accessionNumber + ") berhasil";
+                        simpanLogDicom(noRawat, modifiedStudyId, "success", pesan);
+                        TeksArea.append("  ✓ " + pesan + "\n");
+                        berhasil++;
+                    } else {
+                        String pesan = "Orthanc melaporkan kegagalan saat mengirim study";
+                        simpanLogDicom(noRawat, modifiedStudyId, "failed", pesan);
+                        TeksArea.append("  ✗ " + pesan + "\n");
+                        gagal++;
+                    }
+                    
+                } catch(Exception e) {
+                    String errorMsg = "Error: " + e.getMessage();
+                    simpanLogDicom(noRawat, null, "failed", errorMsg);
+                    TeksArea.append("  ✗ " + errorMsg + "\n");
+                    gagal++;
+                }
+            }
+            
+            TeksArea.append("\n=== Ringkasan ===\n");
+            TeksArea.append("Berhasil: " + berhasil + "\n");
+            TeksArea.append("Gagal: " + gagal + "\n");
+            TeksArea.append("=================\n\n");
+            
+        } catch(Exception e) {
+            TeksArea.append("ERROR triggerDicomSend: " + e.getMessage() + "\n");
+            e.printStackTrace();
+        } finally {
+            try {
+                if(rs != null) rs.close();
+                if(ps != null) ps.close();
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    /**
+     * Helper method untuk mencari Study di Orthanc
+     */
+    private String cariStudyDiOrthanc(String noRkmMedis, String tglRegistrasi) {
+        try {
+            // URL Orthanc API - menggunakan konfigurasi yang sudah ada
+            String orthancUrl = koneksiDB.URLORTHANC();
+            String orthancUser = koneksiDB.USERORTHANC();
+            String orthancPass = koneksiDB.PASSORTHANC();
+            
+            // Buat Basic Auth
+            String auth = orthancUser + ":" + orthancPass;
+            String encodedAuth = java.util.Base64.getEncoder().encodeToString(auth.getBytes());
+            
+            // Search studies by PatientID
+            headers = new HttpHeaders();
+            headers.add("Authorization", "Basic " + encodedAuth);
+            
+            requestEntity = new HttpEntity(headers);
+            
+            // Query ke Orthanc
+            String searchUrl = orthancUrl + "/tools/find";
+            String queryJson = "{" +
+                "\"Level\": \"Study\"," +
+                "\"Query\": {" +
+                    "\"PatientID\": \"" + noRkmMedis + "\"," +
+                    "\"StudyDate\": \"" + tglRegistrasi.replace("-", "") + "\"" +
+                "}" +
+            "}";
+            
+            requestEntity = new HttpEntity(queryJson, headers);
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            
+            String response = api.getRest().exchange(
+                searchUrl,
+                HttpMethod.POST,
+                requestEntity,
+                String.class
+            ).getBody();
+            
+            // Parse response untuk mendapatkan Study ID
+            root = mapper.readTree(response);
+            if(root.isArray() && root.size() > 0) {
+                return root.get(0).asText();
+            }
+            
+            return null;
+            
+        } catch(Exception e) {
+            TeksArea.append("Error cariStudyDiOrthanc: " + e.getMessage() + "\n");
+            return null;
+        }
+    }
+    
+    /**
+     * Helper method untuk menambahkan Accession Number ke Study
+     */
+    private String sisipkanAccessionNumber(String orthancStudyId, String accessionNumber) {
+        try {
+            String orthancUrl = koneksiDB.URLORTHANC();
+            String orthancUser = koneksiDB.USERORTHANC();
+            String orthancPass = koneksiDB.PASSORTHANC();
+            
+            String auth = orthancUser + ":" + orthancPass;
+            String encodedAuth = java.util.Base64.getEncoder().encodeToString(auth.getBytes());
+            
+            headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.add("Authorization", "Basic " + encodedAuth);
+            
+            // Modify study dengan Accession Number
+            String modifyUrl = orthancUrl + "/studies/" + orthancStudyId + "/modify";
+            String modifyJson = "{" +
+                "\"Replace\": {" +
+                    "\"AccessionNumber\": \"" + accessionNumber + "\"" +
+                "}," +
+                "\"Force\": true" +
+            "}";
+            
+            requestEntity = new HttpEntity(modifyJson, headers);
+            
+            String response = api.getRest().exchange(
+                modifyUrl,
+                HttpMethod.POST,
+                requestEntity,
+                String.class
+            ).getBody();
+            
+            // Parse untuk mendapatkan ID study yang baru
+            root = mapper.readTree(response);
+            JsonNode idNode = root.path("ID");
+            
+            return idNode.asText();
+            
+        } catch(Exception e) {
+            TeksArea.append("Error sisipkanAccessionNumber: " + e.getMessage() + "\n");
+            return null;
+        }
+    }
+    
+    /**
+     * Helper method untuk mengirim Study ke DICOM Router
+     */
+    private boolean kirimStudyKeDicomRouter(String orthancStudyId) {
+        try {
+            String orthancUrl = koneksiDB.URLORTHANC();
+            String orthancUser = koneksiDB.USERORTHANC();
+            String orthancPass = koneksiDB.PASSORTHANC();
+            String dicomAet = koneksiDB.DICOMAET(); // AET tujuan DICOM Router
+            
+            String auth = orthancUser + ":" + orthancPass;
+            String encodedAuth = java.util.Base64.getEncoder().encodeToString(auth.getBytes());
+            
+            headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.add("Authorization", "Basic " + encodedAuth);
+            
+            // Kirim study ke modality
+            String storeUrl = orthancUrl + "/modalities/" + dicomAet + "/store";
+            String storeJson = "[\"" + orthancStudyId + "\"]";
+            
+            requestEntity = new HttpEntity(storeJson, headers);
+            
+            String response = api.getRest().exchange(
+                storeUrl,
+                HttpMethod.POST,
+                requestEntity,
+                String.class
+            ).getBody();
+            
+            // Cek response
+            root = mapper.readTree(response);
+            
+            // Jika ada field "Status" atau berhasil
+            // Format response Orthanc bisa berbeda, sesuaikan dengan versi Orthanc Anda
+            return true;
+            
+        } catch(Exception e) {
+            TeksArea.append("Error kirimStudyKeDicomRouter: " + e.getMessage() + "\n");
+            return false;
+        }
+    }
+    
+    /**
+     * Helper method untuk menyimpan log DICOM
+     */
+    private void simpanLogDicom(String noRawat, String orthancStudyId, String status, String keterangan) {
+        try {
+            PreparedStatement psLog = koneksi.prepareStatement(
+                "INSERT INTO satu_sehat_dicom_log (no_rawat, orthanc_study_id, status, keterangan) " +
+                "VALUES (?, ?, ?, ?) " +
+                "ON DUPLICATE KEY UPDATE " +
+                "orthanc_study_id = VALUES(orthanc_study_id), " +
+                "status = VALUES(status), " +
+                "keterangan = VALUES(keterangan)"
+            );
+            
+            psLog.setString(1, noRawat);
+            psLog.setString(2, orthancStudyId != null ? orthancStudyId : "");
+            psLog.setString(3, status);
+            psLog.setString(4, keterangan);
+            psLog.executeUpdate();
+            psLog.close();
+            
+        } catch(Exception e) {
+            TeksArea.append("Error simpanLogDicom: " + e.getMessage() + "\n");
+        }
+    }
 }
