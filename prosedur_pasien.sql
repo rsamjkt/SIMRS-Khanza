@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : ci-zero
- Source Server Type    : MySQL
- Source Server Version : 100338 (10.3.38-MariaDB-0ubuntu0.20.04.1-log)
- Source Host           : 192.168.196.251:3306
- Source Schema         : sikci2
+ Source Server         : serverDevAtta-ygakseIP
+ Source Server Type    : MariaDB
+ Source Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
+ Source Host           : 10.0.2.121:3306
+ Source Schema         : sikrsamlegacy4
 
- Target Server Type    : MySQL
- Target Server Version : 100338 (10.3.38-MariaDB-0ubuntu0.20.04.1-log)
+ Target Server Type    : MariaDB
+ Target Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
  File Encoding         : 65001
 
- Date: 05/12/2025 19:09:19
+ Date: 22/12/2025 15:38:39
 */
 
 SET NAMES utf8mb4;
@@ -27,7 +27,7 @@ CREATE TABLE `prosedur_pasien` (
   `status` enum('Ralan','Ranap') NOT NULL,
   `prioritas` tinyint(4) NOT NULL,
   `jumlah` varchar(3) NOT NULL,
-  PRIMARY KEY (`no_rawat`,`kode`,`status`) USING BTREE,
+  PRIMARY KEY (`no_rawat`,`kode`,`status`),
   KEY `kode` (`kode`) USING BTREE,
   CONSTRAINT `prosedur_pasien_ibfk_1` FOREIGN KEY (`no_rawat`) REFERENCES `reg_periksa` (`no_rawat`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `prosedur_pasien_ibfk_2` FOREIGN KEY (`kode`) REFERENCES `icd9` (`kode`) ON DELETE CASCADE ON UPDATE CASCADE

@@ -823,7 +823,39 @@ public class BPJSSuratKontrol extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+private boolean isValidTanggalKontrol() {
+    try {
+        // Pengecualian untuk Poli Mata (MAT) - tidak perlu validasi H+8
+        if(KdPoli.getText().trim().equalsIgnoreCase("MAT")){
+            return true;
+        }
+        
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+        java.util.Date tglSurat = sdf.parse(Valid.SetTgl(TanggalSurat.getSelectedItem()+""));
+        java.util.Date tglKontrol = sdf.parse(Valid.SetTgl(TanggalKontrol.getSelectedItem()+""));
+        
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.setTime(tglSurat);
+        cal.add(java.util.Calendar.DATE, 8); // H+8
+        java.util.Date minTglKontrol = cal.getTime();
+        
+        if(tglKontrol.before(minTglKontrol)){
+            java.text.SimpleDateFormat sdfDisplay = new java.text.SimpleDateFormat("dd-MM-yyyy");
+            JOptionPane.showMessageDialog(null, 
+                "Tanggal kontrol minimal H+8 dari tanggal surat!\n\n" +
+                "Tanggal Surat: " + sdfDisplay.format(tglSurat) + "\n" +
+                "Minimal Tanggal Kontrol: " + sdfDisplay.format(minTglKontrol) + "\n\n" +
+                "Silahkan pilih tanggal kontrol mulai " + sdfDisplay.format(minTglKontrol) + " atau setelahnya\n" +
+                "untuk menghindari fragmentasi BPJS.");
+            TanggalKontrol.requestFocus();
+            return false;
+        }
+        return true;
+    } catch (Exception e) {
+        System.out.println("Error validasi tanggal kontrol: " + e);
+        return true;
+    }
+}
     private void TanggalSuratKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TanggalSuratKeyPressed
         Valid.pindah(evt,TCari,TanggalKontrol);
 }//GEN-LAST:event_TanggalSuratKeyPressed
@@ -834,10 +866,12 @@ public class BPJSSuratKontrol extends javax.swing.JDialog {
         }else if(NmDokter.getText().trim().equals("")||KdDokter.getText().trim().equals("")){
             Valid.textKosong(KdDokter,"Dokter");
         }else if(NmPoli.getText().trim().equals("")||NmPoli.getText().trim().equals("")){
-            Valid.textKosong(KdPoli,"Poli");
-        }else{
-            try {
-                headers = new HttpHeaders();
+    Valid.textKosong(KdPoli,"Poli");
+}else if(!isValidTanggalKontrol()){
+    // Validasi sudah ditampilkan di dalam method
+}else{
+    try {
+        headers = new HttpHeaders();
                 headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
                 headers.add("X-Cons-ID",koneksiDB.CONSIDAPIBPJS());
                 utc=String.valueOf(api.GetUTCdatetimeAsString());
@@ -1111,9 +1145,11 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         }else if(NmDokter.getText().trim().equals("")||KdDokter.getText().trim().equals("")){
             Valid.textKosong(KdDokter,"Dokter");
         }else if(NmPoli.getText().trim().equals("")||NmPoli.getText().trim().equals("")){
-            Valid.textKosong(KdPoli,"Poli");
-        }else{
-            if(tbObat.getSelectedRow()!= -1){
+    Valid.textKosong(KdPoli,"Poli");
+}else if(!isValidTanggalKontrol()){
+    // Validasi sudah ditampilkan di dalam method
+}else{
+    if(tbObat.getSelectedRow()!= -1){
                 try {
                     headers = new HttpHeaders();
                     headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);

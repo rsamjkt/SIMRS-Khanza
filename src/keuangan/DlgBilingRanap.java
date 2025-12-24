@@ -57,7 +57,8 @@ import simrskhanza.DlgInputResepPulang;
 import simrskhanza.DlgPeriksaLaboratoriumMB;
 import simrskhanza.DlgPeriksaLaboratoriumPA;
 import simrskhanza.DlgTagihanOperasi;
-
+import java.text.SimpleDateFormat;
+import java.util.concurrent.TimeUnit;
 /**
  *
  * @author perpustakaan
@@ -4957,10 +4958,14 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
         Valid.tabelKosong(tabModeRwJlDr);
         try{  
             psreg=koneksi.prepareStatement(
-                    "select reg_periksa.no_rkm_medis,concat(DATE_FORMAT(reg_periksa.tgl_registrasi, '%e %M %Y'),' ',reg_periksa.jam_reg) as registrasi,kamar_inap.kd_kamar,concat(if(kamar_inap.tgl_keluar='0000-00-00',DATE_FORMAT(CURDATE(), '%e %M %Y'),DATE_FORMAT(kamar_inap.tgl_keluar, '%e %M %Y')),' ',kamar_inap.jam_keluar) as keluar,  "+
-                    "(select sum(kamar_inap.lama) from kamar_inap where kamar_inap.no_rawat=reg_periksa.no_rawat ) as lama,reg_periksa.biaya_reg,reg_periksa.umurdaftar,reg_periksa.sttsumur,reg_periksa.tgl_registrasi "+
-                    "from reg_periksa inner join kamar_inap on reg_periksa.no_rawat=kamar_inap.no_rawat where reg_periksa.no_rawat=? "+
-                    "order by kamar_inap.tgl_keluar desc limit 1");
+    "select reg_periksa.no_rkm_medis,concat(DATE_FORMAT(reg_periksa.tgl_registrasi, '%e %M %Y'),' ',reg_periksa.jam_reg) as registrasi, " +
+    "reg_periksa.tgl_registrasi, reg_periksa.jam_reg, " + // tambahan kolom
+    "kamar_inap.kd_kamar,concat(if(kamar_inap.tgl_keluar='0000-00-00',DATE_FORMAT(CURDATE(), '%e %M %Y'),DATE_FORMAT(kamar_inap.tgl_keluar, '%e %M %Y')),' ',kamar_inap.jam_keluar) as keluar, " +
+    "if(kamar_inap.tgl_keluar='0000-00-00',curdate(),kamar_inap.tgl_keluar) as tgl_keluar, " + // tambahan kolom
+    "if(kamar_inap.jam_keluar='00:00:00',curtime(),kamar_inap.jam_keluar) as jam_keluar, " + // tambahan kolom
+    "(select sum(kamar_inap.lama) from kamar_inap where kamar_inap.no_rawat=reg_periksa.no_rawat ) as lama,reg_periksa.biaya_reg,reg_periksa.umurdaftar,reg_periksa.sttsumur,reg_periksa.tgl_registrasi "+
+    "from reg_periksa inner join kamar_inap on reg_periksa.no_rawat=kamar_inap.no_rawat where reg_periksa.no_rawat=? "+
+    "order by kamar_inap.tgl_keluar desc limit 1");
             try {
                 psreg.setString(1,TNoRw.getText());
                 rsreg=psreg.executeQuery();            
@@ -4987,9 +4992,29 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                     }
                         
                     umurdaftar=rsreg.getString("umurdaftar")+rsreg.getString("sttsumur");
-                    tgl_registrasi=rsreg.getString("tgl_registrasi");
-                    DTPTgl.setDate(new Date());
-                    tabModeRwJlDr.addRow(new Object[]{true,"Tgl.Perawatan",": "+rsreg.getString("registrasi")+" s.d. "+rsreg.getString("keluar")+" ( "+rsreg.getString("lama")+" Hari )","",null,null,null,null,"-"});
+tgl_registrasi=rsreg.getString("tgl_registrasi");
+DTPTgl.setDate(new Date());
+
+// --- Awal Perubahan Perhitungan Detail ---
+String durasiDetail = "";
+try {
+    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    java.util.Date tglMasuk = sdf.parse(rsreg.getString("tgl_registrasi") + " " + rsreg.getString("jam_reg"));
+    java.util.Date tglKeluar = sdf.parse(rsreg.getString("tgl_keluar") + " " + rsreg.getString("jam_keluar"));
+
+    long diffInMillies = Math.abs(tglKeluar.getTime() - tglMasuk.getTime());
+    long days = java.util.concurrent.TimeUnit.DAYS.convert(diffInMillies, java.util.concurrent.TimeUnit.MILLISECONDS);
+    long hours = java.util.concurrent.TimeUnit.HOURS.convert(diffInMillies, java.util.concurrent.TimeUnit.MILLISECONDS) % 24;
+    long minutes = java.util.concurrent.TimeUnit.MINUTES.convert(diffInMillies, java.util.concurrent.TimeUnit.MILLISECONDS) % 60;
+    long seconds = java.util.concurrent.TimeUnit.SECONDS.convert(diffInMillies, java.util.concurrent.TimeUnit.MILLISECONDS) % 60;
+
+    durasiDetail = days + " Hari " + hours + " Jam " + minutes + " Menit " + seconds + " Detik";
+} catch (Exception e) {
+    durasiDetail = rsreg.getString("lama") + " Hari";
+}
+// --- Akhir Perubahan Perhitungan Detail ---
+
+tabModeRwJlDr.addRow(new Object[]{true,"Tgl.Perawatan",": "+rsreg.getString("registrasi")+" s.d. "+rsreg.getString("keluar")+" ( "+durasiDetail+" )","",null,null,null,null,"-"});
 
                     norawatbayi="";
                     psanak=koneksi.prepareStatement(sqlpsanak);
