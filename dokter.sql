@@ -5,13 +5,13 @@
  Source Server Type    : MariaDB
  Source Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
  Source Host           : 10.0.2.121:3306
- Source Schema         : sikrsamlegacy3
+ Source Schema         : sikrsamlegacy5
 
  Target Server Type    : MariaDB
  Target Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
  File Encoding         : 65001
 
- Date: 11/10/2025 11:31:16
+ Date: 01/01/2026 14:23:45
 */
 
 SET NAMES utf8mb4;
@@ -50,6 +50,7 @@ CREATE TABLE `dokter` (
   KEY `stts_nikah` (`stts_nikah`) USING BTREE,
   KEY `alumni` (`alumni`) USING BTREE,
   KEY `no_ijn_praktek` (`no_ijn_praktek`) USING BTREE,
+  KEY `kd_dokter` (`kd_dokter`) USING BTREE,
   KEY `status` (`status`) USING BTREE,
   CONSTRAINT `dokter_ibfk_2` FOREIGN KEY (`kd_sps`) REFERENCES `spesialis` (`kd_sps`) ON UPDATE CASCADE,
   CONSTRAINT `dokter_ibfk_3` FOREIGN KEY (`kd_dokter`) REFERENCES `pegawai` (`nik`) ON UPDATE CASCADE

@@ -5,13 +5,13 @@
  Source Server Type    : MariaDB
  Source Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
  Source Host           : 10.0.2.121:3306
- Source Schema         : sikrsamlegacy3
+ Source Schema         : sikrsamlegacy5
 
  Target Server Type    : MariaDB
  Target Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
  File Encoding         : 65001
 
- Date: 11/10/2025 11:31:48
+ Date: 01/01/2026 14:23:30
 */
 
 SET NAMES utf8mb4;

@@ -5,13 +5,13 @@
  Source Server Type    : MariaDB
  Source Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
  Source Host           : 10.0.2.121:3306
- Source Schema         : sikrsamlegacy4
+ Source Schema         : sikrsamlegacy5
 
  Target Server Type    : MariaDB
  Target Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
  File Encoding         : 65001
 
- Date: 17/12/2025 10:52:41
+ Date: 27/12/2025 19:51:53
 */
 
 SET NAMES utf8mb4;
@@ -37,19 +37,19 @@ CREATE TABLE `resume_pasien_ranap` (
   `kd_diagnosa_utama` varchar(10) NOT NULL,
   `diagnosa_sekunder` varchar(80) NOT NULL,
   `kd_diagnosa_sekunder` varchar(10) NOT NULL,
-  `diagnosa_sekunder2` varchar(80) NOT NULL,
+  `diagnosa_sekunder2` varchar(150) NOT NULL,
   `kd_diagnosa_sekunder2` varchar(10) NOT NULL,
-  `diagnosa_sekunder3` varchar(80) NOT NULL,
+  `diagnosa_sekunder3` varchar(150) NOT NULL,
   `kd_diagnosa_sekunder3` varchar(10) NOT NULL,
-  `diagnosa_sekunder4` varchar(80) NOT NULL,
+  `diagnosa_sekunder4` varchar(150) NOT NULL,
   `kd_diagnosa_sekunder4` varchar(10) NOT NULL,
-  `prosedur_utama` varchar(80) NOT NULL,
+  `prosedur_utama` varchar(150) NOT NULL,
   `kd_prosedur_utama` varchar(8) NOT NULL,
-  `prosedur_sekunder` varchar(80) NOT NULL,
+  `prosedur_sekunder` varchar(150) NOT NULL,
   `kd_prosedur_sekunder` varchar(8) NOT NULL,
-  `prosedur_sekunder2` varchar(80) NOT NULL,
+  `prosedur_sekunder2` varchar(150) NOT NULL,
   `kd_prosedur_sekunder2` varchar(8) NOT NULL,
-  `prosedur_sekunder3` varchar(80) NOT NULL,
+  `prosedur_sekunder3` varchar(150) NOT NULL,
   `kd_prosedur_sekunder3` varchar(8) NOT NULL,
   `alergi` varchar(100) NOT NULL,
   `diet` text NOT NULL,
