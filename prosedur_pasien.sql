@@ -11,7 +11,7 @@
  Target Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
  File Encoding         : 65001
 
- Date: 27/12/2025 19:51:15
+ Date: 02/01/2026 18:16:47
 */
 
 SET NAMES utf8mb4;
@@ -26,6 +26,7 @@ CREATE TABLE `prosedur_pasien` (
   `kode` varchar(8) NOT NULL,
   `status` enum('Ralan','Ranap') NOT NULL,
   `prioritas` tinyint(4) NOT NULL,
+  `jumlah` varchar(3) NOT NULL,
   PRIMARY KEY (`no_rawat`,`kode`,`status`),
   KEY `kode` (`kode`) USING BTREE,
   CONSTRAINT `prosedur_pasien_ibfk_1` FOREIGN KEY (`no_rawat`) REFERENCES `reg_periksa` (`no_rawat`) ON DELETE CASCADE ON UPDATE CASCADE,

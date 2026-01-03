@@ -59,6 +59,7 @@ import simrskhanza.DlgPeriksaLaboratoriumPA;
 import simrskhanza.DlgTagihanOperasi;
 import java.text.SimpleDateFormat;
 import java.util.concurrent.TimeUnit;
+
 /**
  *
  * @author perpustakaan
@@ -3056,8 +3057,7 @@ private void MnRawatInapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
             rawatinap.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
             rawatinap.setLocationRelativeTo(internalFrame1);
             rawatinap.isCek();
-            rawatinap.setNoRm(TNoRw.getText(),DTPTgl.getDate(),new Date());    
-            rawatinap.tampilDr();
+            rawatinap.setNoRm(TNoRw.getText(),DTPTgl.getDate(),new Date());  
             rawatinap.setVisible(true);
         }
 }//GEN-LAST:event_MnRawatInapActionPerformed
@@ -4054,7 +4054,6 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                 rawatinap.setLocationRelativeTo(internalFrame1);
                 rawatinap.isCek();
                 rawatinap.setNoRm(norawatbayi,DTPTgl.getDate(),new Date());
-                rawatinap.tampilDr();
                 rawatinap.setVisible(true);
             }                
         }
@@ -4992,13 +4991,14 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                     }
                         
                     umurdaftar=rsreg.getString("umurdaftar")+rsreg.getString("sttsumur");
-tgl_registrasi=rsreg.getString("tgl_registrasi");
-DTPTgl.setDate(new Date());
-
-// --- Awal Perubahan Perhitungan Detail ---
+                    tgl_registrasi=rsreg.getString("tgl_registrasi");
+                    DTPTgl.setDate(new Date());
+                     //--- PERBAIKAN: Hitung durasi detail terlebih dahulu ---
+                    // --- LOGIKA HITUNG DURASI (Ini sudah ada di kode Anda, pastikan sama) ---
 String durasiDetail = "";
 try {
     java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    // Mengambil tanggal masuk dan keluar
     java.util.Date tglMasuk = sdf.parse(rsreg.getString("tgl_registrasi") + " " + rsreg.getString("jam_reg"));
     java.util.Date tglKeluar = sdf.parse(rsreg.getString("tgl_keluar") + " " + rsreg.getString("jam_keluar"));
 
@@ -5008,14 +5008,18 @@ try {
     long minutes = java.util.concurrent.TimeUnit.MINUTES.convert(diffInMillies, java.util.concurrent.TimeUnit.MILLISECONDS) % 60;
     long seconds = java.util.concurrent.TimeUnit.SECONDS.convert(diffInMillies, java.util.concurrent.TimeUnit.MILLISECONDS) % 60;
 
+    // Format string hasil
     durasiDetail = days + " Hari " + hours + " Jam " + minutes + " Menit " + seconds + " Detik";
 } catch (Exception e) {
+    // Fallback jika error parsing tanggal
     durasiDetail = rsreg.getString("lama") + " Hari";
 }
-// --- Akhir Perubahan Perhitungan Detail ---
-
+// --- AKHIR LOGIKA HITUNG ---
+                    
+                    // PERBAIKAN DI SINI: Gunakan variabel durasiDetail
 tabModeRwJlDr.addRow(new Object[]{true,"Tgl.Perawatan",": "+rsreg.getString("registrasi")+" s.d. "+rsreg.getString("keluar")+" ( "+durasiDetail+" )","",null,null,null,null,"-"});
-
+                    
+                    
                     norawatbayi="";
                     psanak=koneksi.prepareStatement(sqlpsanak);
                     try {
@@ -5589,6 +5593,13 @@ tabModeRwJlDr.addRow(new Object[]{true,"Tgl.Perawatan",": "+rsreg.getString("reg
     }
 
     private void prosesCariService(){
+         // --- MODIFIKASI KHANZA.SOFT MEDIA START ---
+        // Cek dulu kode penjab pasien (BPJ atau bukan)
+        // Jika KD_PJ adalah BPJ, maka langsung keluar dari void (Service/Admin Rp 0)
+        String kode_penjab = Sequel.cariIsi("select kd_pj from reg_periksa where no_rawat=?",TNoRw.getText());
+        if(kode_penjab.trim().equals("BPJ")){
+            return;
+        }
         try {   
             if(ChkPiutang.isSelected()==false){
                 psservice=koneksi.prepareStatement("select * from set_service_ranap");

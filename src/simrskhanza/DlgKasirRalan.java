@@ -296,8 +296,8 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         tabModekasir=new DefaultTableModel(null,new String[]{
             "Kode Dokter","Dokter Dituju","No.RM","Pasien",
             "Poliklinik","Penanggung Jawab","Alamat P.J.","Hubungan P.J.",
-            "Biaya Reg","Jenis Bayar","Status","No.Rawat","Tanggal",
-            "Jam","No.Reg","Status Bayar","Stts Poli","Kd PJ","Kd Poli","No.Telp Pasien"}){
+            "Biaya Reg","Jenis Bayar","No.SEP","Potensi PRB","Stts TTV","Status","No.Rawat","Tanggal",
+            "Jam","No.Reg","Status Bayar","Stts Poli","Kd PJ","Kd Poli","No.Telp Pasien","Stts Asesmen"}){
               @Override public boolean isCellEditable(int rowIndex, int colIndex){return false;}
         };
         tbKasirRalan.setModel(tabModekasir);
@@ -305,7 +305,7 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
         tbKasirRalan.setPreferredScrollableViewportSize(new Dimension(800,800));
         tbKasirRalan.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-        for (i = 0; i < 20; i++) {
+        for (i = 0; i < 23; i++) {
             TableColumn column = tbKasirRalan.getColumnModel().getColumn(i);
             if(i==0){
                 column.setPreferredWidth(70);
@@ -328,27 +328,36 @@ public final class DlgKasirRalan extends javax.swing.JDialog {
             }else if(i==9){
                 column.setPreferredWidth(100);
             }else if(i==10){
-                column.setPreferredWidth(75);
+                column.setPreferredWidth(110); // No. SEP
             }else if(i==11){
-                column.setPreferredWidth(105);
+                column.setPreferredWidth(100); // <--- TAMBAHAN: POTENSI PRB
             }else if(i==12){
-                column.setPreferredWidth(65);
+                column.setPreferredWidth(60);  // Stts TTV (Geser index)
             }else if(i==13){
-                column.setPreferredWidth(55);
+                column.setPreferredWidth(75);  // Status (Geser index)
             }else if(i==14){
-                column.setPreferredWidth(47);
+                column.setPreferredWidth(105); // No. Rawat (Geser index)
             }else if(i==15){
-                column.setPreferredWidth(70);
+                column.setPreferredWidth(65);  // Tanggal (Geser index)
             }else if(i==16){
-                column.setPreferredWidth(50);
+                column.setPreferredWidth(55);  // Jam (Geser index)
             }else if(i==17){
-                column.setMinWidth(0);
-                column.setMaxWidth(0);
+                column.setPreferredWidth(47);  // No. Reg (Geser index)
             }else if(i==18){
-                column.setMinWidth(0);
-                column.setMaxWidth(0);
+                column.setPreferredWidth(70);  // Status Bayar (Geser index)
             }else if(i==19){
-                column.setPreferredWidth(95);
+                column.setPreferredWidth(50);  // Stts Poli (Geser index)
+            }else if(i==20){
+                column.setMinWidth(0);         // Kd PJ (Hidden)
+                column.setMaxWidth(0);
+            }else if(i==21){
+                column.setMinWidth(0);         // Kd Poli (Hidden)
+                column.setMaxWidth(0);
+            }else if(i==22){
+                column.setPreferredWidth(95);  // No. Telp
+            }else if(i==23){
+                column.setMinWidth(0);         // Stts Asesmen (Hidden)
+                column.setMaxWidth(0);
             }
         }
         try {
@@ -15943,16 +15952,54 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
                 protected Void doInBackground() {
                     try{   
                         semua=caripenjab.equals("")&&CrPoli.getText().trim().equals("")&&CrPtg.getText().trim().equals("")&&cmbStatus.getSelectedItem().toString().equals("Semua")&&cmbStatusBayar.getSelectedItem().toString().equals("Semua")&&TCari.getText().trim().equals("");
-                        pskasir=koneksi.prepareStatement("select reg_periksa.no_reg,reg_periksa.no_rawat,reg_periksa.tgl_registrasi,reg_periksa.jam_reg,"+
+                        
+                        pskasir=koneksi.prepareStatement(
+                            "select reg_periksa.no_reg,reg_periksa.no_rawat,reg_periksa.tgl_registrasi,reg_periksa.jam_reg,"+
                             "reg_periksa.kd_dokter,dokter.nm_dokter,reg_periksa.no_rkm_medis,pasien.nm_pasien,poliklinik.nm_poli,"+
                             "reg_periksa.p_jawab,reg_periksa.almt_pj,reg_periksa.hubunganpj,reg_periksa.biaya_reg,reg_periksa.stts,penjab.png_jawab,concat(reg_periksa.umurdaftar,' ',reg_periksa.sttsumur)as umur, "+
-                            "reg_periksa.status_bayar,reg_periksa.status_poli,reg_periksa.kd_pj,reg_periksa.kd_poli,pasien.no_tlp "+
-                            "from reg_periksa inner join dokter on reg_periksa.kd_dokter=dokter.kd_dokter inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
-                            "inner join poliklinik on reg_periksa.kd_poli=poliklinik.kd_poli inner join penjab on reg_periksa.kd_pj=penjab.kd_pj where  "+
-                            "reg_periksa.tgl_registrasi between ? and ? and reg_periksa.status_lanjut='Ralan' "+tampildiagnosa+
+                            "reg_periksa.status_bayar,reg_periksa.status_poli,reg_periksa.kd_pj,reg_periksa.kd_poli,pasien.no_tlp, "+
+                            
+                            // --- EDIT 1: AMBIL KOLOM NO SEP & PRB ---
+                            "if(ifnull(bridging_sep.no_sep,'')='','Belum Ada SEP',bridging_sep.no_sep) as no_sep, "+
+                            "ifnull(bpjs_prb.prb,'-') as prb, "+
+                            // ----------------------------------------
+
+                            "if((select count(no_rawat) from penilaian_awal_keperawatan_ralan where no_rawat=reg_periksa.no_rawat)>0 or " +
+                            "(select count(no_rawat) from penilaian_awal_keperawatan_kebidanan where no_rawat=reg_periksa.no_rawat)>0 or " +
+                            "(select count(no_rawat) from penilaian_awal_keperawatan_gigi where no_rawat=reg_periksa.no_rawat)>0 or " +
+                            "(select count(no_rawat) from penilaian_awal_keperawatan_igd where no_rawat=reg_periksa.no_rawat)>0 or " +
+                            "(select count(no_rawat) from penilaian_awal_keperawatan_mata where no_rawat=reg_periksa.no_rawat)>0 or " +
+                            "(select count(no_rawat) from penilaian_awal_keperawatan_ralan_bayi where no_rawat=reg_periksa.no_rawat)>0 or " +
+                            "(select count(no_rawat) from penilaian_awal_keperawatan_ralan_psikiatri where no_rawat=reg_periksa.no_rawat)>0,'Sudah','Belum') as stts_ttv, " +
+                            
+                            // Cek Status Asesmen untuk pewarnaan Pink
+                            "if(penilaian_awal_keperawatan_kebidanan.no_rawat is not null or penilaian_awal_keperawatan_gigi.no_rawat is not null or "+
+                            "penilaian_awal_keperawatan_igd.no_rawat is not null or penilaian_awal_keperawatan_ralan.no_rawat is not null or "+
+                            "penilaian_awal_keperawatan_ralan_bayi.no_rawat is not null or penilaian_awal_keperawatan_ralan_psikiatri.no_rawat is not null,'Ada','Tidak') as stts_asesmen "+
+                            
+                            "from reg_periksa "+
+                            "inner join dokter on reg_periksa.kd_dokter=dokter.kd_dokter "+
+                            "inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
+                            "inner join poliklinik on reg_periksa.kd_poli=poliklinik.kd_poli "+
+                            "inner join penjab on reg_periksa.kd_pj=penjab.kd_pj "+
+                            "left join bridging_sep on reg_periksa.no_rawat=bridging_sep.no_rawat "+ 
+                            
+                            // --- EDIT 2: JOIN KE TABEL PRB ---
+                            "left join bpjs_prb on bridging_sep.no_sep=bpjs_prb.no_sep "+
+                            
+                            // Join tabel asesmen (disingkat agar muat, sesuaikan dengan kode asli Anda jika perlu)
+                            "left join penilaian_awal_keperawatan_kebidanan on reg_periksa.no_rawat=penilaian_awal_keperawatan_kebidanan.no_rawat "+
+                            "left join penilaian_awal_keperawatan_gigi on reg_periksa.no_rawat=penilaian_awal_keperawatan_gigi.no_rawat "+
+                            "left join penilaian_awal_keperawatan_igd on reg_periksa.no_rawat=penilaian_awal_keperawatan_igd.no_rawat "+
+                            "left join penilaian_awal_keperawatan_ralan on reg_periksa.no_rawat=penilaian_awal_keperawatan_ralan.no_rawat "+
+                            "left join penilaian_awal_keperawatan_ralan_bayi on reg_periksa.no_rawat=penilaian_awal_keperawatan_ralan_bayi.no_rawat "+
+                            "left join penilaian_awal_keperawatan_ralan_psikiatri on reg_periksa.no_rawat=penilaian_awal_keperawatan_ralan_psikiatri.no_rawat "+
+
+                            "where reg_periksa.tgl_registrasi between ? and ? and reg_periksa.status_lanjut='Ralan' "+tampildiagnosa+
                             (semua?"":"and reg_periksa.kd_pj like ? and poliklinik.nm_poli like ? and dokter.nm_dokter like ? and reg_periksa.stts like ? and reg_periksa.status_bayar like ? and "+
                             "(reg_periksa.no_reg like ? or reg_periksa.no_rawat like ? or reg_periksa.tgl_registrasi like ? or reg_periksa.kd_dokter like ? or dokter.nm_dokter like ? or reg_periksa.no_rkm_medis like ? or pasien.nm_pasien like ? or poliklinik.nm_poli like ? or "+
-                            "reg_periksa.p_jawab like ? or penjab.png_jawab like ? or reg_periksa.almt_pj like ? or reg_periksa.status_bayar like ? or reg_periksa.hubunganpj like ?) ")+terbitsep+
+                            // --- EDIT 3: TAMBAHKAN PENCARIAN PRB ---
+                            "reg_periksa.p_jawab like ? or penjab.png_jawab like ? or reg_periksa.almt_pj like ? or reg_periksa.status_bayar like ? or reg_periksa.hubunganpj like ? or bridging_sep.no_sep like ? or bpjs_prb.prb like ?) ")+terbitsep+
                             "order by "+order);
                         try{
                             pskasir.setString(1,Valid.SetTgl(DTPCari1.getSelectedItem()+""));
@@ -15976,6 +16023,8 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
                                 pskasir.setString(18,"%"+TCari.getText().trim()+"%");
                                 pskasir.setString(19,"%"+TCari.getText().trim()+"%");
                                 pskasir.setString(20,"%"+TCari.getText().trim()+"%");
+                                pskasir.setString(21,"%"+TCari.getText().trim()+"%"); 
+                                pskasir.setString(22,"%"+TCari.getText().trim()+"%"); // Parameter tambahan PRB
                             }
 
                             rskasir=pskasir.executeQuery();
@@ -15983,10 +16032,22 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
                             while(rskasir.next()){
                                 Object[] row = new Object[]{
                                     rskasir.getString(5),rskasir.getString(6),rskasir.getString(7),rskasir.getString(8)+" ("+rskasir.getString("umur")+")",
-                                    rskasir.getString(9),rskasir.getString(10),rskasir.getString(11),rskasir.getString(12),Valid.SetAngka(rskasir.getDouble(13)),
-                                    rskasir.getString("png_jawab"),rskasir.getString(14),rskasir.getString("no_rawat"),rskasir.getString("tgl_registrasi"),
+                                    rskasir.getString(9),rskasir.getString(10),rskasir.getString(11),rskasir.getString(12),
+                                    Valid.SetAngka(rskasir.getDouble(13)),
+                                    rskasir.getString("png_jawab"),
+                                    rskasir.getString("no_sep"), // Kolom 10
+                                    
+                                    // --- EDIT 4: MASUKKAN DATA PRB ---
+                                    rskasir.getString("prb"),    // Kolom 11 (Baru)
+                                    // ---------------------------------
+                                    
+                                    rskasir.getString("stts_ttv"), // Kolom 12
+                                    rskasir.getString(14),         // Kolom 13 (Status)
+                                    rskasir.getString("no_rawat"), // Kolom 14
+                                    rskasir.getString("tgl_registrasi"), // Kolom 15
                                     rskasir.getString("jam_reg"),rskasir.getString(1),rskasir.getString("status_bayar"),rskasir.getString("status_poli"),
-                                    rskasir.getString("kd_pj"),rskasir.getString("kd_poli"),rskasir.getString("no_tlp")
+                                    rskasir.getString("kd_pj"),rskasir.getString("kd_poli"),rskasir.getString("no_tlp"),
+                                    rskasir.getString("stts_asesmen")
                                 };
                                 i++;
                                 publish(row);
@@ -16113,11 +16174,20 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
 
     private void getDatakasir() {
         if(tbKasirRalan.getSelectedRow()!= -1){
-            TNoRw.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),11).toString());
-            Tanggal.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),12).toString());
-            Jam.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),13).toString());
-            TNoRwCari.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),11).toString());
-            TNoReg.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),14).toString());
+            // No. Rawat ada di index 14 (sebelumnya 13)
+            TNoRw.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),14).toString());
+            
+            // Tanggal ada di index 15 (sebelumnya 14)
+            Tanggal.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),15).toString());
+            
+            // Jam ada di index 16 (sebelumnya 15)
+            Jam.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),16).toString());
+            
+            TNoRwCari.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),14).toString());
+            
+            // No Reg ada di index 17 (sebelumnya 16)
+            TNoReg.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),17).toString());
+            
             TNoRMCari.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),2).toString());
             TPasienCari.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),3).toString());
         }
