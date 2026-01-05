@@ -11,27 +11,24 @@
  Target Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
  File Encoding         : 65001
 
- Date: 05/01/2026 13:12:35
+ Date: 05/01/2026 13:02:03
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
--- Table structure for satu_sehat_episode
+-- Table structure for satu_sehat_diagnosticreport_usg
 -- ----------------------------
-DROP TABLE IF EXISTS `satu_sehat_episode`;
-CREATE TABLE `satu_sehat_episode` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `jenis_program` varchar(30) NOT NULL,
-  `no_rkm_medis` varchar(30) NOT NULL,
-  `period_key` varchar(10) NOT NULL,
-  `id_eoc` varchar(80) NOT NULL,
-  `start_date` date DEFAULT NULL,
-  `end_date` date DEFAULT NULL,
+DROP TABLE IF EXISTS `satu_sehat_diagnosticreport_usg`;
+CREATE TABLE `satu_sehat_diagnosticreport_usg` (
+  `no_rawat` varchar(17) NOT NULL,
+  `id_diagnosticreport` varchar(64) NOT NULL DEFAULT '',
+  `status` enum('success','failed') NOT NULL DEFAULT 'success',
+  `response` mediumtext DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq_kia` (`jenis_program`,`no_rkm_medis`,`period_key`)
-) ENGINE=InnoDB AUTO_INCREMENT=2343 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`no_rawat`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;

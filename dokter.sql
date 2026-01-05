@@ -11,7 +11,7 @@
  Target Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
  File Encoding         : 65001
 
- Date: 01/01/2026 14:23:45
+ Date: 04/01/2026 20:36:21
 */
 
 SET NAMES utf8mb4;
@@ -50,7 +50,6 @@ CREATE TABLE `dokter` (
   KEY `stts_nikah` (`stts_nikah`) USING BTREE,
   KEY `alumni` (`alumni`) USING BTREE,
   KEY `no_ijn_praktek` (`no_ijn_praktek`) USING BTREE,
-  KEY `kd_dokter` (`kd_dokter`) USING BTREE,
   KEY `status` (`status`) USING BTREE,
   CONSTRAINT `dokter_ibfk_2` FOREIGN KEY (`kd_sps`) REFERENCES `spesialis` (`kd_sps`) ON UPDATE CASCADE,
   CONSTRAINT `dokter_ibfk_3` FOREIGN KEY (`kd_dokter`) REFERENCES `pegawai` (`nik`) ON UPDATE CASCADE

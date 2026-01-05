@@ -7876,8 +7876,11 @@ private void MnDataRalanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                     dlgrwjl2.isCek();
                     dlgrwjl2.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
                     dlgrwjl2.setLocationRelativeTo(internalFrame1);
-                    dlgrwjl2.SetPoli(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),18).toString());
-                    dlgrwjl2.SetPj(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),17).toString());
+                    /// dlgrwjl2.SetPoli(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),18).toString());
+                    //dlgrwjl2.SetPj(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),17).toString());
+                    // GANTI DENGAN KODE DI BAWAH INI
+                dlgrwjl2.SetPoli(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 21).toString()); // Indeks baru untuk Kd Poli
+                dlgrwjl2.SetPj(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(), 20).toString());   // Indeks baru untuk Kd PJ
                     dlgrwjl2.setNoRm(TNoRw.getText(),DTPCari1.getDate(),DTPCari2.getDate());    
                     dlgrwjl2.setVisible(true);
                 } 
@@ -16174,22 +16177,14 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
 
     private void getDatakasir() {
         if(tbKasirRalan.getSelectedRow()!= -1){
-            // No. Rawat ada di index 14 (sebelumnya 13)
-            TNoRw.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),14).toString());
-            
-            // Tanggal ada di index 15 (sebelumnya 14)
-            Tanggal.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),15).toString());
-            
-            // Jam ada di index 16 (sebelumnya 15)
-            Jam.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),16).toString());
-            
-            TNoRwCari.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),14).toString());
-            
-            // No Reg ada di index 17 (sebelumnya 16)
-            TNoReg.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),17).toString());
-            
-            TNoRMCari.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),2).toString());
-            TPasienCari.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),3).toString());
+        TNoRw.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),14).toString());
+        Tanggal.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),15).toString());
+        Jam.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),16).toString());
+        TNoRwCari.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),14).toString());
+        TNoReg.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),17).toString());
+        TNoRMCari.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),2).toString());
+        TPasienCari.setText(tbKasirRalan.getValueAt(tbKasirRalan.getSelectedRow(),3).toString());
+    
         }
     }
 
