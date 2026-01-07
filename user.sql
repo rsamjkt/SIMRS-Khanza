@@ -11,7 +11,7 @@
  Target Server Version : 100339 (10.3.39-MariaDB-0ubuntu0.20.04.2)
  File Encoding         : 65001
 
- Date: 30/12/2025 22:31:05
+ Date: 06/01/2026 08:40:23
 */
 
 SET NAMES utf8mb4;
@@ -1175,6 +1175,24 @@ CREATE TABLE `user` (
   `master_sampel_bakumutu` enum('true','false') DEFAULT NULL,
   `skrining_instrumen_amt` enum('true','false') DEFAULT NULL,
   `parameter_pengujian_lab_kesehatan_lingkungan` enum('true','false') DEFAULT NULL,
+  `nilai_normal_baku_mutu_lab_kesehatan_lingkungan` enum('true','false') DEFAULT NULL,
+  `skrining_pneumonia_severity_index` enum('true','false') DEFAULT NULL,
+  `permintaan_pengujian_sampel_lab_kesehatan_lingkungan` enum('true','false') DEFAULT NULL,
+  `penilaian_awal_medis_ralan_jantung` enum('true','false') DEFAULT NULL,
+  `penilaian_awal_medis_ralan_urologi` enum('true','false') DEFAULT NULL,
+  `hasil_pemeriksaan_treadmill` enum('true','false') DEFAULT NULL,
+  `hasil_pemeriksaan_echo_pediatrik` enum('true','false') DEFAULT NULL,
+  `template_pelaksanaan_informasi_edukasi` enum('true','false') DEFAULT NULL,
+  `skrining_instrumen_esat` enum('true','false') DEFAULT NULL,
+  `penilaian_awal_medis_ranap_jantung` enum('true','false') DEFAULT NULL,
+  `penugasan_pengujian_sampel_lab_kesehatan_lingkungan` enum('true','false') DEFAULT NULL,
+  `hasil_pengujian_sampel_lab_kesehatan_lingkungan` enum('true','false') DEFAULT NULL,
+  `verifikasi_pengujian_sampel_lab_kesehatan_lingkungan` enum('true','false') DEFAULT NULL,
+  `validasi_pengujian_sampel_lab_kesehatan_lingkungan` enum('true','false') DEFAULT NULL,
+  `rekap_pelayanan_lab_kesehatan_lingkungan` enum('true','false') DEFAULT NULL,
+  `pembayaran_pengujian_sampel_lab_kesehatan_lingkungan` enum('true','false') DEFAULT NULL,
+  `skrining_curb65` enum('true','false') DEFAULT NULL,
+  `bpjs_potensi_prb` enum('true','false') DEFAULT NULL,
   PRIMARY KEY (`id_user`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci ROW_FORMAT=DYNAMIC;
 
