@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+v<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
     <comment>KhanzaHMS</comment> 
     <entry key="HOST">1exBpelPnPHnuOu06YYpPw==</entry>
-    <entry key="DATABASE">pHTMkb+fiI4ekzE94miWRA==</entry>
+    <entry key="DATABASE">8czhVLU4LUjwOEUbTySWSQ==</entry>
     <entry key="PORT">nioxtijcpDaKSUiUiP5FAg==</entry>
     <entry key="USER">uad4MgewGeDsJJxHQJ221g==</entry>
-    <entry key="PAS">1cKign9JVVL5lOkdlJnStA==</entry>
+    <entry key="PAS">mVSgg3V70tpcAmyrs5dFyp7B9f2tNXQIz/fH9WH6n6o=</entry>
     
     <entry key="CARICEPAT">aktif</entry>
     <entry key="HOSTHYBRIDWEB">5k7+C7EnUw9nUv2Nix+DBA==</entry>
@@ -129,7 +129,7 @@
     <entry key="TOKENINHEALTH">l4nh5eVYrLAER/I2A4b3Tw==</entry>
     
     <entry key="PEMBULATANHARGAOBAT">yes</entry>
-    <entry key="AKTIFKANBATCHOBAT">no</entry>
+    <entry key="AKTIFKANBATCHOBAT">yes</entry>
     <entry key="CETAKRINCIANOBAT">yes</entry>
     <entry key="DEPOAKTIFOBAT"></entry>
     <entry key="VALIDASIULANGBERIOBAT">yes</entry>
