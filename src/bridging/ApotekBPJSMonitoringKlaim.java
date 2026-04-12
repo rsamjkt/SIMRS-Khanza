@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
@@ -48,7 +49,7 @@ public final class ApotekBPJSMonitoringKlaim extends javax.swing.JDialog {
     private sekuel Sequel=new sekuel();
     private int i=0;
     private ApiApotekBPJS api=new ApiApotekBPJS();
-    private String URL="",link="",utc="";
+    private String URL="",link="",utc="",requestJson="";
     private HttpHeaders headers;
     private HttpEntity requestEntity;
     private ObjectMapper mapper = new ObjectMapper();
@@ -82,15 +83,15 @@ public final class ApotekBPJSMonitoringKlaim extends javax.swing.JDialog {
         for (i = 0; i < 9; i++) {
             TableColumn column = tbKamar.getColumnModel().getColumn(i);
             if(i==0){
-                column.setPreferredWidth(110);
+                column.setPreferredWidth(125);
             }else if(i==1){
-                column.setPreferredWidth(110);
+                column.setPreferredWidth(125);
             }else if(i==2){
                 column.setPreferredWidth(90);
             }else if(i==3){
-                column.setPreferredWidth(150);
+                column.setPreferredWidth(170);
             }else if(i==4){
-                column.setPreferredWidth(90);
+                column.setPreferredWidth(70);
             }else if(i==5){
                 column.setPreferredWidth(120);
             }else if(i==6){
@@ -104,29 +105,6 @@ public final class ApotekBPJSMonitoringKlaim extends javax.swing.JDialog {
         tbKamar.setDefaultRenderer(Object.class, new WarnaTable());
         
         TCari.setDocument(new batasInput((byte)100).getKata(TCari));
-        
-        if(koneksiDB.CARICEPAT().equals("aktif")){
-            TCari.getDocument().addDocumentListener(new javax.swing.event.DocumentListener(){
-                @Override
-                public void insertUpdate(DocumentEvent e) {
-                    if(TCari.getText().length()>2){
-                        runBackground(() ->tampil());
-                    }
-                }
-                @Override
-                public void removeUpdate(DocumentEvent e) {
-                    if(TCari.getText().length()>2){
-                        runBackground(() ->tampil());
-                    }
-                }
-                @Override
-                public void changedUpdate(DocumentEvent e) {
-                    if(TCari.getText().length()>2){
-                        runBackground(() ->tampil());
-                    }
-                }
-            });
-        } 
         
         try {
             link=koneksiDB.URLAPIAPOTEKBPJS();
@@ -177,6 +155,11 @@ public final class ApotekBPJSMonitoringKlaim extends javax.swing.JDialog {
         setIconImages(null);
         setUndecorated(true);
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         internalFrame1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 245, 235)), "::[ Monitoring Klaim Apotek BPJS ]::", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(50, 50, 50))); // NOI18N
         internalFrame1.setName("internalFrame1"); // NOI18N
@@ -393,9 +376,7 @@ public final class ApotekBPJSMonitoringKlaim extends javax.swing.JDialog {
     }//GEN-LAST:event_TCariKeyPressed
 
     private void BtnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCariActionPerformed
-        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         runBackground(() ->tampil());
-        this.setCursor(Cursor.getDefaultCursor());
     }//GEN-LAST:event_BtnCariActionPerformed
 
     private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BtnCariKeyPressed
@@ -405,6 +386,31 @@ public final class ApotekBPJSMonitoringKlaim extends javax.swing.JDialog {
             Valid.pindah(evt,TCari,BtnPrint);
         }
     }//GEN-LAST:event_BtnCariKeyPressed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        if(koneksiDB.CARICEPAT().equals("aktif")){
+            TCari.getDocument().addDocumentListener(new javax.swing.event.DocumentListener(){
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    if(TCari.getText().length()>2){
+                        runBackground(() ->tampil());
+                    }
+                }
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    if(TCari.getText().length()>2){
+                        runBackground(() ->tampil());
+                    }
+                }
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    if(TCari.getText().length()>2){
+                        runBackground(() ->tampil());
+                    }
+                }
+            });
+        }
+    }//GEN-LAST:event_formWindowOpened
 
     /**
     * @param args the command line arguments
@@ -462,35 +468,37 @@ public final class ApotekBPJSMonitoringKlaim extends javax.swing.JDialog {
 	    headers.add("user_key",koneksiDB.USERKEYAPIAPOTEKBPJS());
             requestEntity = new HttpEntity(headers);
             URL = link+"/monitoring/klaim/"+Bulan.getSelectedItem().toString()+"/"+Tahun.getSelectedItem().toString()+"/"+Jenis.getSelectedItem().toString().substring(0,1)+"/"+Status.getSelectedItem().toString().substring(0,1);	
-            System.out.println(URL);
+            System.out.println("URL : "+URL);
             root = mapper.readTree(api.getRest().exchange(URL, HttpMethod.GET, requestEntity, String.class).getBody());
             nameNode = root.path("metaData");
             if(nameNode.path("code").asText().equals("200")){
                 Valid.tabelKosong(tabMode);
-                response = mapper.readTree(api.Decrypt(root.path("response").asText(),utc));
-                LCountPengajuan.setText(Valid.SetAngka(response.path("rekap").path("totalbiayapengajuan").asDouble()));
-                LCountDisetujui.setText(Valid.SetAngka(response.path("rekap").path("totalbiayasetuju").asDouble()));
-                LCount.setText(response.path("rekap").path("jumlahdata").asText());
-                if(response.path("rekap").path("listsep").isArray()){
+                requestJson=api.Decrypt(root.path("response").asText(),utc);
+                System.out.println("Respon JSON : "+requestJson);
+                response = mapper.readTree(requestJson);
+                LCountPengajuan.setText(Valid.SetAngka(response.path("totalbiayapengajuan").asDouble()));
+                LCountDisetujui.setText(Valid.SetAngka(response.path("totalbiayasetuju").asDouble()));
+                LCount.setText(response.path("jumlahdata").asText());
+                if(response.path("listsep").isArray()){
                     if(TCari.getText().trim().equals("")){
-                        for(JsonNode list:response.path("rekap").path("listsep")){
+                        for(JsonNode list:response.path("listsep")){
                             tabMode.addRow(new Object[]{
-                                list.path("nosepapotek").asText(),list.path("nosepaasal").asText(),list.path("nokartu").asText(),
-                                list.path("namapeserta").asText(),list.path("noresep").asText(),list.path("jnsobat").asText(),
+                                list.path("nosepapotek").asText(),list.path("nosepaasal").asText(),list.path("nokapst").asText(),
+                                list.path("nmpst").asText(),list.path("noresep").asText(),list.path("nmjnsobat").asText(),
                                 list.path("tglpelayanan").asText(),Valid.SetAngka(list.path("biayapengajuan").asDouble()),
-                                Valid.SetAngka(list.path("biayasetuju").asDouble())
+                                Valid.SetAngka(list.path("biayasetujui").asDouble())
                             });
                         }
                     }else{
-                        for(JsonNode list:response.path("rekap").path("listsep")){
+                        for(JsonNode list:response.path("listsep")){
                             if(list.path("nosepapotek").asText().contains(TCari.getText())||list.path("nosepaasal").asText().contains(TCari.getText())||
                                     list.path("nokartu").asText().contains(TCari.getText())||list.path("namapeserta").asText().contains(TCari.getText())||
                                     list.path("tglpelayanan").asText().contains(TCari.getText())){
                                 tabMode.addRow(new Object[]{
-                                    list.path("nosepapotek").asText(),list.path("nosepaasal").asText(),list.path("nokartu").asText(),
-                                    list.path("namapeserta").asText(),list.path("noresep").asText(),list.path("jnsobat").asText(),
+                                    list.path("nosepapotek").asText(),list.path("nosepaasal").asText(),list.path("nokapst").asText(),
+                                    list.path("nmpst").asText(),list.path("noresep").asText(),list.path("nmjnsobat").asText(),
                                     list.path("tglpelayanan").asText(),Valid.SetAngka(list.path("biayapengajuan").asDouble()),
-                                    Valid.SetAngka(list.path("biayasetuju").asDouble())
+                                    Valid.SetAngka(list.path("biayasetujui").asDouble())
                                 });
                             }
                         }
@@ -513,19 +521,33 @@ public final class ApotekBPJSMonitoringKlaim extends javax.swing.JDialog {
     
     private void runBackground(Runnable task) {
         if (ceksukses) return;
+        if (executor.isShutdown() || executor.isTerminated()) return;
+        if (!isDisplayable()) return;
+
         ceksukses = true;
+        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
-        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-
-        executor.submit(() -> {
-            try {
-                task.run();
-            } finally {
-                ceksukses = false;
-                SwingUtilities.invokeLater(() -> {
-                    this.setCursor(Cursor.getDefaultCursor());
-                });
-            }
-        });
+        try {
+            executor.submit(() -> {
+                try {
+                    task.run();
+                } finally {
+                    ceksukses = false;
+                    SwingUtilities.invokeLater(() -> {
+                        if (isDisplayable()) {
+                            setCursor(Cursor.getDefaultCursor());
+                        }
+                    });
+                }
+            });
+        } catch (RejectedExecutionException ex) {
+            ceksukses = false;
+        }
+    }
+    
+    @Override
+    public void dispose() {
+        executor.shutdownNow();
+        super.dispose();
     }
 }
