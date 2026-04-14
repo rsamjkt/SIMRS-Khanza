@@ -2,13 +2,13 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
     <comment>KhanzaHMS</comment> 
-    <entry key="HOST">5k7+C7EnUw9nUv2Nix+DBA==</entry>
-    <entry key="DATABASE">AZHNccBwSmSho84f+X8GyQ==</entry>
+    <entry key="HOST">1exBpelPnPHnuOu06YYpPw==</entry>
+    <entry key="DATABASE">CO/6uOP0Cm79XD9igvQfjg==</entry>
     <entry key="PORT">nioxtijcpDaKSUiUiP5FAg==</entry>
-    <entry key="USER">kMR3WfAwUK6MbhCyydxa0g==</entry>
-    <entry key="PAS">l4nh5eVYrLAER/I2A4b3Tw==</entry>
+    <entry key="USER">uad4MgewGeDsJJxHQJ221g==</entry>
+    <entry key="PAS">mVSgg3V70tpcAmyrs5dFyp7B9f2tNXQIz/fH9WH6n6o=</entry>
     <entry key="CARICEPAT">aktif</entry>
-    <entry key="HOSTHYBRIDWEB">5k7+C7EnUw9nUv2Nix+DBA==</entry>
+    <entry key="HOSTHYBRIDWEB">1exBpelPnPHnuOu06YYpPw==</entry>
     <entry key="USERHYBRIDWEB">nmXqCKzrz9i8GTZlq7JruQ==</entry>
     <entry key="PASHYBRIDWEB">AsJ/0/gCnYnD+gK4fw9uKA==</entry>
     <entry key="HYBRIDWEB">webapps</entry>
@@ -35,10 +35,10 @@
     <entry key="ALARMPERMINTAANRANAP">yes</entry>
     <entry key="MENUTRANSPARAN">yes</entry>
     <entry key="TANGGALMUNDUR">yes</entry>
-    <entry key="URLAPIBPJS">https://tanyabpjs.go.id/vclaim-rest-dev</entry>
-    <entry key="SECRETKEYAPIBPJS">l4nh5eVYrLAER/I2A4b3Tw==</entry>
-    <entry key="CONSIDAPIBPJS">l4nh5eVYrLAER/I2A4b3Tw==</entry>
-    <entry key="USERKEYAPIBPJS">l4nh5eVYrLAER/I2A4b3Tw==</entry>
+    <entry key="URLAPIBPJS">https://apijkn-dev.bpjs-kesehatan.go.id/vclaim-rest-dev</entry>
+    <entry key="SECRETKEYAPIBPJS">3WqRHqbInKwBR7pmxIRrIw==</entry>
+    <entry key="CONSIDAPIBPJS">iqhYGlpKZMHpW20BoLGEug==</entry>
+    <entry key="USERKEYAPIBPJS">B2wPrrF9IvC65aM9fQv407fEC948txVBYedTi9Z/jfOM86eNDe1/omW0SUo+cgrh</entry>
     <entry key="DIAGNOSARUJUKANMASUKAPIBPJS">no</entry>
     <entry key="JADIKANBOOKINGSURATKONTROL">yes</entry>
     <entry key="JADIKANBOOKINGSURATKONTROLAPIBPJS">no</entry>
@@ -51,17 +51,17 @@
     <entry key="CONSIDAPIMOBILEJKN">l4nh5eVYrLAER/I2A4b3Tw==</entry>
     <entry key="USERKEYAPIMOBILEJKN">l4nh5eVYrLAER/I2A4b3Tw==</entry>
     <entry key="ADDANTRIANAPIMOBILEJKN">no</entry>
-    <entry key="URLAPIAPOTEKBPJS">https://tanyabpjs.go.id/apotek-rest-dev</entry>
-    <entry key="SECRETKEYAPIAPOTEKBPJS">l4nh5eVYrLAER/I2A4b3Tw==</entry>
-    <entry key="CONSIDAPIAPOTEKBPJS">l4nh5eVYrLAER/I2A4b3Tw==</entry>
-    <entry key="USERKEYAPIAPOTEKBPJS">l4nh5eVYrLAER/I2A4b3Tw==</entry>
+    <entry key="URLAPIAPOTEKBPJS">https://apijkn-dev.bpjs-kesehatan.go.id/apotek-rest-dev</entry>
+    <entry key="SECRETKEYAPIAPOTEKBPJS">AF5mTQQcOTD6WlzPtgOcZQ==</entry>
+    <entry key="CONSIDAPIAPOTEKBPJS">Yu6+IDvsRyoHRLdJBgtnIQ==</entry>
+    <entry key="USERKEYAPIAPOTEKBPJS">UAdZkq2HnGaTa8JS4GQSWsBkwS5dUEe+oenl2DfAVfyPCZrC5zVHYTrZfPjr9IGz</entry>
     <entry key="JADIKANPIUTANGAPOTEKBPJS">yes</entry>
     <entry key="AKTIFKANRESEPITERDOKTER">yes</entry>
     <entry key="KODEPPKAPOTEKBPJS">08/HhXNN0CXIF5S+HRdJHw==</entry>
     <entry key="URLAPIICARE">https://apijkn-dev.bpjs-kesehatan.go.id/ihs_dev/api/rs</entry>
-    <entry key="SECRETKEYAPIICARE">l4nh5eVYrLAER/I2A4b3Tw==</entry>
-    <entry key="CONSIDAPIICARE">l4nh5eVYrLAER/I2A4b3Tw==</entry>
-    <entry key="USERKEYAPIICARE">l4nh5eVYrLAER/I2A4b3Tw==</entry>
+    <entry key="SECRETKEYAPIICARE">AF5mTQQcOTD6WlzPtgOcZQ==</entry>
+    <entry key="CONSIDAPIICARE">Yu6+IDvsRyoHRLdJBgtnIQ==</entry>
+    <entry key="USERKEYAPIICARE">UAdZkq2HnGaTa8JS4GQSWsBkwS5dUEe+oenl2DfAVfyPCZrC5zVHYTrZfPjr9IGz</entry>
     <entry key="URLAPISMARTCLAIM">https://dvlp.bpjs-kesehatan.go.id/eRekamMedis</entry>
     <entry key="SECRETKEYAPISMARTCLAIM">l4nh5eVYrLAER/I2A4b3Tw==</entry>
     <entry key="CONSIDAPISMARTCLAIM">l4nh5eVYrLAER/I2A4b3Tw==</entry>
