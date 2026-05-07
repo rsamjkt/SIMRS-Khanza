@@ -1393,22 +1393,17 @@ public final class sekuel {
     }
     
     public boolean cekTanggalRegistrasi(String tanggalregistrasi,String tanggalinputdata){
-        bool=false;
+    bool = true; // Set langsung ke true, tanpa cek waktu
         try {
+        // Anda bisa menghapus atau tetap mempertahankan parsing tanggal jika masih dibutuhkan untuk tujuan lain
             waktumulai = formattanggal.parse(tanggalregistrasi);
             kegiatan = formattanggal.parse(tanggalinputdata);
-            bedawaktu = (kegiatan.getTime()-waktumulai.getTime())/1000;
-            if(bedawaktu<0){
-                bool=false;
-                JOptionPane.showMessageDialog(null,"Maaf, jam input data / perubahan data minimal di jam "+tanggalregistrasi+" !");
-            }else{
-                bool=true;
-            }
+        // Tidak perlu hitung selisih waktu atau pengecekan lainnya
         } catch (Exception ex) {
-            bool=false;
-            System.out.println("Notif : "+ex);
+        bool = false; // Tetap false jika terjadi error pada parsing tanggal
+        System.out.println("Notif : " + ex);
         }
-        return bool;
+    return bool; // Selalu mengembalikan true kecuali ada error parsing
     }
     
     public boolean cekTanggal48jam(String tanggalmulai,String tanggalinputdata){
@@ -1417,9 +1412,9 @@ public final class sekuel {
             waktumulai = formattanggal.parse(tanggalmulai);
             kegiatan = formattanggal.parse(tanggalinputdata);
             bedawaktu = (kegiatan.getTime()-waktumulai.getTime())/1000;
-            if(bedawaktu>172800){
+            if(bedawaktu>2592000){
                 bool=false;
-                JOptionPane.showMessageDialog(null,"Maaf, perubahan data / penghapusan data tidak boleh lebih dari 2 x 24 jam !");
+                JOptionPane.showMessageDialog(null,"Maaf, perubahan data / penghapusan data tidak boleh lebih dari 30 Hari !");
             }else{
                 bool=true;
             }
