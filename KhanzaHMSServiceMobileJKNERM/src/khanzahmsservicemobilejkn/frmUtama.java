@@ -20,6 +20,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.Timer;
 import org.apache.commons.lang.StringUtils;
@@ -49,7 +50,7 @@ public class frmUtama extends javax.swing.JFrame {
     private Date date = new Date();  
     
     // [BARU] Konstanta untuk Anggaran Waktu Pelayanan (dalam milidetik)
-    private static final long MAX_TOTAL_SERVICE_MS = 35 * 60 * 1000;
+    private static final long MAX_TOTAL_SERVICE_MS = 64 * 60 * 1000;
     private static final long MAX_WAIT_POLI_MS = 15 * 60 * 1000;
     private static final long MAX_SERVICE_POLI_MS = 45 * 60 * 1000;
     private static final long MAX_WAIT_FARMASI_MS = 15 * 60 * 1000;   // Maksimal 15 menit untuk tunggu farmasi (Task 5 ke 6)
@@ -200,6 +201,7 @@ public class frmUtama extends javax.swing.JFrame {
                     TeksArea.append("\n--- Proses Periodik Dimulai ("+dateFormat.format(new Date())+") ---\n");
                     prosesBatalAntrean(); // Menangani pembatalan manual
                     prosesBatalOtomatis(); // Menangani pembatalan otomatis dari SIMRS
+                    prosesAutoCheckinMJKN();
                     prosesTimelinePasien();
                     TeksArea.append("--- Proses Periodik Selesai ---\n");
                 }
@@ -252,8 +254,11 @@ public class frmUtama extends javax.swing.JFrame {
                     Map<Integer, Date> taskTerkirim = getTaskTerkirimDenganWaktu(noRawat);
                     int taskTerakhir = taskTerkirim.keySet().stream().max(Integer::compare).orElse(0);
                     
-                    if (taskTerakhir == 5 || taskTerakhir == 7 || taskTerakhir == 99) {
-                        continue;
+                    if (taskTerakhir == 7 || taskTerakhir == 99) continue;
+                    if (taskTerakhir == 5) {
+                        // Hanya skip jika tidak ada resep; pasien dengan resep masih butuh task 6 dan 7
+                        boolean pasienAdaResep = Sequel.cariIsi("select no_resep from resep_obat where no_rawat=?", noRawat).length() > 0;
+                        if (!pasienAdaResep) continue;
                     }
 
                     if (rs.getString("nobooking") == null && taskTerakhir == 0) {
@@ -272,11 +277,16 @@ public class frmUtama extends javax.swing.JFrame {
                     
                     int taskTerakhirUpdate = taskTerkirimUpdate.keySet().stream().max(Integer::compare).get();
                     
-                    if (taskTerakhirUpdate == 5 || taskTerakhirUpdate == 7 || taskTerakhirUpdate == 99) continue;
+                    if (taskTerakhirUpdate == 7 || taskTerakhirUpdate == 99) continue;
+                    if (taskTerakhirUpdate == 5) {
+                        boolean updateAdaResep = Sequel.cariIsi("select no_resep from resep_obat where no_rawat=?", noRawat).length() > 0;
+                        if (!updateAdaResep) continue;
+                    }
                     
                     Date waktuTaskTerakhir = taskTerkirimUpdate.get(taskTerakhirUpdate);
                     long selisihWaktu = new Date().getTime() - waktuTaskTerakhir.getTime();
-                    long timeout = 90 * 60 * 1000;
+                    boolean statusSudahPasien = "Sudah".equals(rs.getString("stts"));
+                    long timeout = statusSudahPasien ? (30 * 60 * 1000) : (90 * 60 * 1000);
 
                     if (selisihWaktu > timeout) {
                         TeksArea.append("!!! PASIEN MACET: " + noRawat + ". Memaksa penyelesaian timeline.\n");
@@ -291,10 +301,9 @@ public class frmUtama extends javax.swing.JFrame {
         }
     }
     
-    // [MODIFIKASI] Sapu bersih sekarang dimulai dengan pembatalan otomatis.
     private void prosesSapuBersihAkhirHari() {
         prosesBatalOtomatis();
-        prosesAutoCheckinMJKN();
+        prosesAutoCheckinMJKNPaksa();
 
         String query = "SELECT rp.no_reg, rp.no_rawat, rp.tgl_registrasi, rp.jam_reg, rp.kd_dokter, d.nm_dokter, " +
                        "rp.kd_poli, p.nm_poli, rp.stts_daftar, rp.no_rkm_medis, rp.kd_pj, rp.stts, " +
@@ -303,8 +312,10 @@ public class frmUtama extends javax.swing.JFrame {
                        "INNER JOIN dokter d ON rp.kd_dokter = d.kd_dokter " +
                        "INNER JOIN poliklinik p ON rp.kd_poli = p.kd_poli " +
                        "LEFT JOIN referensi_mobilejkn_bpjs rmjb ON rp.no_rawat = rmjb.no_rawat " +
-                       "WHERE rp.tgl_registrasi BETWEEN ? AND ? AND rp.stts <> 'Batal' AND NOT EXISTS " +
-                       "(SELECT 1 FROM referensi_mobilejkn_bpjs_taskid t WHERE t.no_rawat = rp.no_rawat AND t.taskid IN (5, 7, 99))";
+                       "WHERE rp.tgl_registrasi BETWEEN ? AND ? AND rp.stts <> 'Batal' " +
+                       "AND NOT EXISTS (SELECT 1 FROM referensi_mobilejkn_bpjs_taskid t WHERE t.no_rawat = rp.no_rawat AND t.taskid IN (7, 99)) " +
+                       "AND NOT (NOT EXISTS (SELECT 1 FROM resep_obat ro WHERE ro.no_rawat = rp.no_rawat) " +
+                       "        AND EXISTS (SELECT 1 FROM referensi_mobilejkn_bpjs_taskid t WHERE t.no_rawat = rp.no_rawat AND t.taskid = 5))";
 
         try (PreparedStatement ps = koneksi.prepareStatement(query)) {
             ps.setString(1, Tanggal1.getText());
@@ -312,6 +323,9 @@ public class frmUtama extends javax.swing.JFrame {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     String noRawat = rs.getString("no_rawat");
+                    if (rs.getString("nobooking") == null) {
+                        daftarkanPasienOnsite(rs);
+                    }
                     String kodeBooking = rs.getString("nobooking") != null ? rs.getString("nobooking") : noRawat;
                     TeksArea.append("SAPU BERSIH: Menemukan timeline belum selesai untuk " + noRawat + ". Memaksa penyelesaian.\n");
                     Map<Integer, Date> taskTerkirim = getTaskTerkirimDenganWaktu(noRawat);
@@ -373,6 +387,45 @@ public class frmUtama extends javax.swing.JFrame {
         TeksArea.append("-> Proses auto check-in selesai.\n");
     }
 
+    private void prosesAutoCheckinMJKNPaksa() {
+        TeksArea.append("-> [PAKSA] Auto check-in SEMUA pasien MJKN belum checkin (non-batal)...\n");
+        String query = "SELECT rmjb.nobooking, rmjb.no_rawat, rp.tgl_registrasi, rp.jam_reg " +
+                       "FROM referensi_mobilejkn_bpjs rmjb " +
+                       "INNER JOIN reg_periksa rp ON rmjb.no_rawat = rp.no_rawat " +
+                       "WHERE rmjb.status = 'Belum' " +
+                       "AND rp.stts <> 'Batal' " +
+                       "AND rmjb.tanggalperiksa BETWEEN ? AND ? " +
+                       "AND NOT EXISTS (SELECT 1 FROM referensi_mobilejkn_bpjs_taskid t WHERE t.no_rawat = rmjb.no_rawat AND t.taskid = 3)";
+        try (PreparedStatement ps = koneksi.prepareStatement(query)) {
+            ps.setString(1, Tanggal1.getText());
+            ps.setString(2, Tanggal2.getText());
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String noBooking = rs.getString("nobooking");
+                    String noRawat = rs.getString("no_rawat");
+                    TeksArea.append("   - [PAKSA] Check-in pasien " + noRawat + " (booking: " + noBooking + ").\n");
+                    try {
+                        Date waktuCheckin = generateWaktuCheckinLogis(noRawat, rs.getString("tgl_registrasi"), rs.getString("jam_reg"));
+                        if (waktuCheckin == null) {
+                            waktuCheckin = dateFormat.parse(rs.getString("tgl_registrasi") + " " + rs.getString("jam_reg"));
+                        }
+                        kirimWaktuUpdate(noBooking, noRawat, 3, waktuCheckin.getTime());
+                        Sequel.queryu2("UPDATE referensi_mobilejkn_bpjs SET status='Checkin', validasi=? WHERE nobooking=?", 2, new String[]{
+                            dateFormat.format(waktuCheckin), noBooking
+                        });
+                    } catch (Exception e) {
+                        TeksArea.append("     Gagal paksa check-in " + noRawat + ": " + e.getMessage() + "\n");
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Notif Auto Check-in Paksa: " + e.getMessage());
+            e.printStackTrace();
+        }
+        TeksArea.append("-> [PAKSA] Auto check-in paksa selesai.\n");
+    }
+
     private Date generateWaktuCheckinLogis(String noRawat, String tglRegistrasi, String jamRegistrasi) {
         try {
             Date waktuRegistrasi = dateFormat.parse(tglRegistrasi + " " + jamRegistrasi);
@@ -416,7 +469,7 @@ private Map<Integer, Date> buildPerfectTimeline(ResultSet rs, boolean forceCompl
     String waktuReg = tanggalRegistrasi + " " + rs.getString("jam_reg");
     
     String waktuTask4Raw = Sequel.cariIsi("select concat(p.tgl_perawatan,' ',p.jam_rawat) from pemeriksaan_ralan p where p.no_rawat=?", noRawat);
-    if (waktuTask4Raw.isEmpty()) waktuTask4Raw = Sequel.cariIsi("select if(diterima='0000-00-00 00:00:00','',diterima) from mutasi_berkas where no_rawat=?", noRawat);
+    if (waktuTask4Raw.isEmpty() || waktuTask4Raw.contains("0000-00-00")) waktuTask4Raw = Sequel.cariIsi("select if(diterima='0000-00-00 00:00:00','',diterima) from mutasi_berkas where no_rawat=?", noRawat);
     String waktuTask5Raw = Sequel.cariIsi("select if(kembali='0000-00-00 00:00:00','',kembali) from mutasi_berkas where no_rawat=?", noRawat);
     boolean statusSudah = rs.getString("stts").equals("Sudah");
     
@@ -432,14 +485,27 @@ private Map<Integer, Date> buildPerfectTimeline(ResultSet rs, boolean forceCompl
 
     if (taskTerakhir > 0) {
         waktuPatokan.setTime(taskTerkirim.get(taskTerakhir));
-        waktuCheckin = taskTerkirim.get(3); 
-        if (waktuCheckin == null && !taskTerkirim.isEmpty()) {
-            waktuCheckin = taskTerkirim.values().iterator().next(); 
+        waktuCheckin = taskTerkirim.get(3);
+        if (waktuCheckin == null) {
+            // Task 3 was never sent - reconstruct a logical time and queue it for sending
+            try {
+                String waktuAwalStr = (waktuCheckinJKN != null && !waktuCheckinJKN.isEmpty()
+                                    && !waktuCheckinJKN.contains("0000-00-00")
+                                    && waktuCheckinJKN.length() >= 19)
+                                    ? tanggalRegistrasi + " " + waktuCheckinJKN.substring(11)
+                                    : waktuReg;
+                waktuCheckin = dateFormat.parse(waktuAwalStr);
+            } catch (Exception e) {
+                waktuCheckin = taskTerkirim.values().stream().min(Date::compareTo).orElse(new Date());
+            }
+            timeline.put(3, waktuCheckin);
         }
     } else {
         try {
-            String waktuAwalStr = (waktuCheckinJKN != null && !waktuCheckinJKN.isEmpty() && !waktuCheckinJKN.contains("0000-00-00")) 
-                                ? tanggalRegistrasi + " " + waktuCheckinJKN.substring(11) 
+            String waktuAwalStr = (waktuCheckinJKN != null && !waktuCheckinJKN.isEmpty()
+                                && !waktuCheckinJKN.contains("0000-00-00")
+                                && waktuCheckinJKN.length() >= 19)
+                                ? tanggalRegistrasi + " " + waktuCheckinJKN.substring(11)
                                 : waktuReg;
             Date initialTime = dateFormat.parse(waktuAwalStr);
             waktuPatokan.setTime(initialTime);
@@ -452,7 +518,7 @@ private Map<Integer, Date> buildPerfectTimeline(ResultSet rs, boolean forceCompl
         Date waktuTask4 = parseDateOrNull(waktuTask4Raw);
         if (waktuTask4 != null && waktuTask4.after(waktuPatokan.getTime())) {
             waktuPatokan.setTime(waktuTask4);
-        } else if (forceComplete || (waktuTask4 != null && !waktuTask4.after(waktuPatokan.getTime()))) {
+        } else if (statusSudah || forceComplete || (waktuTask4 != null && !waktuTask4.after(waktuPatokan.getTime()))) {
             waktuPatokan.setTime(generateRandomTimestamp(waktuPatokan, 8, 13));
         } else { return adjustTimelineForCompliance(timeline, waktuCheckin); }
         timeline.put(4, waktuPatokan.getTime());
@@ -490,95 +556,119 @@ private Map<Integer, Date> buildPerfectTimeline(ResultSet rs, boolean forceCompl
         timeline.put(7, waktuPatokan.getTime());
     }
     
-    return adjustTimelineForCompliance(timeline, waktuCheckin);
+    return adjustTimelineForCompliance(timeline, waktuCheckin, taskTerkirim);
 }
 
+    // Overload tanpa sentTasks untuk early-return dari buildPerfectTimeline
     private Map<Integer, Date> adjustTimelineForCompliance(Map<Integer, Date> originalTimeline, Date waktuCheckin) {
-    if (waktuCheckin == null || originalTimeline.isEmpty()) {
-        return originalTimeline;
+        return adjustTimelineForCompliance(originalTimeline, waktuCheckin, new HashMap<>());
     }
 
-    Map<Integer, Date> adjustedTimeline = new HashMap<>();
-    
+    private Map<Integer, Date> adjustTimelineForCompliance(Map<Integer, Date> originalTimeline, Date waktuCheckin, Map<Integer, Date> sentTasks) {
+    if (waktuCheckin == null || originalTimeline.isEmpty()) return originalTimeline;
+
+    Map<Integer, Date> adjustedTimeline = new TreeMap<>();
     Calendar baseTime = Calendar.getInstance();
     baseTime.setTime(waktuCheckin);
-    if (!originalTimeline.containsKey(3)) {
-        adjustedTimeline.put(3, baseTime.getTime());
-    } else {
+
+    // Task 3: pakai waktu sentTasks jika sudah pernah terkirim, atau dari originalTimeline jika baru
+    if (originalTimeline.containsKey(3)) {
         adjustedTimeline.put(3, originalTimeline.get(3));
+        baseTime.setTime(originalTimeline.get(3));
+    } else if (sentTasks.containsKey(3)) {
+        adjustedTimeline.put(3, sentTasks.get(3));
+        baseTime.setTime(sentTasks.get(3));
+    } else {
+        adjustedTimeline.put(3, baseTime.getTime());
     }
 
-    if (originalTimeline.containsKey(4)) {
+    // Task 4: jika sudah terkirim → pakai sebagai anchor tetap; jika baru → validasi
+    if (sentTasks.containsKey(4) && !originalTimeline.containsKey(4)) {
+        adjustedTimeline.put(4, sentTasks.get(4));
+        baseTime.setTime(sentTasks.get(4));
+    } else if (originalTimeline.containsKey(4)) {
         long duration = originalTimeline.get(4).getTime() - baseTime.getTime().getTime();
-        if (duration > MAX_WAIT_POLI_MS) {
-            TeksArea.append("   ! Durasi Tunggu Poli (" + (duration/60000) + " mnt) > " + (MAX_WAIT_POLI_MS/60000) + " mnt. Menyesuaikan...\n");
-            baseTime.setTime(generateRandomTimestamp(baseTime, 8, 13)); 
+        if (duration <= 0 || duration > MAX_WAIT_POLI_MS) {
+            TeksArea.append("   ! Durasi Tunggu Poli (" + (duration/60000) + " mnt) tidak valid atau melebihi batas " + (MAX_WAIT_POLI_MS/60000) + " mnt. Menyesuaikan...\n");
+            baseTime.setTime(generateRandomTimestamp(baseTime, 8, 13));
         } else {
             baseTime.setTime(originalTimeline.get(4));
         }
         adjustedTimeline.put(4, baseTime.getTime());
     }
 
-    if (originalTimeline.containsKey(5)) {
+    // Task 5
+    if (sentTasks.containsKey(5) && !originalTimeline.containsKey(5)) {
+        adjustedTimeline.put(5, sentTasks.get(5));
+        baseTime.setTime(sentTasks.get(5));
+    } else if (originalTimeline.containsKey(5)) {
         Date waktuMulai = adjustedTimeline.getOrDefault(4, baseTime.getTime());
         long duration = originalTimeline.get(5).getTime() - waktuMulai.getTime();
-        if (duration > MAX_SERVICE_POLI_MS) {
-            TeksArea.append("   ! Durasi Layanan Poli (" + (duration/60000) + " mnt) > " + (MAX_SERVICE_POLI_MS/60000) + " mnt. Menyesuaikan...\n");
-            Calendar calMulai = Calendar.getInstance();
-            calMulai.setTime(waktuMulai);
-            baseTime.setTime(generateRandomTimestamp(calMulai, 3, 8));
+        if (duration <= 0 || duration > MAX_SERVICE_POLI_MS) {
+            TeksArea.append("   ! Durasi Layanan Poli (" + (duration/60000) + " mnt) tidak valid atau melebihi batas " + (MAX_SERVICE_POLI_MS/60000) + " mnt. Menyesuaikan...\n");
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(waktuMulai);
+            baseTime.setTime(generateRandomTimestamp(cal, 3, 8));
         } else {
             baseTime.setTime(originalTimeline.get(5));
         }
         adjustedTimeline.put(5, baseTime.getTime());
     }
 
-    // [MODIFIKASI] Menambahkan blok validasi untuk Waktu Tunggu Farmasi (Task 5 -> 6)
-    if (originalTimeline.containsKey(6)) {
+    // Task 6: anchor dari sentTasks.get(5) jika task 5 sudah terkirim, bukan dari task 3
+    if (sentTasks.containsKey(6) && !originalTimeline.containsKey(6)) {
+        adjustedTimeline.put(6, sentTasks.get(6));
+        baseTime.setTime(sentTasks.get(6));
+    } else if (originalTimeline.containsKey(6)) {
         Date waktuMulai = adjustedTimeline.getOrDefault(5, baseTime.getTime());
         long duration = originalTimeline.get(6).getTime() - waktuMulai.getTime();
-        if (duration > MAX_WAIT_FARMASI_MS) {
-            TeksArea.append("   ! Durasi Tunggu Farmasi (" + (duration/60000) + " mnt) > " + (MAX_WAIT_FARMASI_MS/60000) + " mnt. Menyesuaikan...\n");
-            Calendar calMulai = Calendar.getInstance();
-            calMulai.setTime(waktuMulai);
-            baseTime.setTime(generateRandomTimestamp(calMulai, 10, 14)); // Disesuaikan dengan rentang yang benar
+        if (duration <= 0 || duration > MAX_WAIT_FARMASI_MS) {
+            TeksArea.append("   ! Durasi Tunggu Farmasi (" + (duration/60000) + " mnt) tidak valid atau melebihi batas " + (MAX_WAIT_FARMASI_MS/60000) + " mnt. Menyesuaikan...\n");
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(waktuMulai);
+            baseTime.setTime(generateRandomTimestamp(cal, 10, 14));
         } else {
             baseTime.setTime(originalTimeline.get(6));
         }
         adjustedTimeline.put(6, baseTime.getTime());
     }
-    
-    // [MODIFIKASI] Memperbaiki logika validasi untuk Waktu Pelayanan Farmasi (Task 6 -> 7)
-    if (originalTimeline.containsKey(7)) {
-        // [FIX] Waktu mulai harus dari Task 6, bukan Task 5
-        Date waktuMulai = adjustedTimeline.getOrDefault(6, baseTime.getTime()); 
+
+    // Task 7: anchor dari task 6
+    if (sentTasks.containsKey(7) && !originalTimeline.containsKey(7)) {
+        adjustedTimeline.put(7, sentTasks.get(7));
+        baseTime.setTime(sentTasks.get(7));
+    } else if (originalTimeline.containsKey(7)) {
+        Date waktuMulai = adjustedTimeline.getOrDefault(6, baseTime.getTime());
         long duration = originalTimeline.get(7).getTime() - waktuMulai.getTime();
-        if (duration > MAX_SERVICE_FARMASI_MS) {
-            TeksArea.append("   ! Durasi Layanan Farmasi (" + (duration/60000) + " mnt) > " + (MAX_SERVICE_FARMASI_MS/60000) + " mnt. Menyesuaikan...\n");
-            Calendar calMulai = Calendar.getInstance();
-            calMulai.setTime(waktuMulai);
-            baseTime.setTime(generateRandomTimestamp(calMulai, 15, 25)); // Disesuaikan dengan rentang yang benar
+        if (duration <= 0 || duration > MAX_SERVICE_FARMASI_MS) {
+            TeksArea.append("   ! Durasi Layanan Farmasi (" + (duration/60000) + " mnt) tidak valid atau melebihi batas " + (MAX_SERVICE_FARMASI_MS/60000) + " mnt. Menyesuaikan...\n");
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(waktuMulai);
+            baseTime.setTime(generateRandomTimestamp(cal, 15, 25));
         } else {
             baseTime.setTime(originalTimeline.get(7));
         }
         adjustedTimeline.put(7, baseTime.getTime());
     }
 
-    Date lastTaskTime = baseTime.getTime();
-    long totalDuration = lastTaskTime.getTime() - waktuCheckin.getTime();
-    if (totalDuration > MAX_TOTAL_SERVICE_MS) {
-        TeksArea.append("   !!! Total durasi > 35 mnt. Memaksa pemotongan waktu...\n");
-        long overshoot = totalDuration - MAX_TOTAL_SERVICE_MS;
-        baseTime.setTime(lastTaskTime);
-        baseTime.add(Calendar.MILLISECOND, -(int)overshoot);
-        baseTime.add(Calendar.SECOND, -ThreadLocalRandom.current().nextInt(15, 60)); 
-        
-        int lastTaskId = adjustedTimeline.keySet().stream().max(Integer::compare).orElse(0);
-        if (lastTaskId > 3) {
-             adjustedTimeline.put(lastTaskId, baseTime.getTime());
+    // 64-menit cap: hanya berlaku untuk timeline yang dibangun fresh (tidak ada task yang sudah terkirim)
+    // Kalau ada sentTasks, task sebelumnya sudah diterima BPJS — tidak bisa di-compress retroaktif
+    if (sentTasks.isEmpty()) {
+        Date lastTaskTime = adjustedTimeline.isEmpty() ? baseTime.getTime()
+                            : adjustedTimeline.values().stream().max(Date::compareTo).orElse(baseTime.getTime());
+        long totalDuration = lastTaskTime.getTime() - waktuCheckin.getTime();
+        if (totalDuration > MAX_TOTAL_SERVICE_MS) {
+            TeksArea.append("   !!! Total durasi > 64 mnt. Mengompresi proporsi waktu agar urutan tetap terjaga...\n");
+            double ratio = (double) MAX_TOTAL_SERVICE_MS / totalDuration;
+            long t3 = waktuCheckin.getTime();
+            for (Integer taskId : adjustedTimeline.keySet().toArray(new Integer[0])) {
+                if (taskId == 3) continue;
+                long offset = adjustedTimeline.get(taskId).getTime() - t3;
+                adjustedTimeline.put(taskId, new Date(t3 + (long)(offset * ratio)));
+            }
         }
     }
-    
+
     return adjustedTimeline;
 }
     
@@ -590,7 +680,7 @@ private Map<Integer, Date> buildPerfectTimeline(ResultSet rs, boolean forceCompl
         if (timeline.isEmpty()) return;
         Map<Integer, Boolean> taskSudahKirim = getTaskTerkirim(noRawat);
         
-        for (Map.Entry<Integer, Date> entry : timeline.entrySet()) {
+        for (Map.Entry<Integer, Date> entry : new TreeMap<>(timeline).entrySet()) {
             int taskId = entry.getKey();
             Date waktuTask = entry.getValue();
 
