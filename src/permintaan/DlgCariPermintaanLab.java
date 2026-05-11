@@ -2,6 +2,7 @@ package permintaan;
 import bridging.ApiLICA;
 import bridging.ApiMEDQLAB;
 import bridging.ApiSOFTMEDIX;
+import bridging.koneksiDBAttaLIS;
 import bridging.koneksiDBELIMS;
 import bridging.koneksiDBSLIMS;
 import bridging.koneksiDBSMARTLAB;
@@ -61,6 +62,7 @@ public class DlgCariPermintaanLab extends javax.swing.JDialog {
     private sekuel Sequel=new sekuel();
     private validasi Valid=new validasi();
     private Connection koneksi=koneksiDB.condb();
+    private Connection koneksiattalis;
     private Connection koneksisysmex;
     private Connection koneksielims;
     private Connection koneksismartlab;
@@ -424,6 +426,8 @@ public class DlgCariPermintaanLab extends javax.swing.JDialog {
         BtnAmbilVanslab = new widget.Button();
         BtnKirimLISSLIMS = new widget.Button();
         BtnAmbilLISSLIMS = new widget.Button();
+        BtnKirimLISAttaLIS = new widget.Button();
+        BtnAmbilLISAttaLIS = new widget.Button();
 
         WindowAmbilSampel.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         WindowAmbilSampel.setName("WindowAmbilSampel"); // NOI18N
@@ -1385,6 +1389,60 @@ public class DlgCariPermintaanLab extends javax.swing.JDialog {
             }
         });
         FormMenu.add(BtnAmbilLISSLIMS);
+
+        BtnKirimLISAttaLIS.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/item.png"))); // NOI18N
+        BtnKirimLISAttaLIS.setText("Cek Status Atta-LIS");
+        BtnKirimLISAttaLIS.setFocusPainted(false);
+        BtnKirimLISAttaLIS.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        BtnKirimLISAttaLIS.setGlassColor(new java.awt.Color(255, 255, 255));
+        BtnKirimLISAttaLIS.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        BtnKirimLISAttaLIS.setMargin(new java.awt.Insets(1, 1, 1, 1));
+        BtnKirimLISAttaLIS.setName("BtnKirimLISAttaLIS"); // NOI18N
+        BtnKirimLISAttaLIS.setPreferredSize(new java.awt.Dimension(190, 23));
+        BtnKirimLISAttaLIS.setRoundRect(false);
+        BtnKirimLISAttaLIS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnKirimLISAttaLISActionPerformed(evt);
+            }
+        });
+        FormMenu.add(BtnKirimLISAttaLIS);
+
+        BtnAmbilLISAttaLIS.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/item.png"))); // NOI18N
+        BtnAmbilLISAttaLIS.setText("Ambil Hasil dari Atta-LIS");
+        BtnAmbilLISAttaLIS.setFocusPainted(false);
+        BtnAmbilLISAttaLIS.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        BtnAmbilLISAttaLIS.setGlassColor(new java.awt.Color(255, 255, 255));
+        BtnAmbilLISAttaLIS.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        BtnAmbilLISAttaLIS.setMargin(new java.awt.Insets(1, 1, 1, 1));
+        BtnAmbilLISAttaLIS.setName("BtnAmbilLISAttaLIS"); // NOI18N
+        BtnAmbilLISAttaLIS.setPreferredSize(new java.awt.Dimension(190, 23));
+        BtnAmbilLISAttaLIS.setRoundRect(false);
+        BtnAmbilLISAttaLIS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnAmbilLISAttaLISActionPerformed(evt);
+            }
+        });
+        FormMenu.add(BtnAmbilLISAttaLIS);
+
+        // LIS lain disembunyikan — hanya Atta-LIS yang aktif
+        BtnKirimLica.setVisible(false);
+        BtnAmbilLica.setVisible(false);
+        BtnKirimSysmex.setVisible(false);
+        BtnAmbilSysmex.setVisible(false);
+        BtnKirimLISELIMS.setVisible(false);
+        BtnAmbilLISELIMS.setVisible(false);
+        BtnKirimLISTeras.setVisible(false);
+        BtnAmbilLISTeras.setVisible(false);
+        BtnKirimLISMADQLAB.setVisible(false);
+        BtnAmbilLISMADQLAB.setVisible(false);
+        BtnKirimLISSMARTLAB.setVisible(false);
+        BtnAmbilLISSMARTLAB.setVisible(false);
+        BtnKirimLISSOFTMEDIX.setVisible(false);
+        BtnAmbilLISSOFTMEDIX.setVisible(false);
+        BtnKirimVansLab.setVisible(false);
+        BtnAmbilVanslab.setVisible(false);
+        BtnKirimLISSLIMS.setVisible(false);
+        BtnAmbilLISSLIMS.setVisible(false);
 
         ScrollMenu.setViewportView(FormMenu);
 
@@ -4056,6 +4114,144 @@ private void tbLabRalanKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         }
     }//GEN-LAST:event_BtnAmbilLISSLIMSActionPerformed
 
+    private void BtnKirimLISAttaLISActionPerformed(java.awt.event.ActionEvent evt) {
+        if (TabPilihRawat.getSelectedIndex() == 0) {
+            if (!NoRawat.equals("")) {
+                if (NoPermintaan.trim().equals("") || DiagnosaKlinis.trim().equals("")) {
+                    Valid.textKosong(TCari, "No.Permintaan");
+                } else {
+                    try {
+                        koneksiattalis = koneksiDBAttaLIS.condb();
+                        ps = koneksiattalis.prepareStatement(
+                                "SELECT status, synced_at FROM lab_orders WHERE khanza_noorder=?");
+                        try {
+                            ps.setString(1, NoPermintaan);
+                            rs = ps.executeQuery();
+                            if (rs.next()) {
+                                JOptionPane.showMessageDialog(null,
+                                        "Order sudah diterima Atta-LIS.\nStatus : " + rs.getString("status")
+                                        + "\nSynced : " + rs.getString("synced_at"));
+                            } else {
+                                JOptionPane.showMessageDialog(null,
+                                        "Order belum diterima Atta-LIS.\nAtta-LIS akan polling otomatis setiap 30 detik.");
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Notif : " + e);
+                        } finally {
+                            if (rs != null) { rs.close(); }
+                            if (ps != null) { ps.close(); }
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Notif : " + e);
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Maaf, silahkan pilih data permintaan...!!!!");
+                TCari.requestFocus();
+            }
+        } else if (TabPilihRawat.getSelectedIndex() == 1) {
+            if (!NoRawat.equals("")) {
+                if (NoPermintaan.trim().equals("") || DiagnosaKlinis.trim().equals("")) {
+                    Valid.textKosong(TCari, "No.Permintaan");
+                } else {
+                    try {
+                        koneksiattalis = koneksiDBAttaLIS.condb();
+                        ps = koneksiattalis.prepareStatement(
+                                "SELECT status, synced_at FROM lab_orders WHERE khanza_noorder=?");
+                        try {
+                            ps.setString(1, NoPermintaan);
+                            rs = ps.executeQuery();
+                            if (rs.next()) {
+                                JOptionPane.showMessageDialog(null,
+                                        "Order sudah diterima Atta-LIS.\nStatus : " + rs.getString("status")
+                                        + "\nSynced : " + rs.getString("synced_at"));
+                            } else {
+                                JOptionPane.showMessageDialog(null,
+                                        "Order belum diterima Atta-LIS.\nAtta-LIS akan polling otomatis setiap 30 detik.");
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Notif : " + e);
+                        } finally {
+                            if (rs != null) { rs.close(); }
+                            if (ps != null) { ps.close(); }
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Notif : " + e);
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Maaf, silahkan pilih data permintaan...!!!!");
+                TCari.requestFocus();
+            }
+        }
+    }
+
+    private void BtnAmbilLISAttaLISActionPerformed(java.awt.event.ActionEvent evt) {
+        if (TabPilihRawat.getSelectedIndex() == 0) {
+            if (TabRawatJalan.getSelectedIndex() == 0) {
+                if (!NoRawat.equals("")) {
+                    if (NoPermintaan.trim().equals("") || DiagnosaKlinis.trim().equals("")) {
+                        Valid.textKosong(TCari, "No.Permintaan");
+                    } else {
+                        if (Sampel.equals("")) {
+                            JOptionPane.showMessageDialog(rootPane, "Maaf, silahkan ambil sampel terlebih dahulu..!!");
+                        } else {
+                            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                            DlgPeriksaLaboratorium dlgro = new DlgPeriksaLaboratorium(null, false);
+                            dlgro.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
+                            dlgro.setLocationRelativeTo(internalFrame1);
+                            dlgro.emptTeks();
+                            dlgro.isCek();
+                            dlgro.setOrderAttaLIS(NoPermintaan, NoRawat, "Ralan");
+                            dlgro.setDokterPerujuk(KodeDokter, DokterPerujuk);
+                            TeksKosong();
+                            dlgro.setVisible(true);
+                            this.setCursor(Cursor.getDefaultCursor());
+                        }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Maaf, silahkan pilih data permintaan...!!!!");
+                    TCari.requestFocus();
+                }
+            } else if (TabRawatJalan.getSelectedIndex() == 1) {
+                JOptionPane.showMessageDialog(null, "Maaf, silahkan pilih Data Permintaan...!!!!");
+                TabRawatJalan.setSelectedIndex(0);
+                TCari.requestFocus();
+            }
+        } else if (TabPilihRawat.getSelectedIndex() == 1) {
+            if (TabRawatInap.getSelectedIndex() == 0) {
+                if (!NoRawat.equals("")) {
+                    if (NoPermintaan.trim().equals("") || DiagnosaKlinis.trim().equals("")) {
+                        Valid.textKosong(TCari, "No.Permintaan");
+                    } else {
+                        if (Sampel.equals("")) {
+                            JOptionPane.showMessageDialog(rootPane, "Maaf, silahkan ambil sampel terlebih dahulu..!!");
+                        } else {
+                            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                            DlgPeriksaLaboratorium dlgro = new DlgPeriksaLaboratorium(null, false);
+                            dlgro.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
+                            dlgro.setLocationRelativeTo(internalFrame1);
+                            dlgro.emptTeks();
+                            dlgro.isCek();
+                            dlgro.setOrderAttaLIS(NoPermintaan, NoRawat, "Ranap");
+                            dlgro.setDokterPerujuk(KodeDokter, DokterPerujuk);
+                            TeksKosong();
+                            dlgro.setVisible(true);
+                            this.setCursor(Cursor.getDefaultCursor());
+                        }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Maaf, silahkan pilih data permintaan...!!!!");
+                    TCari.requestFocus();
+                }
+            } else if (TabRawatInap.getSelectedIndex() == 1) {
+                JOptionPane.showMessageDialog(null, "Maaf, silahkan pilih Data Permintaan...!!!!");
+                TabRawatInap.setSelectedIndex(0);
+                TCari.requestFocus();
+            }
+        }
+    }
+
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         if(koneksiDB.CARICEPAT().equals("aktif")){
             TCari.getDocument().addDocumentListener(new javax.swing.event.DocumentListener(){
@@ -4099,6 +4295,7 @@ private void tbLabRalanKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private widget.Button BtnAll;
+    private widget.Button BtnAmbilLISAttaLIS;
     private widget.Button BtnAmbilLISELIMS;
     private widget.Button BtnAmbilLISMADQLAB;
     private widget.Button BtnAmbilLISSLIMS;
@@ -4116,6 +4313,7 @@ private void tbLabRalanKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
     private widget.Button BtnHapus;
     private widget.Button BtnHasil;
     private widget.Button BtnKeluar;
+    private widget.Button BtnKirimLISAttaLIS;
     private widget.Button BtnKirimLISELIMS;
     private widget.Button BtnKirimLISMADQLAB;
     private widget.Button BtnKirimLISSLIMS;

@@ -11,6 +11,7 @@
 
 package simrskhanza;
 
+import bridging.koneksiDBAttaLIS;
 import bridging.koneksiDBELIMS;
 import bridging.koneksiDBSLIMS;
 import bridging.koneksiDBSysmex;
@@ -59,6 +60,7 @@ import keuangan.Jurnal;
 public final class DlgPeriksaLaboratorium extends javax.swing.JDialog {
     private final DefaultTableModel tabMode,tabMode2;
     private sekuel Sequel=new sekuel();
+    private Connection koneksiattalis;
     private Connection koneksisysmex;
     private Connection koneksielims;
     private Connection koneksislims;
@@ -1951,7 +1953,127 @@ private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         
     }
     
-    private void tampilELIMS(String order) { 
+    private void tampilAttaLIS(String order) {
+        try {
+            koneksiattalis = koneksiDBAttaLIS.condb();
+            Valid.tabelKosong(tabMode);
+            for (i2 = 0; i2 < tbTarif.getRowCount(); i2++) {
+                if (tbTarif.getValueAt(i2, 0).toString().equals("true")) {
+                    tabMode.addRow(new Object[]{true, tbTarif.getValueAt(i2, 2).toString(), "", "", "", "", "", 0, 0, 0, 0, 0, 0, 0, 0, ""});
+                    pstampil = koneksi.prepareStatement(
+                            "select template_laboratorium.id_template, template_laboratorium.Pemeriksaan, "
+                            + "template_laboratorium.satuan, template_laboratorium.nilai_rujukan_ld,"
+                            + "template_laboratorium.biaya_item,template_laboratorium.bagian_rs,"
+                            + "template_laboratorium.bhp,template_laboratorium.bagian_perujuk,"
+                            + "template_laboratorium.bagian_dokter,template_laboratorium.bagian_laborat,"
+                            + "template_laboratorium.kso,template_laboratorium.menejemen "
+                            + "from template_laboratorium inner join permintaan_detail_permintaan_lab on "
+                            + "permintaan_detail_permintaan_lab.id_template=template_laboratorium.id_template "
+                            + "where template_laboratorium.kd_jenis_prw=? and permintaan_detail_permintaan_lab.noorder=? "
+                            + (TCari.getText().trim().equals("") ? "" : "and template_laboratorium.Pemeriksaan like ? ")
+                            + "order by urut");
+                    try {
+                        pstampil.setString(1, tbTarif.getValueAt(i2, 1).toString());
+                        pstampil.setString(2, order);
+                        if (!TCari.getText().trim().equals("")) {
+                            pstampil.setString(3, "%" + TCari.getText().trim() + "%");
+                        }
+                        rstampil = pstampil.executeQuery();
+                        while (rstampil.next()) {
+                            String pemeriksaan = rstampil.getString("Pemeriksaan");
+                            String pemClean = pemeriksaan.replaceAll("^[\\s\\-]+", "").trim();
+                            pstindakan = koneksiattalis.prepareStatement(
+                                    "SELECT lri.value as RESULT_VALUE, lri.unit as UNIT, lri.atta_flag as FLAG, "
+                                    + "CONCAT(COALESCE(CAST(mp.ref_min_adult_male AS CHAR),''),' - ',COALESCE(CAST(mp.ref_max_adult_male AS CHAR),'')) as REF_RANGE, "
+                                    + "mp.code as ORDER_TESTID "
+                                    + "FROM lab_result_items lri "
+                                    + "JOIN lab_results lr ON lri.lab_result_id = lr.id "
+                                    + "JOIN lab_orders lo ON lr.lab_order_id = lo.id "
+                                    + "JOIN m_parameters mp ON lri.parameter_id = mp.id "
+                                    + "LEFT JOIN m_parameter_mappings mpm ON lri.parameter_id = mpm.parameter_id AND mpm.simrs_type = 'khanza' "
+                                    + "WHERE lo.khanza_noorder = ? "
+                                    + "AND lr.status IN ('doctor_approved','analyst_validated','sent') "
+                                    + "AND (LOWER(mp.name) = LOWER(?) OR LOWER(mp.name) = LOWER(?) "
+                                    + "     OR (mpm.khanza_aliases IS NOT NULL AND ("
+                                    + "         JSON_CONTAINS(mpm.khanza_aliases, JSON_QUOTE(LOWER(?))) "
+                                    + "         OR JSON_CONTAINS(mpm.khanza_aliases, JSON_QUOTE(LOWER(?)))))) "
+                                    + "LIMIT 1");
+                            try {
+                                pstindakan.setString(1, order);
+                                pstindakan.setString(2, pemeriksaan);
+                                pstindakan.setString(3, pemClean);
+                                pstindakan.setString(4, pemeriksaan);
+                                pstindakan.setString(5, pemClean);
+                                rstindakan = pstindakan.executeQuery();
+                                if (rstindakan.next()) {
+                                    String flag = rstindakan.getString("FLAG") != null
+                                            ? rstindakan.getString("FLAG").replaceAll("LL", "L").replaceAll("HH", "H") : "";
+                                    tabMode.addRow(new Object[]{
+                                        true, "   " + pemeriksaan,
+                                        rstindakan.getString("RESULT_VALUE"),
+                                        rstampil.getString("satuan"),
+                                        rstampil.getString("nilai_rujukan_ld"),
+                                        flag,
+                                        rstampil.getString("id_template"),
+                                        rstampil.getDouble("biaya_item"),
+                                        rstampil.getDouble("bagian_rs"),
+                                        rstampil.getDouble("bhp"),
+                                        rstampil.getDouble("bagian_perujuk"),
+                                        rstampil.getDouble("bagian_dokter"),
+                                        rstampil.getDouble("bagian_laborat"),
+                                        rstampil.getDouble("kso"),
+                                        rstampil.getDouble("menejemen"),
+                                        tbTarif.getValueAt(i2, 1).toString()
+                                    });
+                                }
+                            } catch (Exception e) {
+                                System.out.println("Notif tampilAttaLIS item : " + e);
+                            } finally {
+                                if (rstindakan != null) { rstindakan.close(); }
+                                if (pstindakan != null) { pstindakan.close(); }
+                            }
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Notifikasi tampilAttaLIS : " + e);
+                    } finally {
+                        if (rstampil != null) { rstampil.close(); }
+                        if (pstampil != null) { pstampil.close(); }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error Detail tampilAttaLIS : " + e);
+        }
+    }
+
+    public void setOrderAttaLIS(String order, String norawat, String posisi) {
+        noorder = order;
+        TNoRw.setText(norawat);
+        this.status = posisi;
+        isRawat();
+        try {
+            pssetpj = koneksi.prepareStatement("select set_pjlab.kd_dokterlab from set_pjlab");
+            try {
+                rssetpj = pssetpj.executeQuery();
+                while (rssetpj.next()) {
+                    KodePj.setText(rssetpj.getString(1));
+                    NmDokterPj.setText(Sequel.CariDokter(rssetpj.getString(1)));
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+            } finally {
+                if (rssetpj != null) { rssetpj.close(); }
+                if (pssetpj != null) { pssetpj.close(); }
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        isPsien();
+        tampiltarif(order);
+        tampilAttaLIS(order);
+    }
+
+    private void tampilELIMS(String order) {
         try {
             koneksielims=koneksiDBELIMS.condb();
             Valid.tabelKosong(tabMode);

@@ -3,7 +3,7 @@
 <properties>
     <comment>KhanzaHMS</comment> 
     <entry key="HOST">1exBpelPnPHnuOu06YYpPw==</entry>
-    <entry key="DATABASE">dCLOZkqsiZmK7NzDjJIWyg==</entry>
+    <entry key="DATABASE">CO/6uOP0Cm79XD9igvQfjg==</entry>
     <entry key="PORT">nioxtijcpDaKSUiUiP5FAg==</entry>
     <entry key="USER">uad4MgewGeDsJJxHQJ221g==</entry>
     <entry key="PAS">mVSgg3V70tpcAmyrs5dFyp7B9f2tNXQIz/fH9WH6n6o=</entry>
@@ -172,6 +172,11 @@
     <entry key="PORTSLIMS">nioxtijcpDaKSUiUiP5FAg==</entry>
     <entry key="USERSLIMS">kMR3WfAwUK6MbhCyydxa0g==</entry>
     <entry key="PASSLIMS">l4nh5eVYrLAER/I2A4b3Tw==</entry>
+    <entry key="HOSTATTALIS">1exBpelPnPHnuOu06YYpPw==</entry>
+    <entry key="PORTATTALIS">nioxtijcpDaKSUiUiP5FAg==</entry>
+    <entry key="DATABASEATTALIS">g1bBqcK26gSv48POmER3bg==</entry>
+    <entry key="USERATTALIS">uad4MgewGeDsJJxHQJ221g==</entry>
+    <entry key="PASSATTALIS">mVSgg3V70tpcAmyrs5dFyp7B9f2tNXQIz/fH9WH6n6o=</entry>
     <entry key="URLORTHANC">http://localhost</entry>
     <entry key="PORTORTHANC">4xOkFa6gxM9Bc/dkpEtJ+A==</entry>
     <entry key="USERORTHANC">V9bi0P2HgAq8Nn8lUyS6/A==</entry>
