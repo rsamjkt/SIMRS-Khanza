@@ -266,11 +266,15 @@ import surat.SuratKewaspadaanKesehatan;
 import surat.SuratPenolakanAnjuranMedis;
 import surat.SuratPernyataanMemilihDPJP;
 import surat.SuratPernyataanPasienUmum;
+import surat.SuratPernyataanPembiayaanTindakan;
+import surat.SuratPernyataanPembiayaanNaikKelas;
 import surat.SuratPersetujuanPemeriksaanHIV;
 import surat.SuratPersetujuanPenolakanTindakan;
 import surat.SuratPersetujuanPenundaanPelayanan;
 import surat.SuratPersetujuanRawatInap;
 import surat.SuratPersetujuanUmum;
+import surat.SuratPemilihanDPJP;
+import surat.SuratPernyataanPengambilanSampleSHK;
 import surat.SuratPulangAtasPermintaanSendiri;
 import surat.SuratSakit;
 import surat.SuratSakitPihak2;
@@ -856,10 +860,14 @@ public final class DlgReg extends javax.swing.JDialog {
         MnCetakSuratCutiHamil = new javax.swing.JMenuItem();
         MnCetakSuratCovid = new javax.swing.JMenuItem();
         MnPersetujuanUmum = new javax.swing.JMenuItem();
+        MnPemilihanDPJP = new javax.swing.JMenuItem();
+        MnPernyataanPengambilanSampleSHK = new javax.swing.JMenuItem();
         MnPersetujuanPenolakanTindakan = new javax.swing.JMenuItem();
         MnPulangAtasPermintaanSendiri = new javax.swing.JMenuItem();
         MnPernyataanPasienUmum = new javax.swing.JMenuItem();
+        MnPernyataanPembiayaanTindakan = new javax.swing.JMenuItem();
         MnPersetujuanRawatInap = new javax.swing.JMenuItem();
+        MnPernyataanPembiayaanNaikKelas = new javax.swing.JMenuItem();
         MnPersetujuanPenundaanPelayanan = new javax.swing.JMenuItem();
         MnPenolakanAnjuranMedis = new javax.swing.JMenuItem();
         jMenu8 = new javax.swing.JMenu();
@@ -3170,6 +3178,8 @@ public final class DlgReg extends javax.swing.JDialog {
             }
         });
         MnSuratSurat.add(MnSuratKontrol);
+        MnSuratSurat.add(MnPernyataanPengambilanSampleSHK);
+        MnSuratSurat.add(MnPernyataanPembiayaanNaikKelas);
 
         MnSuratButaWarna.setBackground(new java.awt.Color(255, 255, 254));
         MnSuratButaWarna.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
@@ -3410,6 +3420,36 @@ public final class DlgReg extends javax.swing.JDialog {
             }
         });
         
+        MnPemilihanDPJP.setBackground(new java.awt.Color(255, 255, 254));
+        MnPemilihanDPJP.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        MnPemilihanDPJP.setForeground(new java.awt.Color(50, 50, 50));
+        MnPemilihanDPJP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/category.png"))); // NOI18N
+        MnPemilihanDPJP.setText("Pemilihan DPJP");
+        MnPemilihanDPJP.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        MnPemilihanDPJP.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        MnPemilihanDPJP.setName("MnPemilihanDPJP"); // NOI18N
+        MnPemilihanDPJP.setPreferredSize(new java.awt.Dimension(170, 26));
+        MnPemilihanDPJP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MnPemilihanDPJPActionPerformed(evt);
+            }
+        });
+        MnSuratSurat.add(MnPemilihanDPJP);
+        
+        MnPernyataanPengambilanSampleSHK.setBackground(new java.awt.Color(255, 255, 254));
+        MnPernyataanPengambilanSampleSHK.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        MnPernyataanPengambilanSampleSHK.setForeground(new java.awt.Color(50, 50, 50));
+        MnPernyataanPengambilanSampleSHK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/category.png"))); // NOI18N
+        MnPernyataanPengambilanSampleSHK.setText("Pengambilan Sample SHK");
+        MnPernyataanPengambilanSampleSHK.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        MnPernyataanPengambilanSampleSHK.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        MnPernyataanPengambilanSampleSHK.setName("MnPernyataanPengambilanSampleSHK"); // NOI18N
+        MnPernyataanPengambilanSampleSHK.setPreferredSize(new java.awt.Dimension(170, 26));
+        MnPernyataanPengambilanSampleSHK.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MnPernyataanPengambilanSampleSHKActionPerformed(evt);
+            }
+        });
         MnPersetujuanPenolakanTindakan.setBackground(new java.awt.Color(255, 255, 254));
         MnPersetujuanPenolakanTindakan.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
         MnPersetujuanPenolakanTindakan.setForeground(new java.awt.Color(50, 50, 50));
@@ -3455,6 +3495,22 @@ public final class DlgReg extends javax.swing.JDialog {
             }
         });
 
+        MnPernyataanPembiayaanTindakan.setBackground(new java.awt.Color(255, 255, 254));
+        MnPernyataanPembiayaanTindakan.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        MnPernyataanPembiayaanTindakan.setForeground(new java.awt.Color(50, 50, 50));
+        MnPernyataanPembiayaanTindakan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/category.png"))); // NOI18N
+        MnPernyataanPembiayaanTindakan.setText("Pernyataan Pembiayaan Tindakan");
+        MnPernyataanPembiayaanTindakan.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        MnPernyataanPembiayaanTindakan.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        MnPernyataanPembiayaanTindakan.setName("MnPernyataanPembiayaanTindakan"); // NOI18N
+        MnPernyataanPembiayaanTindakan.setPreferredSize(new java.awt.Dimension(170, 26));
+        MnPernyataanPembiayaanTindakan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MnPernyataanPembiayaanTindakanActionPerformed(evt);
+            }
+        });
+        MnSuratSurat.add(MnPernyataanPembiayaanTindakan);
+
         MnPersetujuanRawatInap.setBackground(new java.awt.Color(255, 255, 254));
         MnPersetujuanRawatInap.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
         MnPersetujuanRawatInap.setForeground(new java.awt.Color(50, 50, 50));
@@ -3470,6 +3526,20 @@ public final class DlgReg extends javax.swing.JDialog {
             }
         });
 
+        MnPernyataanPembiayaanNaikKelas.setBackground(new java.awt.Color(255, 255, 254));
+        MnPernyataanPembiayaanNaikKelas.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        MnPernyataanPembiayaanNaikKelas.setForeground(new java.awt.Color(50, 50, 50));
+        MnPernyataanPembiayaanNaikKelas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/category.png"))); // NOI18N
+        MnPernyataanPembiayaanNaikKelas.setText("Pernyataan Pembiayaan Naik Kelas Rawat Inap");
+        MnPernyataanPembiayaanNaikKelas.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        MnPernyataanPembiayaanNaikKelas.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        MnPernyataanPembiayaanNaikKelas.setName("MnPernyataanPembiayaanNaikKelas"); // NOI18N
+        MnPernyataanPembiayaanNaikKelas.setPreferredSize(new java.awt.Dimension(170, 26));
+        MnPernyataanPembiayaanNaikKelas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MnPernyataanPembiayaanNaikKelasActionPerformed(evt);
+            }
+        });
         MnPersetujuanPenundaanPelayanan.setBackground(new java.awt.Color(255, 255, 254));
         MnPersetujuanPenundaanPelayanan.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
         MnPersetujuanPenundaanPelayanan.setForeground(new java.awt.Color(50, 50, 50));
@@ -13404,7 +13474,28 @@ private void MnLaporanRekapKunjunganBulananPoliActionPerformed(java.awt.event.Ac
             }
         }
     }//GEN-LAST:event_MnPernyataanPasienUmumActionPerformed
-
+private void MnPernyataanPembiayaanTindakanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnPernyataanPasienUmumActionPerformed
+        if(tabMode.getRowCount()==0){
+            JOptionPane.showMessageDialog(null,"Maaf, data registrasi sudah habis...!!!!");
+            TNoRM.requestFocus();
+        }else if(TPasien.getText().trim().equals("")){
+            JOptionPane.showMessageDialog(null,"Maaf, Silahkan anda pilih dulu data pasien dengan menklik data pada table...!!!");
+            tbPetugas.requestFocus();
+        }else{
+            if(tbPetugas.getSelectedRow()!= -1){
+                this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                SuratPernyataanPembiayaanTindakan form=new SuratPernyataanPembiayaanTindakan(null,false);
+                form.isCek();
+                form.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
+                form.setLocationRelativeTo(internalFrame1);
+                form.setVisible(true);
+                form.emptTeks();
+                form.setNoRm(TNoRw.getText(),DTPCari2.getDate());
+                form.tampil();
+                this.setCursor(Cursor.getDefaultCursor());
+            }
+        }
+    }//GEN-LAST:event_MnPernyataanPasienUmumActionPerformed
     private void MnKonselingFarmasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnKonselingFarmasiActionPerformed
         if(tabMode.getRowCount()==0){
             JOptionPane.showMessageDialog(null,"Maaf, data registrasi sudah habis...!!!!");
@@ -13474,7 +13565,94 @@ private void MnLaporanRekapKunjunganBulananPoliActionPerformed(java.awt.event.Ac
             }
         }
     }//GEN-LAST:event_MnPersetujuanUmumActionPerformed
-
+    private void MnPemilihanDPJPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnPersetujuanUmumActionPerformed
+        if(tabMode.getRowCount()==0){
+            JOptionPane.showMessageDialog(null,"Maaf, data registrasi sudah habis...!!!!");
+            TNoRM.requestFocus();
+        }else if(TPasien.getText().trim().equals("")){
+            JOptionPane.showMessageDialog(null,"Maaf, Silahkan anda pilih dulu data pasien dengan menklik data pada table...!!!");
+            tbPetugas.requestFocus();
+        }else{
+            if(tbPetugas.getSelectedRow()!= -1){
+                this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                SuratPemilihanDPJP form=new SuratPemilihanDPJP(null,false);
+                form.isCek();
+                form.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
+                form.setLocationRelativeTo(internalFrame1);
+                form.setVisible(true);
+                form.emptTeks();
+                form.setNoRm(TNoRw.getText(),DTPCari2.getDate());
+                form.tampil();
+                this.setCursor(Cursor.getDefaultCursor());
+            }
+        }
+    }//GEN-LAST:event_MnPersetujuanUmumActionPerformed
+private void MnPernyataanPengambilanSampleSHKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnPersetujuanUmumActionPerformed
+        if(tabMode.getRowCount()==0){
+            JOptionPane.showMessageDialog(null,"Maaf, data registrasi sudah habis...!!!!");
+            TNoRM.requestFocus();
+        }else if(TPasien.getText().trim().equals("")){
+            JOptionPane.showMessageDialog(null,"Maaf, Silahkan anda pilih dulu data pasien dengan menklik data pada table...!!!");
+            tbPetugas.requestFocus();
+        }else{
+            if(tbPetugas.getSelectedRow()!= -1){
+                this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                SuratPernyataanPengambilanSampleSHK form=new SuratPernyataanPengambilanSampleSHK(null,false);
+                form.isCek();
+                form.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
+                form.setLocationRelativeTo(internalFrame1);
+                form.setVisible(true);
+                form.emptTeks();
+                form.setNoRm(TNoRw.getText(),DTPCari2.getDate());
+                form.tampil();
+                this.setCursor(Cursor.getDefaultCursor());
+            }
+        }
+    }//GEN-LAST:event_MnPersetujuanUmumActionPerformed
+    private void MnPemilihanDPJPActionPerformed() {//GEN-FIRST:event_MnPersetujuanUmumActionPerformed
+        if(tabMode.getRowCount()==0){
+            JOptionPane.showMessageDialog(null,"Maaf, data registrasi sudah habis...!!!!");
+            TNoRM.requestFocus();
+        }else if(TPasien.getText().trim().equals("")){
+            JOptionPane.showMessageDialog(null,"Maaf, Silahkan anda pilih dulu data pasien dengan menklik data pada table...!!!");
+            tbPetugas.requestFocus();
+        }else{
+            if(tbPetugas.getSelectedRow()!= -1){
+                this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                SuratPemilihanDPJP form=new SuratPemilihanDPJP(null,false);
+                form.isCek();
+                form.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
+                form.setLocationRelativeTo(internalFrame1);
+                form.setVisible(true);
+                form.emptTeks();
+                form.setNoRm(TNoRw.getText(),DTPCari2.getDate());
+                form.tampil();
+                this.setCursor(Cursor.getDefaultCursor());
+            }
+        }
+    }//GEN-LAST:event_MnPersetujuanUmumActionPerformed
+private void MnPernyataanPengambilanSampleSHKActionPerformed() {//GEN-FIRST:event_MnPersetujuanUmumActionPerformed
+        if(tabMode.getRowCount()==0){
+            JOptionPane.showMessageDialog(null,"Maaf, data registrasi sudah habis...!!!!");
+            TNoRM.requestFocus();
+        }else if(TPasien.getText().trim().equals("")){
+            JOptionPane.showMessageDialog(null,"Maaf, Silahkan anda pilih dulu data pasien dengan menklik data pada table...!!!");
+            tbPetugas.requestFocus();
+        }else{
+            if(tbPetugas.getSelectedRow()!= -1){
+                this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                SuratPernyataanPengambilanSampleSHK form=new SuratPernyataanPengambilanSampleSHK(null,false);
+                form.isCek();
+                form.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
+                form.setLocationRelativeTo(internalFrame1);
+                form.setVisible(true);
+                form.emptTeks();
+                form.setNoRm(TNoRw.getText(),DTPCari2.getDate());
+                form.tampil();
+                this.setCursor(Cursor.getDefaultCursor());
+            }
+        }
+    }//GEN-LAST:event_MnPersetujuanUmumActionPerformed
     private void MnTransferAntarRuangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnTransferAntarRuangActionPerformed
         if(tabMode.getRowCount()==0){
             JOptionPane.showMessageDialog(null,"Maaf, data registrasi sudah habis...!!!!");
@@ -13741,6 +13919,29 @@ private void MnLaporanRekapKunjunganBulananPoliActionPerformed(java.awt.event.Ac
                 form.setVisible(true);
                 form.emptTeks();
                 form.setNoRm(TNoRw.getText(),DTPCari2.getDate());
+                this.setCursor(Cursor.getDefaultCursor());
+            }
+        }
+    }//GEN-LAST:event_MnPersetujuanRawatInapActionPerformed
+
+    private void MnPernyataanPembiayaanNaikKelasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnPersetujuanRawatInapActionPerformed
+        if(tabMode.getRowCount()==0){
+            JOptionPane.showMessageDialog(null,"Maaf, data registrasi sudah habis...!!!!");
+            TNoRM.requestFocus();
+        }else if(TPasien.getText().trim().equals("")){
+            JOptionPane.showMessageDialog(null,"Maaf, Silahkan anda pilih dulu data pasien dengan menklik data pada table...!!!");
+            tbPetugas.requestFocus();
+        }else{
+            if(tbPetugas.getSelectedRow()!= -1){
+                this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                SuratPernyataanPembiayaanNaikKelas form=new SuratPernyataanPembiayaanNaikKelas(null,false);
+                form.isCek();
+                form.setSize(internalFrame1.getWidth()-20,internalFrame1.getHeight()-20);
+                form.setLocationRelativeTo(internalFrame1);
+                form.setVisible(true);
+                form.emptTeks();
+                form.setNoRm(TNoRw.getText(),DTPCari2.getDate());
+                form.tampil();
                 this.setCursor(Cursor.getDefaultCursor());
             }
         }
@@ -16642,10 +16843,14 @@ private void MnLaporanRekapKunjunganBulananPoliActionPerformed(java.awt.event.Ac
     private javax.swing.JMenuItem MnPermintaanRanap;
     private javax.swing.JMenuItem MnPermintaanRanap1;
     private javax.swing.JMenuItem MnPernyataanPasienUmum;
+    private javax.swing.JMenuItem MnPernyataanPembiayaanTindakan;
     private javax.swing.JMenuItem MnPersetujuanPenolakanTindakan;
     private javax.swing.JMenuItem MnPersetujuanPenundaanPelayanan;
     private javax.swing.JMenuItem MnPersetujuanRawatInap;
+    private javax.swing.JMenuItem MnPernyataanPembiayaanNaikKelas;
     private javax.swing.JMenuItem MnPersetujuanUmum;
+    private javax.swing.JMenuItem MnPemilihanDPJP;
+    private javax.swing.JMenuItem MnPernyataanPengambilanSampleSHK;
     private javax.swing.JMenu MnPilihBilling;
     private javax.swing.JMenuItem MnPoliInternal;
     private javax.swing.JMenuItem MnPulangAtasPermintaanSendiri;
