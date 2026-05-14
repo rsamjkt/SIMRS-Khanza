@@ -260,6 +260,12 @@ public class BPJSSuratKontrol extends javax.swing.JDialog {
                 cekBatasanTanggalKontrol(); // hanya tampilkan pesan, tidak perlu cek return
             }
         });
+
+        TanggalSurat.addItemListener(e -> {
+            if (e.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
+                updateMinDateKontrol();
+            }
+        });
     }
  
     /** This method is called from within the constructor to
@@ -1620,6 +1626,29 @@ public class BPJSSuratKontrol extends javax.swing.JDialog {
         return true;
     }
 
+    private void updateMinDateKontrol() {
+        if (akses.getkode().equals("Admin Utama")) {
+            TanggalKontrol.setMinDate(null);
+            return;
+        }
+        String nmPoli = NmPoli.getText().toLowerCase();
+        if (nmPoli.contains("mata") || nmPoli.contains("bedah")) {
+            TanggalKontrol.setMinDate(null);
+            return;
+        }
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            String tglSuratStr = TanggalSurat.getSelectedItem().toString().substring(0, 10);
+            Date tglSurat = sdf.parse(tglSuratStr);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(tglSurat);
+            cal.add(Calendar.DAY_OF_MONTH, 8);
+            TanggalKontrol.setMinDate(cal.getTime());
+        } catch (Exception ex) {
+            TanggalKontrol.setMinDate(null);
+        }
+    }
+
     private void BtnBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBatalActionPerformed
         emptTeks();
         ChkInput.setSelected(true);
@@ -1839,6 +1868,8 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             Valid.textKosong(KdDokter,"Dokter");
         }else if(NmPoli.getText().trim().equals("")||NmPoli.getText().trim().equals("")){
             Valid.textKosong(KdPoli,"Poli");
+        }else if(!cekBatasanTanggalKontrol()){
+            // tanggal tidak valid, pesan sudah ditampilkan oleh cekBatasanTanggalKontrol
         }else{
             if(tbObat.getSelectedRow()!= -1){
                 try {
@@ -1998,6 +2029,7 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 if(poli.getTable().getSelectedRow()!= -1){
                     KdPoli.setText(poli.getTable().getValueAt(poli.getTable().getSelectedRow(),1).toString());
                     NmPoli.setText(poli.getTable().getValueAt(poli.getTable().getSelectedRow(),2).toString());
+                    updateMinDateKontrol();
                     cekBatasanTanggalKontrol();
                 }
             }
@@ -2413,6 +2445,7 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         TanggalSurat.setDate(new Date());
         NoSurat.setText("");
         TanggalKontrol.setDate(new Date());
+        TanggalKontrol.setMinDate(null);
         KdDokter.setText("");
         NmDokter.setText("");
         KdPoli.setText("");
@@ -2511,6 +2544,7 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             Hamil.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(),51).toString().trim());
             Valid.SetTgl(TanggalSurat,tbObat.getValueAt(tbObat.getSelectedRow(),8).toString());
             Valid.SetTgl(TanggalKontrol,tbObat.getValueAt(tbObat.getSelectedRow(),10).toString());
+            updateMinDateKontrol();
         }
     }
     
