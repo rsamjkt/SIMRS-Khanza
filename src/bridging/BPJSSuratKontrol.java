@@ -21,6 +21,8 @@ import java.security.cert.X509Certificate;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -252,6 +254,12 @@ public class BPJSSuratKontrol extends javax.swing.JDialog {
         } catch (Exception ex) {
             JADIKANBOOKINGSURATKONTROLAPIBPJS="no";
         }
+
+        TanggalKontrol.addItemListener(e -> {
+            if (e.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
+                cekBatasanTanggalKontrol(); // hanya tampilkan pesan, tidak perlu cek return
+            }
+        });
     }
  
     /** This method is called from within the constructor to
@@ -1456,6 +1464,8 @@ public class BPJSSuratKontrol extends javax.swing.JDialog {
             Valid.textKosong(KdDokter,"Dokter");
         }else if(NmPoli.getText().trim().equals("")||NmPoli.getText().trim().equals("")){
             Valid.textKosong(KdPoli,"Poli");
+        }else if(!cekBatasanTanggalKontrol()){
+            // tanggal tidak valid, pesan sudah ditampilkan oleh cekBatasanTanggalKontrol
         }else{
             try {
                 headers = new HttpHeaders();
@@ -1575,6 +1585,40 @@ public class BPJSSuratKontrol extends javax.swing.JDialog {
             Valid.pindah(evt,NoSurat,BtnBatal);
         }
 }//GEN-LAST:event_BtnSimpanKeyPressed
+
+    private boolean cekBatasanTanggalKontrol() {
+        // Skip saat form sedang direset (NoSEP belum diisi)
+        if (NoSEP.getText().trim().isEmpty()) return true;
+
+        // Admin Utama bebas tanpa batasan
+        if (akses.getkode().equals("Admin Utama")) return true;
+
+        // Poli mata dan bedah dikecualikan dari aturan 8 hari
+        String nmPoli = NmPoli.getText().toLowerCase();
+        if (nmPoli.contains("mata") || nmPoli.contains("bedah")) return true;
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            String tglSuratStr = TanggalSurat.getSelectedItem().toString().substring(0, 10);
+            String tglKontrolStr = TanggalKontrol.getSelectedItem().toString().substring(0, 10);
+            Date tglSurat = sdf.parse(tglSuratStr);
+            Date tglKontrol = sdf.parse(tglKontrolStr);
+            long selisihHari = (tglKontrol.getTime() - tglSurat.getTime()) / (1000 * 60 * 60 * 24);
+            if (selisihHari < 8) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(tglSurat);
+                cal.add(Calendar.DAY_OF_MONTH, 8);
+                String tglMinimal = sdf.format(cal.getTime());
+                JOptionPane.showMessageDialog(null,
+                    "Tanggal rencana kontrol minimal 8 hari dari tanggal surat.\n" +
+                    "Aturan anti-readmisi BPJS — tanggal minimal: " + tglMinimal);
+                return false;
+            }
+        } catch (Exception ex) {
+            System.out.println("Notif cekBatasanTanggalKontrol: " + ex);
+        }
+        return true;
+    }
 
     private void BtnBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBatalActionPerformed
         emptTeks();
@@ -1951,10 +1995,11 @@ private void ChkInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             public void windowClosing(WindowEvent e) {}
             @Override
             public void windowClosed(WindowEvent e) {
-                if(poli.getTable().getSelectedRow()!= -1){                    
+                if(poli.getTable().getSelectedRow()!= -1){
                     KdPoli.setText(poli.getTable().getValueAt(poli.getTable().getSelectedRow(),1).toString());
                     NmPoli.setText(poli.getTable().getValueAt(poli.getTable().getSelectedRow(),2).toString());
-                }   
+                    cekBatasanTanggalKontrol();
+                }
             }
             @Override
             public void windowIconified(WindowEvent e) {}
