@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.17.0.final using JasperReports Library version 6.0.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="184" pageHeight="113" columnWidth="174" leftMargin="5" rightMargin="5" topMargin="5" bottomMargin="5" uuid="47ff644c-0f7e-4ff8-9a5b-471993fcb9e1">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="184" pageHeight="125" columnWidth="174" leftMargin="5" rightMargin="5" topMargin="5" bottomMargin="5" uuid="47ff644c-0f7e-4ff8-9a5b-471993fcb9e1">
 	<property name="ireport.zoom" value="4.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -93,11 +93,16 @@ resep_obat.jam=obat_racikan.jam and resep_obat.no_rawat=obat_racikan.no_rawat]]>
 		<property name="com.jaspersoft.studio.field.label" value="sttsumur"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="reg_periksa"/>
 	</field>
+	<field name="bud" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="bud"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="bud_racikan"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<detail>
-		<band height="103" splitType="Stretch">
+		<band height="115" splitType="Stretch">
 			<line>
 				<reportElement x="1" y="0" width="172" height="1" forecolor="#006666" uuid="18561ed3-c28f-4dc2-a0c9-14f3237c1441"/>
 				<graphicElement>
@@ -111,19 +116,19 @@ resep_obat.jam=obat_racikan.jam and resep_obat.no_rawat=obat_racikan.no_rawat]]>
 				</graphicElement>
 			</line>
 			<line direction="BottomUp">
-				<reportElement x="0" y="0" width="1" height="103" forecolor="#006666" uuid="3ea6935f-ca2c-4234-a921-a2ec4b48d213"/>
+				<reportElement x="0" y="0" width="1" height="115" forecolor="#006666" uuid="3ea6935f-ca2c-4234-a921-a2ec4b48d213"/>
 				<graphicElement>
 					<pen lineStyle="Solid"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="1" y="102" width="172" height="1" forecolor="#006666" uuid="72019729-411e-49ed-80ef-bdb2389f089c"/>
+				<reportElement x="1" y="114" width="172" height="1" forecolor="#006666" uuid="72019729-411e-49ed-80ef-bdb2389f089c"/>
 				<graphicElement>
 					<pen lineStyle="Solid"/>
 				</graphicElement>
 			</line>
 			<line direction="BottomUp">
-				<reportElement x="173" y="0" width="1" height="103" forecolor="#006666" uuid="d4362759-d561-41a9-948c-115a7d8c1c82"/>
+				<reportElement x="173" y="0" width="1" height="115" forecolor="#006666" uuid="d4362759-d561-41a9-948c-115a7d8c1c82"/>
 				<graphicElement>
 					<pen lineStyle="Solid"/>
 				</graphicElement>
@@ -301,6 +306,22 @@ resep_obat.jam=obat_racikan.jam and resep_obat.no_rawat=obat_racikan.no_rawat]]>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{jam}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="3" y="103" width="20" height="9" uuid="bb001001-0001-0001-0001-000000000001"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Tahoma" size="7"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[BUD:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="23" y="103" width="80" height="9" uuid="bb001001-0001-0001-0001-000000000002"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Tahoma" size="7"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bud}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

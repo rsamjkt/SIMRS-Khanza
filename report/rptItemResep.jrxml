@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.17.0.final using JasperReports Library version 6.0.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="184" pageHeight="113" columnWidth="174" leftMargin="5" rightMargin="5" topMargin="5" bottomMargin="5" uuid="662d5359-f1cb-4a1f-b4a1-29dfb5df5c10">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="184" pageHeight="125" columnWidth="174" leftMargin="5" rightMargin="5" topMargin="5" bottomMargin="5" uuid="662d5359-f1cb-4a1f-b4a1-29dfb5df5c10">
 	<property name="ireport.zoom" value="4.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -93,11 +93,16 @@ resep_obat.jam=detail_pemberian_obat.jam and kodesatuan.kode_sat=databarang.kode
 		<property name="com.jaspersoft.studio.field.label" value="sttsumur"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="reg_periksa"/>
 	</field>
+	<field name="bud" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="bud"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="bud_obat"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<detail>
-		<band height="103" splitType="Stretch">
+		<band height="115" splitType="Stretch">
 			<componentElement>
 				<reportElement x="3" y="33" width="21" height="38" uuid="a8e84cbb-bc92-4e8b-a09b-1d80df33cf4f">
 					<property name="com.jaspersoft.studio.unit.barHeight" value="px"/>
@@ -120,7 +125,7 @@ resep_obat.jam=detail_pemberian_obat.jam and kodesatuan.kode_sat=databarang.kode
 				</graphicElement>
 			</line>
 			<line direction="BottomUp">
-				<reportElement x="0" y="0" width="1" height="103" forecolor="#006666" uuid="680987a1-bda1-47d0-9189-c9508f35b427"/>
+				<reportElement x="0" y="0" width="1" height="115" forecolor="#006666" uuid="680987a1-bda1-47d0-9189-c9508f35b427"/>
 				<graphicElement>
 					<pen lineStyle="Solid"/>
 				</graphicElement>
@@ -136,13 +141,13 @@ resep_obat.jam=detail_pemberian_obat.jam and kodesatuan.kode_sat=databarang.kode
 				<text><![CDATA[No.RM]]></text>
 			</staticText>
 			<line>
-				<reportElement x="1" y="102" width="172" height="1" forecolor="#006666" uuid="e72acbc4-f9e2-4589-a0f6-1e0ba17a66b0"/>
+				<reportElement x="1" y="114" width="172" height="1" forecolor="#006666" uuid="e72acbc4-f9e2-4589-a0f6-1e0ba17a66b0"/>
 				<graphicElement>
 					<pen lineStyle="Solid"/>
 				</graphicElement>
 			</line>
 			<line direction="BottomUp">
-				<reportElement x="173" y="-1" width="1" height="103" forecolor="#006666" uuid="448a0689-925a-4b54-b4fa-0416fe6d991e"/>
+				<reportElement x="173" y="-1" width="1" height="115" forecolor="#006666" uuid="448a0689-925a-4b54-b4fa-0416fe6d991e"/>
 				<graphicElement>
 					<pen lineStyle="Solid"/>
 				</graphicElement>
@@ -301,6 +306,22 @@ resep_obat.jam=detail_pemberian_obat.jam and kodesatuan.kode_sat=databarang.kode
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{jam}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="3" y="103" width="20" height="9" uuid="aa001001-0001-0001-0001-000000000001"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Tahoma" size="7"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[BUD:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="23" y="103" width="80" height="9" uuid="aa001001-0001-0001-0001-000000000002"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Tahoma" size="7"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bud}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

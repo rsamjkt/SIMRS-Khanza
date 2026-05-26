@@ -16160,7 +16160,14 @@ private void MnDataPemberianObatActionPerformed(java.awt.event.ActionEvent evt) 
                             "reg_periksa.p_jawab,reg_periksa.almt_pj,reg_periksa.hubunganpj,reg_periksa.biaya_reg,reg_periksa.stts,penjab.png_jawab,concat(reg_periksa.umurdaftar,' ',reg_periksa.sttsumur)as umur, "+
                             "reg_periksa.status_bayar,reg_periksa.status_poli,reg_periksa.kd_pj,reg_periksa.kd_poli,pasien.no_tlp,"+
                             "bridging_sep.no_sep,bpjs_prb.prb,"+
-                            "if(exists(select 1 from pemeriksaan_ralan where pemeriksaan_ralan.no_rawat=reg_periksa.no_rawat),'Sudah','-') as stts_ttv,"+
+                            "if(exists(select 1 from penilaian_awal_keperawatan_ralan where penilaian_awal_keperawatan_ralan.no_rawat=reg_periksa.no_rawat)"+
+                            " or exists(select 1 from penilaian_awal_keperawatan_ralan_bayi where penilaian_awal_keperawatan_ralan_bayi.no_rawat=reg_periksa.no_rawat)"+
+                            " or exists(select 1 from penilaian_awal_keperawatan_ralan_geriatri where penilaian_awal_keperawatan_ralan_geriatri.no_rawat=reg_periksa.no_rawat)"+
+                            " or exists(select 1 from penilaian_awal_keperawatan_ralan_psikiatri where penilaian_awal_keperawatan_ralan_psikiatri.no_rawat=reg_periksa.no_rawat)"+
+                            " or exists(select 1 from penilaian_awal_keperawatan_gigi where penilaian_awal_keperawatan_gigi.no_rawat=reg_periksa.no_rawat)"+
+                            " or exists(select 1 from penilaian_awal_keperawatan_kebidanan where penilaian_awal_keperawatan_kebidanan.no_rawat=reg_periksa.no_rawat)"+
+                            " or exists(select 1 from penilaian_awal_keperawatan_mata where penilaian_awal_keperawatan_mata.no_rawat=reg_periksa.no_rawat)"+
+                            ",'Sudah','-') as stts_ttv,"+
                             "if(exists(select 1 from penilaian_awal_keperawatan_ralan where penilaian_awal_keperawatan_ralan.no_rawat=reg_periksa.no_rawat),'Sudah','-') as stts_asesmen "+
                             "from reg_periksa inner join dokter on reg_periksa.kd_dokter=dokter.kd_dokter inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
                             "inner join poliklinik on reg_periksa.kd_poli=poliklinik.kd_poli inner join penjab on reg_periksa.kd_pj=penjab.kd_pj "+

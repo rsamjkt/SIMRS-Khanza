@@ -2008,11 +2008,22 @@ private void BtnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                                 if (rstindakan.next()) {
                                     String flag = rstindakan.getString("FLAG") != null
                                             ? rstindakan.getString("FLAG").replaceAll("LL", "L").replaceAll("HH", "H") : "";
+                                    String satuan   = rstampil.getString("satuan");
+                                    String nilaiRuj = rstampil.getString("nilai_rujukan_ld");
+                                    String rawVal = rstindakan.getString("RESULT_VALUE");
+                                    String hasilVal = rawVal;
+                                    if (rawVal != null && !rawVal.trim().isEmpty()) {
+                                        try {
+                                            java.math.BigDecimal bd = new java.math.BigDecimal(rawVal.trim());
+                                            bd = bd.setScale(2, java.math.RoundingMode.DOWN);
+                                            hasilVal = bd.stripTrailingZeros().toPlainString();
+                                        } catch (NumberFormatException nfe) { }
+                                    }
                                     tabMode.addRow(new Object[]{
                                         true, "   " + pemeriksaan,
-                                        rstindakan.getString("RESULT_VALUE"),
-                                        rstampil.getString("satuan"),
-                                        rstampil.getString("nilai_rujukan_ld"),
+                                        hasilVal,
+                                        satuan,
+                                        nilaiRuj,
                                         flag,
                                         rstampil.getString("id_template"),
                                         rstampil.getDouble("biaya_item"),

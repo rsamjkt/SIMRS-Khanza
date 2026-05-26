@@ -93,7 +93,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
         
         tabMode=new DefaultTableModel(null,new Object[]{
             "No.Rawat","No.RM","Nama Pasien","Tgl.Lahir","Kode Dokter","Nama Dokter","Tanggal","Usia Kehamilan",
-            "Janin","Jumlah Janin","Lokasi","Letak Janin","Frekuensi HR","Presentasi","GS","CRL","DBP","FL","AC","TBJ","Diagnosa Klinis",
+            "Janin","Jumlah Janin","Lokasi","Letak Janin","Frekuensi HR","Presentasi","GS","CRL","DBP","FL","AC","HC","TBJ","Diagnosa Klinis",
             "Plasenta Berimplatansi","Derajat Maturitas","Air Ketuban","Jenis Kelamin","ICA","Kelainan Kongenital Mayor","Kesimpulan"
         }){
               @Override public boolean isCellEditable(int rowIndex, int colIndex){return false;}
@@ -103,7 +103,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
         tbObat.setPreferredScrollableViewportSize(new Dimension(500,500));
         tbObat.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-        for (i = 0; i < 28; i++) {
+        for (i = 0; i < 29; i++) {
             TableColumn column = tbObat.getColumnModel().getColumn(i);
             if(i==0){
                 column.setPreferredWidth(105);
@@ -146,20 +146,22 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
             }else if(i==19){
                 column.setPreferredWidth(30);
             }else if(i==20){
-                column.setPreferredWidth(60);
+                column.setPreferredWidth(30);
             }else if(i==21){
                 column.setPreferredWidth(60);
             }else if(i==22){
                 column.setPreferredWidth(60);
             }else if(i==23){
-                column.setPreferredWidth(70);
+                column.setPreferredWidth(60);
             }else if(i==24){
-                column.setPreferredWidth(50);
+                column.setPreferredWidth(70);
             }else if(i==25){
-                column.setPreferredWidth(30);
+                column.setPreferredWidth(50);
             }else if(i==26){
-                column.setPreferredWidth(147);
+                column.setPreferredWidth(30);
             }else if(i==27){
+                column.setPreferredWidth(147);
+            }else if(i==28){
                 column.setPreferredWidth(60);
             }
         }
@@ -194,6 +196,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
         DiameterBiparietal.setDocument(new batasInput((int)6).getKata(DiameterBiparietal));
         PanjangFemur.setDocument(new batasInput((int)6).getKata(PanjangFemur));
         LingkarAbdomen.setDocument(new batasInput((int)6).getKata(LingkarAbdomen));
+        LingkarKepala.setDocument(new batasInput((int)6).getKata(LingkarKepala));
         TafsiranBerat.setDocument(new batasInput((int)6).getKata(TafsiranBerat));
         DiagnosaKlinis.setDocument(new batasInput((int)50).getKata(DiagnosaKlinis));
         Plasenta.setDocument(new batasInput((int)50).getKata(Plasenta));
@@ -366,6 +369,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
         PanjangFemur = new widget.TextBox();
         jLabel38 = new widget.Label();
         LingkarAbdomen = new widget.TextBox();
+        LingkarKepala = new widget.TextBox();
         jLabel39 = new widget.Label();
         TafsiranBerat = new widget.TextBox();
         jLabel41 = new widget.Label();
@@ -605,7 +609,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
         FormInput.setBackground(new java.awt.Color(255, 255, 255));
         FormInput.setBorder(null);
         FormInput.setName("FormInput"); // NOI18N
-        FormInput.setPreferredSize(new java.awt.Dimension(750, 363));
+        FormInput.setPreferredSize(new java.awt.Dimension(750, 393));
         FormInput.setLayout(null);
 
         TNoRw.setHighlighter(null);
@@ -741,7 +745,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
         jLabel32.setText("Diagnosa Klinis :");
         jLabel32.setName("jLabel32"); // NOI18N
         FormInput.add(jLabel32);
-        jLabel32.setBounds(30, 230, 90, 23);
+        jLabel32.setBounds(30, 260, 90, 23);
 
         DiagnosaKlinis.setFocusTraversalPolicyProvider(true);
         DiagnosaKlinis.setName("DiagnosaKlinis"); // NOI18N
@@ -751,7 +755,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
             }
         });
         FormInput.add(DiagnosaKlinis);
-        DiagnosaKlinis.setBounds(130, 230, 190, 23);
+        DiagnosaKlinis.setBounds(130, 260, 190, 23);
 
         jLabel33.setText("Ukuran Kantong Gestasi (GS) :");
         jLabel33.setName("jLabel33"); // NOI18N
@@ -848,6 +852,22 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
         FormInput.add(LingkarAbdomen);
         LingkarAbdomen.setBounds(440, 200, 60, 23);
 
+        jLabel39b = new widget.Label();
+        jLabel39b.setText("Lingkar Kepala (HC) :");
+        jLabel39b.setName("jLabel39b");
+        FormInput.add(jLabel39b);
+        jLabel39b.setBounds(250, 230, 180, 23);
+
+        LingkarKepala.setFocusTraversalPolicyProvider(true);
+        LingkarKepala.setName("LingkarKepala");
+        LingkarKepala.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                LingkarKepalaKeyPressed(evt);
+            }
+        });
+        FormInput.add(LingkarKepala);
+        LingkarKepala.setBounds(440, 230, 60, 23);
+
         jLabel39.setText("Tafsiran berat Janin (TBJ) :");
         jLabel39.setName("jLabel39"); // NOI18N
         FormInput.add(jLabel39);
@@ -866,7 +886,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
         jLabel41.setText("Plasenta Berimplatansi Di :");
         jLabel41.setName("jLabel41"); // NOI18N
         FormInput.add(jLabel41);
-        jLabel41.setBounds(310, 230, 150, 23);
+        jLabel41.setBounds(310, 260, 150, 23);
 
         Plasenta.setFocusTraversalPolicyProvider(true);
         Plasenta.setName("Plasenta"); // NOI18N
@@ -876,12 +896,12 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
             }
         });
         FormInput.add(Plasenta);
-        Plasenta.setBounds(470, 230, 270, 23);
+        Plasenta.setBounds(470, 260, 270, 23);
 
         jLabel125.setText("Derajat Maturitas Plasenta :");
         jLabel125.setName("jLabel125"); // NOI18N
         FormInput.add(jLabel125);
-        jLabel125.setBounds(10, 260, 165, 23);
+        jLabel125.setBounds(10, 290, 165, 23);
 
         DerajatMaturitas.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3" }));
         DerajatMaturitas.setName("DerajatMaturitas"); // NOI18N
@@ -891,7 +911,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
             }
         });
         FormInput.add(DerajatMaturitas);
-        DerajatMaturitas.setBounds(180, 260, 60, 23);
+        DerajatMaturitas.setBounds(180, 290, 60, 23);
 
         JumlahAir.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Cukup", "Berkurang", "Lebih" }));
         JumlahAir.setName("JumlahAir"); // NOI18N
@@ -901,17 +921,17 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
             }
         });
         FormInput.add(JumlahAir);
-        JumlahAir.setBounds(370, 260, 100, 23);
+        JumlahAir.setBounds(370, 290, 100, 23);
 
         jLabel126.setText("Jumlah Air Ketuban :");
         jLabel126.setName("jLabel126"); // NOI18N
         FormInput.add(jLabel126);
-        jLabel126.setBounds(250, 260, 120, 23);
+        jLabel126.setBounds(250, 290, 120, 23);
 
         jLabel42.setText("Indeks Cairan Amnion (ICA) :");
         jLabel42.setName("jLabel42"); // NOI18N
         FormInput.add(jLabel42);
-        jLabel42.setBounds(10, 290, 165, 23);
+        jLabel42.setBounds(10, 320, 165, 23);
 
         IndexCairan.setFocusTraversalPolicyProvider(true);
         IndexCairan.setName("IndexCairan"); // NOI18N
@@ -921,7 +941,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
             }
         });
         FormInput.add(IndexCairan);
-        IndexCairan.setBounds(180, 290, 160, 23);
+        IndexCairan.setBounds(180, 320, 160, 23);
 
         Kelainan.setFocusTraversalPolicyProvider(true);
         Kelainan.setName("Kelainan"); // NOI18N
@@ -931,17 +951,17 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
             }
         });
         FormInput.add(Kelainan);
-        Kelainan.setBounds(500, 290, 240, 23);
+        Kelainan.setBounds(500, 320, 240, 23);
 
         jLabel43.setText("Kelainan Kongenital Mayor :");
         jLabel43.setName("jLabel43"); // NOI18N
         FormInput.add(jLabel43);
-        jLabel43.setBounds(330, 290, 160, 23);
+        jLabel43.setBounds(330, 320, 160, 23);
 
         jLabel127.setText("Jenis Kelamin :");
         jLabel127.setName("jLabel127"); // NOI18N
         FormInput.add(jLabel127);
-        jLabel127.setBounds(480, 260, 80, 23);
+        jLabel127.setBounds(480, 290, 80, 23);
 
         PeluangSex.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Belum Dapat di Tentukan", "Laki-laki", "Perempuan" }));
         PeluangSex.setName("PeluangSex"); // NOI18N
@@ -951,12 +971,12 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
             }
         });
         FormInput.add(PeluangSex);
-        PeluangSex.setBounds(570, 260, 160, 23);
+        PeluangSex.setBounds(570, 290, 160, 23);
 
         jLabel44.setText("Kesimpulan :");
         jLabel44.setName("jLabel44"); // NOI18N
         FormInput.add(jLabel44);
-        jLabel44.setBounds(10, 320, 165, 23);
+        jLabel44.setBounds(10, 350, 165, 23);
 
         scrollPane17.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         scrollPane17.setName("scrollPane17"); // NOI18N
@@ -973,7 +993,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
         scrollPane17.setViewportView(Kesimpulan);
 
         FormInput.add(scrollPane17);
-        scrollPane17.setBounds(180, 320, 555, 63);
+        scrollPane17.setBounds(180, 350, 555, 63);
 
         jLabel11.setText("minggu");
         jLabel11.setName("jLabel11"); // NOI18N
@@ -1056,7 +1076,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
             }
         });
         FormInput.add(BtnDokter5);
-        BtnDokter5.setBounds(140, 340, 28, 23);
+        BtnDokter5.setBounds(140, 370, 28, 23);
 
         scrollInput.setViewportView(FormInput);
 
@@ -1332,7 +1352,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
         }else if(Kesimpulan.getText().trim().equals("")){
             Valid.textKosong(Kesimpulan,"Kesimpulan");
         }else{
-            if(Sequel.menyimpantf("hasil_pemeriksaan_usg","?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?","No.Rawat",25,new String[]{
+            if(Sequel.menyimpantf("hasil_pemeriksaan_usg","?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?","No.Rawat",26,new String[]{
         TNoRw.getText(),
         Valid.SetTgl(Tanggal.getSelectedItem()+"")+" "+Tanggal.getSelectedItem().toString().substring(11,19),
         KdDokter.getText(),
@@ -1348,6 +1368,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
         DiameterBiparietal.getText(),
         PanjangFemur.getText(),
         LingkarAbdomen.getText(),
+        LingkarKepala.getText(),
         TafsiranBerat.getText(),
         DiagnosaKlinis.getText(),
         Plasenta.getText(),
@@ -1357,7 +1378,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
         IndexCairan.getText(),
         Kelainan.getText(),
         Kesimpulan.getText(),
-        "" // <-- [PERBAIKAN] Nilai untuk kolom ke-25 'kiriman_dari' ditambahkan
+        ""
     })==true){
         emptTeks();
 }
@@ -1463,7 +1484,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
                             "hasil_pemeriksaan_usg.kantong_gestasi,hasil_pemeriksaan_usg.ukuran_bokongkepala,"+
 
                             "hasil_pemeriksaan_usg.diameter_biparietal,hasil_pemeriksaan_usg.panjang_femur,"+
-                            "hasil_pemeriksaan_usg.lingkar_abdomen,hasil_pemeriksaan_usg.tafsiran_berat_janin,"+
+                            "hasil_pemeriksaan_usg.lingkar_abdomen,hasil_pemeriksaan_usg.lingkar_kepala,hasil_pemeriksaan_usg.tafsiran_berat_janin,"+
                             "hasil_pemeriksaan_usg.plasenta_berimplatansi,hasil_pemeriksaan_usg.derajat_maturitas,hasil_pemeriksaan_usg.jumlah_air_ketuban,"+
                             "hasil_pemeriksaan_usg.indek_cairan_ketuban,hasil_pemeriksaan_usg.kelainan_kongenital,hasil_pemeriksaan_usg.peluang_sex,"+
                             "hasil_pemeriksaan_usg.kesimpulan from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
@@ -1481,7 +1502,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
                                     
                                     
                             "hasil_pemeriksaan_usg.diameter_biparietal,hasil_pemeriksaan_usg.panjang_femur,"+
-                            "hasil_pemeriksaan_usg.lingkar_abdomen,hasil_pemeriksaan_usg.tafsiran_berat_janin,"+
+                            "hasil_pemeriksaan_usg.lingkar_abdomen,hasil_pemeriksaan_usg.lingkar_kepala,hasil_pemeriksaan_usg.tafsiran_berat_janin,"+
                             "hasil_pemeriksaan_usg.plasenta_berimplatansi,hasil_pemeriksaan_usg.derajat_maturitas,hasil_pemeriksaan_usg.jumlah_air_ketuban,"+
                             "hasil_pemeriksaan_usg.indek_cairan_ketuban,hasil_pemeriksaan_usg.kelainan_kongenital,hasil_pemeriksaan_usg.peluang_sex,"+
                             "hasil_pemeriksaan_usg.kesimpulan from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
@@ -1527,6 +1548,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
                             "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>DBP</b></td>"+
                             "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>FL</b></td>"+
                             "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>AC</b></td>"+
+                            "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>HC</b></td>"+
                             "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>TBJ</b></td>"+
                             "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Diagnosa Klinis</b></td>"+    
                             "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Plasenta Berimplatansi</b></td>"+
@@ -1561,6 +1583,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
                                "<td valign='top'>"+rs.getString("diameter_biparietal")+"</td>"+
                                "<td valign='top'>"+rs.getString("panjang_femur")+"</td>"+
                                "<td valign='top'>"+rs.getString("lingkar_abdomen")+"</td>"+
+                               "<td valign='top'>"+rs.getString("lingkar_kepala")+"</td>"+
                                "<td valign='top'>"+rs.getString("tafsiran_berat_janin")+"</td>"+
                                "<td valign='top'>"+rs.getString("diagnosa_klinis")+"</td>"+           
                                "<td valign='top'>"+rs.getString("plasenta_berimplatansi")+"</td>"+
@@ -1758,7 +1781,7 @@ usg = koneksiDB.CLOUDFLARER2HOST()+Sequel.cariIsi("select photo from hasil_pemer
                 "hasil_pemeriksaan_usg.kantong_gestasi,hasil_pemeriksaan_usg.ukuran_bokongkepala,"+
                        
                 "hasil_pemeriksaan_usg.diameter_biparietal,hasil_pemeriksaan_usg.panjang_femur,"+
-                "hasil_pemeriksaan_usg.lingkar_abdomen,hasil_pemeriksaan_usg.tafsiran_berat_janin,"+
+                "hasil_pemeriksaan_usg.lingkar_abdomen,hasil_pemeriksaan_usg.lingkar_kepala,hasil_pemeriksaan_usg.tafsiran_berat_janin,"+
                 "hasil_pemeriksaan_usg.plasenta_berimplatansi,hasil_pemeriksaan_usg.derajat_maturitas,hasil_pemeriksaan_usg.jumlah_air_ketuban,"+
                 "hasil_pemeriksaan_usg.indek_cairan_ketuban,hasil_pemeriksaan_usg.kelainan_kongenital,hasil_pemeriksaan_usg.peluang_sex, "+
                 
@@ -1795,11 +1818,15 @@ usg = koneksiDB.CLOUDFLARER2HOST()+Sequel.cariIsi("select photo from hasil_pemer
     }//GEN-LAST:event_PanjangFemurKeyPressed
 
     private void LingkarAbdomenKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_LingkarAbdomenKeyPressed
-        Valid.pindah(evt,PanjangFemur,TafsiranBerat);
+        Valid.pindah(evt,PanjangFemur,LingkarKepala);
     }//GEN-LAST:event_LingkarAbdomenKeyPressed
 
+    private void LingkarKepalaKeyPressed(java.awt.event.KeyEvent evt) {
+        Valid.pindah(evt,LingkarAbdomen,TafsiranBerat);
+    }
+
     private void TafsiranBeratKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TafsiranBeratKeyPressed
-        Valid.pindah(evt,LingkarAbdomen,DiagnosaKlinis);
+        Valid.pindah(evt,LingkarKepala,DiagnosaKlinis);
     }//GEN-LAST:event_TafsiranBeratKeyPressed
 
     private void PlasentaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PlasentaKeyPressed
@@ -2118,6 +2145,8 @@ usg = koneksiDB.CLOUDFLARER2HOST()+Sequel.cariIsi("select photo from hasil_pemer
     private widget.Label LCount;
     private widget.ComboBox Letak;
     private widget.TextBox LingkarAbdomen;
+    private widget.TextBox LingkarKepala;
+    private widget.Label jLabel39b;
     private widget.editorpane LoadHTML;
     private widget.editorpane LoadHTML2;
     private widget.ComboBox Lokasi;
@@ -2202,7 +2231,7 @@ usg = koneksiDB.CLOUDFLARER2HOST()+Sequel.cariIsi("select photo from hasil_pemer
                         "hasil_pemeriksaan_usg.kantong_gestasi,hasil_pemeriksaan_usg.ukuran_bokongkepala,"+
                                     
                         "hasil_pemeriksaan_usg.diameter_biparietal,hasil_pemeriksaan_usg.panjang_femur,"+
-                        "hasil_pemeriksaan_usg.lingkar_abdomen,hasil_pemeriksaan_usg.tafsiran_berat_janin,"+
+                        "hasil_pemeriksaan_usg.lingkar_abdomen,hasil_pemeriksaan_usg.lingkar_kepala,hasil_pemeriksaan_usg.tafsiran_berat_janin,"+
                         "hasil_pemeriksaan_usg.plasenta_berimplatansi,hasil_pemeriksaan_usg.derajat_maturitas,hasil_pemeriksaan_usg.jumlah_air_ketuban,"+
                         "hasil_pemeriksaan_usg.indek_cairan_ketuban,hasil_pemeriksaan_usg.kelainan_kongenital,hasil_pemeriksaan_usg.peluang_sex,"+
                         "hasil_pemeriksaan_usg.kesimpulan from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
@@ -2219,7 +2248,7 @@ usg = koneksiDB.CLOUDFLARER2HOST()+Sequel.cariIsi("select photo from hasil_pemer
                         "hasil_pemeriksaan_usg.kantong_gestasi,hasil_pemeriksaan_usg.ukuran_bokongkepala,"+
                                 
                         "hasil_pemeriksaan_usg.diameter_biparietal,hasil_pemeriksaan_usg.panjang_femur,"+
-                        "hasil_pemeriksaan_usg.lingkar_abdomen,hasil_pemeriksaan_usg.tafsiran_berat_janin,"+
+                        "hasil_pemeriksaan_usg.lingkar_abdomen,hasil_pemeriksaan_usg.lingkar_kepala,hasil_pemeriksaan_usg.tafsiran_berat_janin,"+
                         "hasil_pemeriksaan_usg.plasenta_berimplatansi,hasil_pemeriksaan_usg.derajat_maturitas,hasil_pemeriksaan_usg.jumlah_air_ketuban,"+
                         "hasil_pemeriksaan_usg.indek_cairan_ketuban,hasil_pemeriksaan_usg.kelainan_kongenital,hasil_pemeriksaan_usg.peluang_sex,"+
                         "hasil_pemeriksaan_usg.kesimpulan from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
@@ -2249,7 +2278,7 @@ usg = koneksiDB.CLOUDFLARER2HOST()+Sequel.cariIsi("select photo from hasil_pemer
                         rs.getString("usiakehamilanhpht"),rs.getString("janin"),rs.getString("jumlahjanin"),rs.getString("lokasi"),
                         rs.getString("letakjanin"),rs.getString("frekuensi_hr"),rs.getString("presentasi"),rs.getString("kantong_gestasi"),
                         rs.getString("ukuran_bokongkepala"),rs.getString("diameter_biparietal"),rs.getString("panjang_femur"),rs.getString("lingkar_abdomen"),
-                        rs.getString("tafsiran_berat_janin"),rs.getString("diagnosa_klinis"),rs.getString("plasenta_berimplatansi"),rs.getString("derajat_maturitas"),
+                        rs.getString("lingkar_kepala"),rs.getString("tafsiran_berat_janin"),rs.getString("diagnosa_klinis"),rs.getString("plasenta_berimplatansi"),rs.getString("derajat_maturitas"),
                         rs.getString("jumlah_air_ketuban"),rs.getString("peluang_sex"),rs.getString("indek_cairan_ketuban"),rs.getString("kelainan_kongenital"),rs.getString("kesimpulan")
                         
                     });
@@ -2286,6 +2315,7 @@ usg = koneksiDB.CLOUDFLARER2HOST()+Sequel.cariIsi("select photo from hasil_pemer
         DiameterBiparietal.setText("");
         PanjangFemur.setText("");
         LingkarAbdomen.setText("");
+        LingkarKepala.setText("");
         TafsiranBerat.setText("");
         DiagnosaKlinis.setText("");
         Plasenta.setText("");
@@ -2321,15 +2351,16 @@ usg = koneksiDB.CLOUDFLARER2HOST()+Sequel.cariIsi("select photo from hasil_pemer
             DiameterBiparietal.setText(tbObat.getValueAt(tbObat.getSelectedRow(),16).toString());
             PanjangFemur.setText(tbObat.getValueAt(tbObat.getSelectedRow(),17).toString());
             LingkarAbdomen.setText(tbObat.getValueAt(tbObat.getSelectedRow(),18).toString());
-            TafsiranBerat.setText(tbObat.getValueAt(tbObat.getSelectedRow(),19).toString());
-            DiagnosaKlinis.setText(tbObat.getValueAt(tbObat.getSelectedRow(),20).toString());
-            Plasenta.setText(tbObat.getValueAt(tbObat.getSelectedRow(),21).toString());
-            DerajatMaturitas.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(),22).toString());
-            JumlahAir.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(),23).toString());
-            PeluangSex.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(),24).toString());
-            IndexCairan.setText(tbObat.getValueAt(tbObat.getSelectedRow(),25).toString());
-            Kelainan.setText(tbObat.getValueAt(tbObat.getSelectedRow(),26).toString());
-            Kesimpulan.setText(tbObat.getValueAt(tbObat.getSelectedRow(),27).toString());
+            LingkarKepala.setText(tbObat.getValueAt(tbObat.getSelectedRow(),19).toString());
+            TafsiranBerat.setText(tbObat.getValueAt(tbObat.getSelectedRow(),20).toString());
+            DiagnosaKlinis.setText(tbObat.getValueAt(tbObat.getSelectedRow(),21).toString());
+            Plasenta.setText(tbObat.getValueAt(tbObat.getSelectedRow(),22).toString());
+            DerajatMaturitas.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(),23).toString());
+            JumlahAir.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(),24).toString());
+            PeluangSex.setSelectedItem(tbObat.getValueAt(tbObat.getSelectedRow(),25).toString());
+            IndexCairan.setText(tbObat.getValueAt(tbObat.getSelectedRow(),26).toString());
+            Kelainan.setText(tbObat.getValueAt(tbObat.getSelectedRow(),27).toString());
+            Kesimpulan.setText(tbObat.getValueAt(tbObat.getSelectedRow(),28).toString());
             Valid.SetTgl2(Tanggal,tbObat.getValueAt(tbObat.getSelectedRow(),6).toString());
         }
     }
@@ -2411,8 +2442,8 @@ usg = koneksiDB.CLOUDFLARER2HOST()+Sequel.cariIsi("select photo from hasil_pemer
     private void ganti() {
     // [PERBAIKAN] Query UPDATE ini sekarang benar dan mencakup semua kolom
     if(Sequel.mengedittf("hasil_pemeriksaan_usg","no_rawat=?","no_rawat=?, tanggal=?, kd_dokter=?, usiakehamilanhpht=?, janin=?, jumlahjanin=?, lokasi=?, letakjanin=?, "+
-            "frekuensi_hr=?, presentasi=?, kantong_gestasi=?, ukuran_bokongkepala=?, diameter_biparietal=?, panjang_femur=?, lingkar_abdomen=?, tafsiran_berat_janin=?, "+
-            "diagnosa_klinis=?, plasenta_berimplatansi=?, derajat_maturitas=?, jumlah_air_ketuban=?, peluang_sex=?, indek_cairan_ketuban=?, kelainan_kongenital=?, kesimpulan=?", 25, new String[]{
+            "frekuensi_hr=?, presentasi=?, kantong_gestasi=?, ukuran_bokongkepala=?, diameter_biparietal=?, panjang_femur=?, lingkar_abdomen=?, lingkar_kepala=?, tafsiran_berat_janin=?, "+
+            "diagnosa_klinis=?, plasenta_berimplatansi=?, derajat_maturitas=?, jumlah_air_ketuban=?, peluang_sex=?, indek_cairan_ketuban=?, kelainan_kongenital=?, kesimpulan=?", 26, new String[]{
             TNoRw.getText(),
             Valid.SetTgl(Tanggal.getSelectedItem()+"")+" "+Tanggal.getSelectedItem().toString().substring(11,19),
             KdDokter.getText(),
@@ -2428,6 +2459,7 @@ usg = koneksiDB.CLOUDFLARER2HOST()+Sequel.cariIsi("select photo from hasil_pemer
             DiameterBiparietal.getText(),
             PanjangFemur.getText(),
             LingkarAbdomen.getText(),
+            LingkarKepala.getText(),
             TafsiranBerat.getText(),
             DiagnosaKlinis.getText(),
             Plasenta.getText(),
