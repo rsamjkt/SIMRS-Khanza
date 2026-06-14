@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.17.0.final using JasperReports Library version 6.0.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="144" pageHeight="177" columnWidth="134" leftMargin="5" rightMargin="5" topMargin="5" bottomMargin="5" uuid="c1647054-8e76-4376-bb8c-c912e58a1bee">
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="144" pageHeight="165" columnWidth="134" leftMargin="5" rightMargin="5" topMargin="5" bottomMargin="5" uuid="c1647054-8e76-4376-bb8c-c912e58a1bee">
 	<property name="ireport.zoom" value="3.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="29"/>
@@ -92,16 +92,14 @@ resep_obat.jam=obat_racikan.jam and resep_obat.no_rawat=obat_racikan.no_rawat]]>
 		<property name="com.jaspersoft.studio.field.label" value="sttsumur"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="reg_periksa"/>
 	</field>
-	<field name="bud" class="java.sql.Date">
-		<property name="com.jaspersoft.studio.field.label" value="bud"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="bud_racikan"/>
+	<field name="bud" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<detail>
-		<band height="167" splitType="Stretch">
+		<band height="155" splitType="Stretch">
 			<line>
 				<reportElement x="2" y="111" width="131" height="1" forecolor="#006666" uuid="84f317b9-833d-4e1e-93bc-2e73abccfc19"/>
 				<graphicElement>
@@ -137,7 +135,7 @@ resep_obat.jam=obat_racikan.jam and resep_obat.no_rawat=obat_racikan.no_rawat]]>
 				</jr:barbecue>
 			</componentElement>
 			<line>
-				<reportElement x="1" y="166" width="132" height="1" forecolor="#006666" uuid="213b7d2d-4e67-4fab-b0ba-29c692c757d0"/>
+				<reportElement x="1" y="154" width="132" height="1" forecolor="#006666" uuid="213b7d2d-4e67-4fab-b0ba-29c692c757d0"/>
 				<graphicElement>
 					<pen lineStyle="Solid"/>
 				</graphicElement>
@@ -172,13 +170,13 @@ resep_obat.jam=obat_racikan.jam and resep_obat.no_rawat=obat_racikan.no_rawat]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{alamatrs}+", "+$P{kotars}+", "+$P{propinsirs}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" x="2" y="134" width="130" height="20" uuid="8fd6ab91-435c-4ca5-bb27-d6e58a441100"/>
+			<textField>
+				<reportElement x="2" y="134" width="130" height="20" uuid="8fd6ab91-435c-4ca5-bb27-d6e58a441100"/>
 				<textElement textAlignment="Center">
-					<font fontName="Tahoma" size="7" isBold="false"/>
+					<font fontName="Tahoma" size="9" isBold="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{aturan_pakai}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{aturan_pakai}+"  BUD : "+($F{bud}==null?"-":$F{bud})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="2" y="72" width="130" height="9" uuid="d0f7ae14-c2bc-4f15-be82-6c8741ee64ac"/>
@@ -277,22 +275,6 @@ resep_obat.jam=obat_racikan.jam and resep_obat.no_rawat=obat_racikan.no_rawat]]>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{tgl_lahir}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="2" y="155" width="20" height="9" uuid="ee001001-0001-0001-0001-000000000001"/>
-				<textElement verticalAlignment="Top">
-					<font fontName="Tahoma" size="7"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<text><![CDATA[BUD:]]></text>
-			</staticText>
-			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement x="22" y="155" width="80" height="9" uuid="ee001001-0001-0001-0001-000000000002"/>
-				<textElement verticalAlignment="Top">
-					<font fontName="Tahoma" size="7"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{bud}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
