@@ -26,11 +26,13 @@ public final class Tanggal extends JDateTimePicker {
     }
 
     public void setMinDate(Date date) {
-        popupEditor.setMinDate(date);
+        if(popupEditor!=null){
+            popupEditor.setMinDate(date);
+        }
     }
 
     public Date getMinDate() {
-        return popupEditor.getMinDate();
+        return popupEditor!=null ? popupEditor.getMinDate() : null;
     }
 
 }
