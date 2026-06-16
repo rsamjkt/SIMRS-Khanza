@@ -25,10 +25,16 @@ NEW="khanza-$VER.jar"                 # nama deploy lowercase
 # 2. copy jar baru (TAMBAH, jangan hapus yg lama)
 cp "$SRC" "$DEST/$NEW"
 
-# 3. backup Aplikasi.bat lalu ganti nama jar di baris java -jar
+# 3. backup + update launcher (Windows .bat DAN macOS .command)
 cp "$DEST/Aplikasi.bat" "$DEST/Aplikasi.bat.bak-$(echo $VER | tr -d '.-')"
 sed -i '' -E "s#khanza-[A-Za-z0-9._-]*\.jar#$NEW#" "$DEST/Aplikasi.bat"
+# macOS launcher (buat kalau belum ada; selalu sinkronkan nama jar)
+[ -f "$DEST/Aplikasi.command" ] && cp "$DEST/Aplikasi.command" "$DEST/Aplikasi.command.bak-$(echo $VER | tr -d '.-')"
+sed -i '' -E "s#khanza-[A-Za-z0-9._-]*\.jar#$NEW#" "$DEST/Aplikasi.command" 2>/dev/null || \
+  printf '#!/bin/bash\ncd "$(dirname "$0")"\njava -jar -Xss2m -Xms32m -Xmx1024m "%s"\n' "$NEW" > "$DEST/Aplikasi.command"
+chmod +x "$DEST/Aplikasi.command"
 ```
+Catatan macOS: `Aplikasi.command` = padanan `.bat` (double-klik di Finder). JANGAN pakai `-XX:PermSize`/`-XX:MaxPermSize` (dihapus sejak Java 8, warning di Java 9+). Isinya: `cd "$(dirname "$0")"` lalu `java -jar -Xss2m -Xms32m -Xmx1024m <jar>`. Pastikan executable (`chmod +x`).
 
 ## Verifikasi WAJIB
 ```bash
