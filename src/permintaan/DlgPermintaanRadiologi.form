@@ -675,7 +675,7 @@
                 </Component>
                 <Component class="widget.Label" name="jLabel5">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Informasi Tambahan Permintaan Foto :"/>
+                    <Property name="text" type="java.lang.String" value="Indikasi Klinis :"/>
                     <Property name="name" type="java.lang.String" value="jLabel5" noResource="true"/>
                   </Properties>
                   <Constraints>
@@ -702,7 +702,7 @@
                 </Component>
                 <Component class="widget.Label" name="jLabel6">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Indikasi Pemeriksaan / Diagnosis Klinis :"/>
+                    <Property name="text" type="java.lang.String" value="Diagnosis Klinis :"/>
                     <Property name="name" type="java.lang.String" value="jLabel6" noResource="true"/>
                   </Properties>
                   <Constraints>

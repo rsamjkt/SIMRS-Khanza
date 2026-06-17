@@ -477,7 +477,7 @@ public final class DlgPermintaanRadiologi extends javax.swing.JDialog {
         PanelInput.add(InformasiTambahan);
         InformasiTambahan.setBounds(212, 102, 420, 23);
 
-        jLabel5.setText("Informasi Tambahan Permintaan Foto :");
+        jLabel5.setText("Indikasi Klinis :");
         jLabel5.setName("jLabel5"); // NOI18N
         PanelInput.add(jLabel5);
         jLabel5.setBounds(0, 102, 209, 23);
@@ -492,7 +492,7 @@ public final class DlgPermintaanRadiologi extends javax.swing.JDialog {
         PanelInput.add(DiagnosisKlinis);
         DiagnosisKlinis.setBounds(212, 132, 420, 23);
 
-        jLabel6.setText("Indikasi Pemeriksaan / Diagnosis Klinis :");
+        jLabel6.setText("Diagnosis Klinis :");
         jLabel6.setName("jLabel6"); // NOI18N
         PanelInput.add(jLabel6);
         jLabel6.setBounds(0, 132, 209, 23);

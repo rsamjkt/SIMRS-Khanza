@@ -5,6 +5,15 @@ Kategori: **Ditambah** (fitur baru), **Diubah**, **Diperbaiki** (fix), **Catatan
 
 ---
 
+## [v2026.06.17d] — 2026-06-17 · `V.17.06.2026-29`
+
+### Diubah
+- **Form Permintaan Radiologi** (UI only, database tidak diubah):
+  - Label "Informasi Tambahan Permintaan Foto" → **"Indikasi Klinis"**
+  - Label "Indikasi Pemeriksaan / Diagnosis Klinis" → **"Diagnosis Klinis"**
+
+---
+
 ## [v2026.06.17c] — 2026-06-17 · `V.17.06.2026-28`
 
 ### Diubah
