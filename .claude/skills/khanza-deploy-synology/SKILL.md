@@ -33,6 +33,13 @@ sed -i '' -E "s#khanza-[A-Za-z0-9._-]*\.jar#$NEW#" "$DEST/Aplikasi.bat"
 sed -i '' -E "s#khanza-[A-Za-z0-9._-]*\.jar#$NEW#" "$DEST/Aplikasi.command" 2>/dev/null || \
   printf '#!/bin/bash\ncd "$(dirname "$0")"\njava -jar -Xss2m -Xms32m -Xmx1024m "%s"\n' "$NEW" > "$DEST/Aplikasi.command"
 chmod +x "$DEST/Aplikasi.command"
+
+# 4. copy report yang berubah/baru ke Synology report folder
+# Cari file .jasper yang berubah sejak commit terakhir sebelum HEAD
+CHANGED_REPORTS=$(git -C "$REPO" diff HEAD~1 HEAD --name-only -- 'report/*.jasper' | xargs -I{} basename {})
+for f in $CHANGED_REPORTS; do
+  cp "$REPO/report/$f" "$DEST/report/$f" && echo "report OK: $f"
+done
 ```
 Catatan macOS: `Aplikasi.command` = padanan `.bat` (double-klik di Finder). JANGAN pakai `-XX:PermSize`/`-XX:MaxPermSize` (dihapus sejak Java 8, warning di Java 9+). Isinya: `cd "$(dirname "$0")"` lalu `java -jar -Xss2m -Xms32m -Xmx1024m <jar>`. Pastikan executable (`chmod +x`).
 
@@ -41,6 +48,7 @@ Catatan macOS: `Aplikasi.command` = padanan `.bat` (double-klik di Finder). JANG
 ls "$DEST"/khanza-*.jar          # jar LAMA harus masih ada semua + jar baru
 JARNAME=$(grep -oE 'khanza-[A-Za-z0-9._-]*\.jar' "$DEST/Aplikasi.bat")
 [ -f "$DEST/$JARNAME" ] && echo "OK bat -> $JARNAME valid" || echo "GAGAL: target tidak ada"
+ls "$DEST/report/"               # cek report baru sudah ada
 ```
 
 ## Aturan
