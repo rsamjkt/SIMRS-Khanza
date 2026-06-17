@@ -5,6 +5,13 @@ Kategori: **Ditambah** (fitur baru), **Diubah**, **Diperbaiki** (fix), **Catatan
 
 ---
 
+## [v2026.06.17] — 2026-06-17 · `V.17.06.2026-26`
+
+### Diubah
+- **`DlgBookingPeriksa`**: optimasi query `select *` → explicit columns (hemat memory); `while` → `if` untuk tabel config 1-row (`set_kelengkapan_data_pasien`, `set_urut_no_rkm_medis`); fix race condition — `runBackground(tampil)` dipindah setelah inisialisasi variabel DB selesai. (Adopt upstream "Optimasi query & memory" — tanpa kustomisasi RS di file ini.)
+
+---
+
 ## [v2026.06.16] — 2026-06-16 · `V.16.06.2026-25`
 
 ### Diperbaiki
