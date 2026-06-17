@@ -5,6 +5,22 @@ Kategori: **Ditambah** (fitur baru), **Diubah**, **Diperbaiki** (fix), **Catatan
 
 ---
 
+## [v2026.06.18] — 2026-06-18 · `V.18.06.2026-30`
+
+### Ditambah — Fitur dari upstream mas-elkhanza
+- **Catatan Observasi Ruang Operasi** (`RMDataCatatanObservasiRuangOperasi`): form baru + report. Menu "Catatan Observasi Ruang Operasi" ditambahkan di **IGD, Kamar Inap, Kasir Ralan, Registrasi** (submenu Rekam Medik Operasi).
+- **Hak akses** `catatan_observasi_ruang_ok` di `akses.java` + `DlgUser` / `DlgUpdateUser` (kolom index 1202).
+- **Cache perujuk** (`cache/perujuk.iyem`) + pencarian berbasis cache di `DlgRujukMasuk`.
+- **`DlgPoli`**: inlining `prosesCari()` — selaraskan dengan upstream.
+- **`SmartKlaimBPJSKirimFHIR`**: fix loop FHIR resource array (`while` → `if` + `do-while`).
+
+### Catatan DB (jalankan saat deploy)
+```sql
+ALTER TABLE user ADD COLUMN catatan_observasi_ruang_ok tinyint(1) DEFAULT 0;
+```
+
+---
+
 ## [v2026.06.17d] — 2026-06-17 · `V.17.06.2026-29`
 
 ### Diubah
