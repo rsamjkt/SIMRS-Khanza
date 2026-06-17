@@ -5,6 +5,16 @@ Kategori: **Ditambah** (fitur baru), **Diubah**, **Diperbaiki** (fix), **Catatan
 
 ---
 
+## [v2026.06.17c] — 2026-06-17 · `V.17.06.2026-28`
+
+### Diubah
+- **Form Permintaan Laboratorium** (UI only, database tidak diubah):
+  - Label "Indikasi/Klinis" → **"Diagnosa"**
+  - Label "Informasi Tambahan" → **"Indikasi Klinis"**
+  - Pesan validasi ikut diperbarui.
+
+---
+
 ## [v2026.06.17b] — 2026-06-17 · `V.17.06.2026-27`
 
 ### Diperbaiki

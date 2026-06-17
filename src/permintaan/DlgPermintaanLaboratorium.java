@@ -645,7 +645,7 @@ public final class DlgPermintaanLaboratorium extends javax.swing.JDialog {
         PanelInput.add(NmPerujuk);
         NmPerujuk.setBounds(177, 40, 180, 23);
 
-        jLabel5.setText("Informasi Tambahan :");
+        jLabel5.setText("Indikasi Klinis :");
         jLabel5.setName("jLabel5"); // NOI18N
         PanelInput.add(jLabel5);
         jLabel5.setBounds(400, 70, 130, 23);
@@ -670,7 +670,7 @@ public final class DlgPermintaanLaboratorium extends javax.swing.JDialog {
         PanelInput.add(DiagnosisKlinis);
         DiagnosisKlinis.setBounds(95, 70, 292, 23);
 
-        jLabel7.setText("Indikasi/Klinis :");
+        jLabel7.setText("Diagnosa :");
         jLabel7.setName("jLabel7"); // NOI18N
         PanelInput.add(jLabel7);
         jLabel7.setBounds(0, 70, 92, 23);
@@ -1286,9 +1286,9 @@ public final class DlgPermintaanLaboratorium extends javax.swing.JDialog {
         }else if(KodePerujuk.getText().equals("")||NmPerujuk.getText().equals("")){
             Valid.textKosong(KodePerujuk,"Dokter Perujuk");
         }else if(InformasiTambahan.getText().equals("")){
-            Valid.textKosong(InformasiTambahan,"Informasi Tambahan");
+            Valid.textKosong(InformasiTambahan,"Indikasi Klinis");
         }else if(DiagnosisKlinis.getText().equals("")){
-            Valid.textKosong(DiagnosisKlinis,"Indikasi/Diagnosis Klinis");
+            Valid.textKosong(DiagnosisKlinis,"Diagnosa");
         }else if((jml+jml2+jml3)==0){
             Valid.textKosong(DiagnosisKlinis,"Data Permintaan");
         }else{
@@ -1362,9 +1362,9 @@ public final class DlgPermintaanLaboratorium extends javax.swing.JDialog {
         }else if(KodePerujuk.getText().equals("")||NmPerujuk.getText().equals("")){
             Valid.textKosong(KodePerujuk,"Dokter Perujuk");
         }else if(InformasiTambahan.getText().equals("")){
-            Valid.textKosong(InformasiTambahan,"Informasi Tambahan");
+            Valid.textKosong(InformasiTambahan,"Indikasi Klinis");
         }else if(DiagnosisKlinis.getText().equals("")){
-            Valid.textKosong(DiagnosisKlinis,"Indikasi/Diagnosis Klinis");
+            Valid.textKosong(DiagnosisKlinis,"Diagnosa");
         }else if((jml+jml2+jml3)==0){
             Valid.textKosong(Pemeriksaan,"Data Permintaan");
         }else{
