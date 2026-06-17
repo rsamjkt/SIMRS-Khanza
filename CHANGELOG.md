@@ -5,6 +5,17 @@ Kategori: **Ditambah** (fitur baru), **Diubah**, **Diperbaiki** (fix), **Catatan
 
 ---
 
+## [v2026.06.17b] — 2026-06-17 · `V.17.06.2026-27`
+
+### Diperbaiki
+- **Tanggal Kunjungan di cetakan asesmen awal** — sebelumnya hanya tampil tanggal, sekarang tampil tanggal + jam (`dd/MM/yyyy HH:mm`). Berlaku untuk 8 laporan: Penilaian Awal Kebidanan Ralan, Keperawatan Gigi, IGD, Ralan, Ralan Anak, Ralan Geriatri, Ranap, Ranap Neonantus. Field `tgl_lahir` dan tanggal obstetri tidak disentuh.
+
+### Catatan Deploy
+- Copy `.jasper` yang berubah ke `/SynologyDrive/dist/dist/report/` (sudah dilakukan).
+- Skill `khanza-deploy-synology` diupdate: otomatis sync report ke Synology tiap rilis.
+
+---
+
 ## [v2026.06.17] — 2026-06-17 · `V.17.06.2026-26`
 
 ### Diubah
