@@ -887,7 +887,7 @@
 				</textElement>
 				<text><![CDATA[Informasi didapat dari]]></text>
 			</staticText>
-			<textField pattern="dd/MM/yyyy">
+			<textField pattern="dd/MM/yyyy HH:mm">
 				<reportElement x="477" y="81" width="78" height="11" uuid="d50ed745-c279-4f52-b1fb-7c350da58218">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
