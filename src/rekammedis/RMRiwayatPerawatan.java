@@ -213,8 +213,9 @@ public final class RMRiwayatPerawatan extends javax.swing.JDialog {
         });
         
         ChkAccor.setSelected(false);
+        initCPPTTab();
         isMenu();
-    }    
+    }
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -4288,6 +4289,250 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         }
     }
     
+    // ── CPPT Tab ────────────────────────────────────────────────────────────────
+    private DefaultTableModel tabModeCPPT;
+    private JTable tbCPPT;
+
+    private void initCPPTTab() {
+        tabModeCPPT = new DefaultTableModel(null, new Object[]{
+            "No.", "Tanggal", "Jam", "Profesi", "Petugas / Dokter",
+            "S — Keluhan", "O — Pemeriksaan", "A — Penilaian", "P — RTL",
+            "Instruksi", "TTV", "Verifikasi DPJP"
+        }) {
+            @Override public boolean isCellEditable(int r, int c) { return false; }
+        };
+
+        tbCPPT = new JTable(tabModeCPPT);
+        tbCPPT.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        tbCPPT.setDefaultRenderer(Object.class, new WarnaTable());
+        int[] colW = {30, 80, 45, 80, 130, 150, 150, 150, 150, 120, 110, 130};
+        for (int ci = 0; ci < colW.length; ci++) {
+            tbCPPT.getColumnModel().getColumn(ci).setPreferredWidth(colW[ci]);
+        }
+        javax.swing.JScrollPane scrollCPPT = new javax.swing.JScrollPane(tbCPPT);
+
+        widget.Button btnCetakCPPT = new widget.Button();
+        btnCetakCPPT.setText("Cetak CPPT");
+        try {
+            btnCetakCPPT.setIcon(new javax.swing.ImageIcon(
+                getClass().getResource("/48x48/print.png")));
+        } catch (Exception ignored) {}
+
+        btnCetakCPPT.addActionListener(evt -> {
+            if (tbRegistrasi.getSelectedRow() < 0) {
+                JOptionPane.showMessageDialog(null,
+                    "Pilih dulu kunjungan di tab Riwayat Kunjungan.");
+                return;
+            }
+            String nr = tabModeRegistrasi.getValueAt(
+                tbRegistrasi.getSelectedRow(), 1).toString();
+            cetakCPPT(nr);
+        });
+
+        javax.swing.JPanel topBar = new javax.swing.JPanel(
+            new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 6, 4));
+        topBar.add(btnCetakCPPT);
+
+        javax.swing.JPanel panelCPPT = new javax.swing.JPanel(
+            new java.awt.BorderLayout(0, 2));
+        panelCPPT.add(topBar, java.awt.BorderLayout.NORTH);
+        panelCPPT.add(scrollCPPT, java.awt.BorderLayout.CENTER);
+
+        TabRawat.addTab("CPPT", panelCPPT);
+
+        TabRawat.addChangeListener(e -> {
+            if (TabRawat.getSelectedComponent() == panelCPPT
+                    && tbRegistrasi.getSelectedRow() >= 0) {
+                String nr = tabModeRegistrasi.getValueAt(
+                    tbRegistrasi.getSelectedRow(), 1).toString();
+                tampilCPPT(nr);
+            }
+        });
+    }
+
+    private void tampilCPPT(String noRawat) {
+        Valid.tabelKosong(tabModeCPPT);
+        if (noRawat == null || noRawat.isEmpty()) return;
+        String sql =
+            "SELECT pr.tgl_perawatan, LEFT(pr.jam_rawat,5) AS jam_rawat, " +
+            "COALESCE(d.nm_dokter, pg.nama, pr.nip) AS nama, " +
+            "CASE WHEN d.nm_dokter IS NOT NULL THEN 'Dokter' " +
+                 "ELSE COALESCE(j.nama,'Petugas') END AS profesi, " +
+            "COALESCE(pr.keluhan,'') AS keluhan, " +
+            "COALESCE(pr.pemeriksaan,'') AS pemeriksaan, " +
+            "COALESCE(pr.penilaian,'') AS penilaian, " +
+            "COALESCE(pr.rtl,'') AS rtl, " +
+            "COALESCE(pr.instruksi,'') AS instruksi, " +
+            "TRIM(CONCAT_WS(', '," +
+                "IF(pr.tensi   IS NOT NULL AND pr.tensi   <>'', CONCAT('TD ',pr.tensi,' mmHg'),NULL)," +
+                "IF(pr.nadi    IS NOT NULL AND pr.nadi    <>'', CONCAT('N ',pr.nadi,'x/mnt'),NULL)," +
+                "IF(pr.respirasi IS NOT NULL AND pr.respirasi<>'',CONCAT('RR ',pr.respirasi,'x/mnt'),NULL)," +
+                "IF(pr.suhu_tubuh IS NOT NULL AND pr.suhu_tubuh<>'',CONCAT('S ',pr.suhu_tubuh,' C'),NULL)," +
+                "IF(pr.spo2    IS NOT NULL AND pr.spo2    <>'', CONCAT('SpO2 ',pr.spo2,'%'),NULL)" +
+            ")) AS ttv, " +
+            "CASE WHEN v.status IS NOT NULL THEN " +
+                "CONCAT('Terverifikasi — '," +
+                    "COALESCE((SELECT nm_dokter FROM dokter WHERE kd_dokter=v.nip_dokter),v.nip_dokter,'')) " +
+                "ELSE '—' END AS verif, " +
+            "'ranap' AS fase " +
+            "FROM pemeriksaan_ranap pr " +
+            "LEFT JOIN dokter d ON d.kd_dokter=pr.nip " +
+            "LEFT JOIN petugas pg ON pg.nip=pr.nip " +
+            "LEFT JOIN jnj_jabatan j ON j.kode=pg.kd_jbtn " +
+            "LEFT JOIN validasi_pemeriksaan_ranap v " +
+                "ON v.no_rawat=pr.no_rawat " +
+                "AND v.tgl_perawatan=pr.tgl_perawatan " +
+                "AND v.jam_rawat=pr.jam_rawat " +
+            "WHERE pr.no_rawat=? " +
+            "UNION ALL " +
+            "SELECT pr.tgl_perawatan, LEFT(pr.jam_rawat,5) AS jam_rawat, " +
+            "COALESCE(d.nm_dokter, pg.nama, pr.nip) AS nama, " +
+            "CONCAT(CASE WHEN d.nm_dokter IS NOT NULL THEN 'Dokter' " +
+                        "ELSE COALESCE(j.nama,'Petugas') END,' (Awal)') AS profesi, " +
+            "COALESCE(pr.keluhan,'') AS keluhan, " +
+            "COALESCE(pr.pemeriksaan,'') AS pemeriksaan, " +
+            "COALESCE(pr.penilaian,'') AS penilaian, " +
+            "COALESCE(pr.rtl,'') AS rtl, " +
+            "COALESCE(pr.instruksi,'') AS instruksi, " +
+            "'' AS ttv, '—' AS verif, 'ralan' AS fase " +
+            "FROM pemeriksaan_ralan pr " +
+            "LEFT JOIN dokter d ON d.kd_dokter=pr.nip " +
+            "LEFT JOIN petugas pg ON pg.nip=pr.nip " +
+            "LEFT JOIN jnj_jabatan j ON j.kode=pg.kd_jbtn " +
+            "WHERE pr.no_rawat=? " +
+            "ORDER BY tgl_perawatan, jam_rawat";
+        try {
+            ps = koneksi.prepareStatement(sql);
+            ps.setString(1, noRawat);
+            ps.setString(2, noRawat);
+            rs = ps.executeQuery();
+            int no = 1;
+            while (rs.next()) {
+                tabModeCPPT.addRow(new Object[]{
+                    no++,
+                    rs.getString("tgl_perawatan"),
+                    rs.getString("jam_rawat"),
+                    rs.getString("profesi"),
+                    rs.getString("nama"),
+                    rs.getString("keluhan"),
+                    rs.getString("pemeriksaan"),
+                    rs.getString("penilaian"),
+                    rs.getString("rtl"),
+                    rs.getString("instruksi"),
+                    rs.getString("ttv"),
+                    rs.getString("verif")
+                });
+            }
+        } catch (Exception e) {
+            System.out.println("tampilCPPT: " + e);
+        } finally {
+            try { if (rs != null) rs.close(); if (ps != null) ps.close(); } catch (Exception ignored) {}
+        }
+    }
+
+    private void cetakCPPT(String noRawat) {
+        // Ambil info pasien untuk parameter header report
+        String nmPasien = "", noRkm = "", kamar = "", umur = "", jk = "";
+        try {
+            ps = koneksi.prepareStatement(
+                "SELECT r.no_rkm_medis, p.nm_pasien, p.jk, " +
+                "CONCAT(r.umurdaftar,' ',r.sttsumur) AS umur, " +
+                "COALESCE(CONCAT(b.nm_bangsal,' ',ki.kd_kamar),'—') AS kamar " +
+                "FROM reg_periksa r " +
+                "JOIN pasien p ON p.no_rkm_medis=r.no_rkm_medis " +
+                "LEFT JOIN kamar_inap ki ON ki.no_rawat=r.no_rawat " +
+                "LEFT JOIN kamar k ON k.kd_kamar=ki.kd_kamar " +
+                "LEFT JOIN bangsal b ON b.kd_bangsal=k.kd_bangsal " +
+                "WHERE r.no_rawat=? " +
+                "ORDER BY ki.tgl_masuk DESC LIMIT 1");
+            ps.setString(1, noRawat);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                noRkm    = rs.getString("no_rkm_medis");
+                nmPasien = rs.getString("nm_pasien");
+                jk       = rs.getString("jk");
+                umur     = rs.getString("umur");
+                kamar    = rs.getString("kamar");
+            }
+        } catch (Exception e) {
+            System.out.println("cetakCPPT header: " + e);
+        } finally {
+            try { if (rs != null) rs.close(); if (ps != null) ps.close(); } catch (Exception ignored) {}
+        }
+
+        Map<String, Object> param = new HashMap<>();
+        param.put("namars",    akses.getnamars());
+        param.put("alamatrs",  akses.getalamatrs());
+        param.put("kotars",    akses.getkabupatenrs());
+        param.put("propinsirs",akses.getpropinsirs());
+        param.put("kontakrs",  akses.getkontakrs());
+        param.put("emailrs",   akses.getemailrs());
+        param.put("logo",      Sequel.cariGambar("select setting.logo from setting"));
+        param.put("no_rawat",  noRawat);
+        param.put("no_rkm",    noRkm);
+        param.put("nm_pasien", nmPasien);
+        param.put("jk",        jk.equals("L") ? "Laki-laki" : jk.equals("P") ? "Perempuan" : jk);
+        param.put("umur",      umur);
+        param.put("kamar",     kamar);
+
+        String nr = noRawat.replace("'", "''");
+        String sql =
+            "SELECT pr.tgl_perawatan, LEFT(pr.jam_rawat,5) AS jam_rawat, " +
+            "COALESCE(d.nm_dokter, pg.nama, pr.nip) AS nama, " +
+            "CASE WHEN d.nm_dokter IS NOT NULL THEN 'Dokter' " +
+                 "ELSE COALESCE(j.nama,'Petugas') END AS profesi, " +
+            "COALESCE(pr.keluhan,'') AS keluhan, " +
+            "COALESCE(pr.pemeriksaan,'') AS pemeriksaan, " +
+            "COALESCE(pr.penilaian,'') AS penilaian, " +
+            "COALESCE(pr.rtl,'') AS rtl, " +
+            "COALESCE(pr.instruksi,'') AS instruksi, " +
+            "COALESCE(pr.evaluasi,'') AS evaluasi, " +
+            "TRIM(CONCAT_WS(', '," +
+                "IF(pr.tensi IS NOT NULL AND pr.tensi<>'',CONCAT('TD ',pr.tensi,' mmHg'),NULL)," +
+                "IF(pr.nadi IS NOT NULL AND pr.nadi<>'',CONCAT('N ',pr.nadi,'x/mnt'),NULL)," +
+                "IF(pr.respirasi IS NOT NULL AND pr.respirasi<>'',CONCAT('RR ',pr.respirasi,'x/mnt'),NULL)," +
+                "IF(pr.suhu_tubuh IS NOT NULL AND pr.suhu_tubuh<>'',CONCAT('S ',pr.suhu_tubuh,' C'),NULL)," +
+                "IF(pr.spo2 IS NOT NULL AND pr.spo2<>'',CONCAT('SpO2 ',pr.spo2,'%'),NULL)," +
+                "IF(pr.kesadaran IS NOT NULL AND pr.kesadaran<>'',pr.kesadaran,NULL)" +
+            ")) AS ttv, " +
+            "CASE WHEN v.status IS NOT NULL THEN " +
+                "CONCAT('Terverifikasi',' — '," +
+                    "COALESCE((SELECT nm_dokter FROM dokter WHERE kd_dokter=v.nip_dokter),v.nip_dokter,''),', '," +
+                    "v.tgl_validasi,' ',LEFT(v.jam_validasi,5)) " +
+                "ELSE '' END AS verif " +
+            "FROM pemeriksaan_ranap pr " +
+            "LEFT JOIN dokter d ON d.kd_dokter=pr.nip " +
+            "LEFT JOIN petugas pg ON pg.nip=pr.nip " +
+            "LEFT JOIN jnj_jabatan j ON j.kode=pg.kd_jbtn " +
+            "LEFT JOIN validasi_pemeriksaan_ranap v " +
+                "ON v.no_rawat=pr.no_rawat AND v.tgl_perawatan=pr.tgl_perawatan AND v.jam_rawat=pr.jam_rawat " +
+            "WHERE pr.no_rawat='" + nr + "' " +
+            "UNION ALL " +
+            "SELECT pr.tgl_perawatan, LEFT(pr.jam_rawat,5) AS jam_rawat, " +
+            "COALESCE(d.nm_dokter, pg.nama, pr.nip) AS nama, " +
+            "CONCAT(CASE WHEN d.nm_dokter IS NOT NULL THEN 'Dokter' " +
+                        "ELSE COALESCE(j.nama,'Petugas') END,' (Asesmen Awal)') AS profesi, " +
+            "COALESCE(pr.keluhan,'') AS keluhan, " +
+            "COALESCE(pr.pemeriksaan,'') AS pemeriksaan, " +
+            "COALESCE(pr.penilaian,'') AS penilaian, " +
+            "COALESCE(pr.rtl,'') AS rtl, " +
+            "COALESCE(pr.instruksi,'') AS instruksi, " +
+            "COALESCE(pr.evaluasi,'') AS evaluasi, " +
+            "'' AS ttv, '' AS verif " +
+            "FROM pemeriksaan_ralan pr " +
+            "LEFT JOIN dokter d ON d.kd_dokter=pr.nip " +
+            "LEFT JOIN petugas pg ON pg.nip=pr.nip " +
+            "LEFT JOIN jnj_jabatan j ON j.kode=pg.kd_jbtn " +
+            "WHERE pr.no_rawat='" + nr + "' " +
+            "ORDER BY tgl_perawatan, jam_rawat";
+
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        Valid.MyReportqry("rptCPPT.jasper", "report",
+            "::[ CPPT — Catatan Perkembangan Pasien Terintegrasi ]::", sql, param);
+        this.setCursor(Cursor.getDefaultCursor());
+    }
+    // ── End CPPT Tab ─────────────────────────────────────────────────────────────
+
     private void tampilKunjungan() {
         Valid.tabelKosong(tabModeRegistrasi);
         try{   

@@ -5,6 +5,19 @@ Kategori: **Ditambah** (fitur baru), **Diubah**, **Diperbaiki** (fix), **Catatan
 
 ---
 
+## [v2026.06.18c] — 2026-06-18 · `V.18.06.2026-32 (Atta)`
+
+### Ditambah
+- **Tab CPPT (Catatan Perkembangan Pasien Terintegrasi)** di `RMRiwayatPerawatan`:
+  - Tab baru "CPPT" di JTabbedPane riwayat perawatan — tabel preview catatan SOAP (Keluhan, Pemeriksaan, Penilaian, RTL, Instruksi, TTV, Verifikasi DPJP) dari `pemeriksaan_ranap` UNION `pemeriksaan_ralan`.
+  - Tombol **Cetak CPPT** → laporan `rptCPPT.jasper` (A4 landscape) dengan kop RS, info pasien (no_rawat, no_rkm, nama, JK, umur, ruang/kamar).
+  - Data diambil otomatis saat tab dipilih berdasarkan kunjungan yang dipilih di tab Riwayat Kunjungan.
+
+### Catatan Deploy
+- Copy `rptCPPT.jasper` ke `/SynologyDrive/dist/dist/report/` (wajib agar cetak CPPT bisa jalan).
+
+---
+
 ## [v2026.06.18b] — 2026-06-18 · `V.18.06.2026-31 (Atta)`
 
 ### Ditambah — dari upstream mas-elkhanza
