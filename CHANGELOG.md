@@ -5,12 +5,22 @@ Kategori: **Ditambah** (fitur baru), **Diubah**, **Diperbaiki** (fix), **Catatan
 
 ---
 
+## [v2026.06.18d] — 2026-06-18 · `V.18.06.2026-33 (Atta)`
+
+### Diubah
+- **CPPT tab — redesign layout** menjadi card view (HTML) seperti AruniHealth:
+  - Setiap entri ditampilkan sebagai card terpisah, bukan tabel horizontal.
+  - SOAP dalam **2-kolom** per card: S (Subjektif) + O (Objektif) di baris atas, A (Asesmen) + P (Plan/RTL) di baris bawah — persis seperti DokterRanap di web AruniHealth.
+  - TTV tampil sebagai baris chip di atas grid SOAP.
+  - Instruksi dan Verifikasi DPJP sebagai baris bawah dengan warna berbeda.
+  - Report cetak (`rptCPPT.jasper`) diperbarui: kolom SOAP sekarang 1 kolom lebar (320px) berisi S/O/A/P stacked dengan label.
+
 ## [v2026.06.18c] — 2026-06-18 · `V.18.06.2026-32 (Atta)`
 
 ### Ditambah
 - **Tab CPPT (Catatan Perkembangan Pasien Terintegrasi)** di `RMRiwayatPerawatan`:
-  - Tab baru "CPPT" di JTabbedPane riwayat perawatan — tabel preview catatan SOAP (Keluhan, Pemeriksaan, Penilaian, RTL, Instruksi, TTV, Verifikasi DPJP) dari `pemeriksaan_ranap` UNION `pemeriksaan_ralan`.
-  - Tombol **Cetak CPPT** → laporan `rptCPPT.jasper` (A4 landscape) dengan kop RS, info pasien (no_rawat, no_rkm, nama, JK, umur, ruang/kamar).
+  - Tab baru "CPPT" di JTabbedPane riwayat perawatan.
+  - Tombol **Cetak CPPT** → laporan `rptCPPT.jasper` (A4 landscape) dengan kop RS, info pasien.
   - Data diambil otomatis saat tab dipilih berdasarkan kunjungan yang dipilih di tab Riwayat Kunjungan.
 
 ### Catatan Deploy

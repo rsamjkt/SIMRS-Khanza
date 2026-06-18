@@ -201,49 +201,28 @@
 				<text><![CDATA[  Profesi / Petugas]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="190" y="1" width="100" height="16" backcolor="#F0F0DC"/>
+				<reportElement mode="Opaque" x="190" y="1" width="320" height="16" backcolor="#F0F0DC"/>
 				<textElement verticalAlignment="Middle" lineSpacing="Single">
 					<font fontName="Tahoma" size="7" isBold="true"/>
 				</textElement>
-				<text><![CDATA[  S — Keluhan / Subjektif]]></text>
+				<text><![CDATA[  S O A P  (Subjektif / Objektif / Asesmen / Plan)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="290" y="1" width="100" height="16" backcolor="#F0F0DC"/>
-				<textElement verticalAlignment="Middle" lineSpacing="Single">
-					<font fontName="Tahoma" size="7" isBold="true"/>
-				</textElement>
-				<text><![CDATA[  O — Pemeriksaan / Objektif]]></text>
-			</staticText>
-			<staticText>
-				<reportElement mode="Opaque" x="390" y="1" width="85" height="16" backcolor="#F0F0DC"/>
-				<textElement verticalAlignment="Middle" lineSpacing="Single">
-					<font fontName="Tahoma" size="7" isBold="true"/>
-				</textElement>
-				<text><![CDATA[  A — Penilaian / Asesmen]]></text>
-			</staticText>
-			<staticText>
-				<reportElement mode="Opaque" x="475" y="1" width="80" height="16" backcolor="#F0F0DC"/>
-				<textElement verticalAlignment="Middle" lineSpacing="Single">
-					<font fontName="Tahoma" size="7" isBold="true"/>
-				</textElement>
-				<text><![CDATA[  P — RTL / Plan]]></text>
-			</staticText>
-			<staticText>
-				<reportElement mode="Opaque" x="555" y="1" width="80" height="16" backcolor="#F0F0DC"/>
+				<reportElement mode="Opaque" x="510" y="1" width="95" height="16" backcolor="#F0F0DC"/>
 				<textElement verticalAlignment="Middle" lineSpacing="Single">
 					<font fontName="Tahoma" size="7" isBold="true"/>
 				</textElement>
 				<text><![CDATA[  Instruksi]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="635" y="1" width="77" height="16" backcolor="#F0F0DC"/>
+				<reportElement mode="Opaque" x="605" y="1" width="95" height="16" backcolor="#F0F0DC"/>
 				<textElement verticalAlignment="Middle" lineSpacing="Single">
 					<font fontName="Tahoma" size="7" isBold="true"/>
 				</textElement>
 				<text><![CDATA[  TTV]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="712" y="1" width="90" height="16" backcolor="#F0F0DC"/>
+				<reportElement mode="Opaque" x="700" y="1" width="102" height="16" backcolor="#F0F0DC"/>
 				<textElement verticalAlignment="Middle" lineSpacing="Single">
 					<font fontName="Tahoma" size="7" isBold="true"/>
 				</textElement>
@@ -279,49 +258,31 @@
 				<textFieldExpression class="java.lang.String"><![CDATA[($F{profesi}!=null?$F{profesi}:"")+"\n"+($F{nama}!=null?$F{nama}:"")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="190" y="0" width="100" height="12"/>
+				<reportElement stretchType="RelativeToBandHeight" x="190" y="0" width="320" height="12"/>
 				<textElement lineSpacing="Single">
 					<font fontName="Tahoma" size="7"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{keluhan}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA["S: "+($F{keluhan}!=null&&!$F{keluhan}.isEmpty()?$F{keluhan}:"—")+"\n"+
+"O: "+($F{pemeriksaan}!=null&&!$F{pemeriksaan}.isEmpty()?$F{pemeriksaan}:"—")+"\n"+
+"A: "+($F{penilaian}!=null&&!$F{penilaian}.isEmpty()?$F{penilaian}:"—")+"\n"+
+"P: "+($F{rtl}!=null&&!$F{rtl}.isEmpty()?$F{rtl}:"—")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="290" y="0" width="100" height="12"/>
-				<textElement lineSpacing="Single">
-					<font fontName="Tahoma" size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{pemeriksaan}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="390" y="0" width="85" height="12"/>
-				<textElement lineSpacing="Single">
-					<font fontName="Tahoma" size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{penilaian}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="475" y="0" width="80" height="12"/>
-				<textElement lineSpacing="Single">
-					<font fontName="Tahoma" size="7"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{rtl}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="555" y="0" width="80" height="12"/>
+				<reportElement stretchType="RelativeToBandHeight" x="510" y="0" width="95" height="12"/>
 				<textElement lineSpacing="Single">
 					<font fontName="Tahoma" size="7"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{instruksi}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="635" y="0" width="77" height="12"/>
+				<reportElement stretchType="RelativeToBandHeight" x="605" y="0" width="95" height="12"/>
 				<textElement lineSpacing="Single">
 					<font fontName="Tahoma" size="7"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{ttv}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="712" y="0" width="90" height="12"/>
+				<reportElement stretchType="RelativeToBandHeight" x="700" y="0" width="102" height="12"/>
 				<textElement lineSpacing="Single">
 					<font fontName="Tahoma" size="7"/>
 				</textElement>
