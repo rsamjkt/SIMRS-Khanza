@@ -5,6 +5,44 @@ Kategori: **Ditambah** (fitur baru), **Diubah**, **Diperbaiki** (fix), **Catatan
 
 ---
 
+## [v2026.06.18b] — 2026-06-18 · `V.18.06.2026-31 (Atta)`
+
+### Ditambah — dari upstream mas-elkhanza
+- **Report `rptCetakPenilaianAwalKebidananRanap`** — form penilaian awal kebidanan ranap (jrxml + jasper).
+- **13 upload handler Orthanc PACS** (`webapps/hasilpemeriksaan*/pages/upload/service.php`): Echo, Echo Pediatrik, EKG, Endoskopi (Faring/Hidung/Telinga), OCT, Slit Lamp, Treadmill, USG, USG Gynecologi, USG Neonatus, USG Urologi.
+- 3 icon baru di `src/48x48/`.
+
+### Catatan DB (jalankan saat deploy — WAJIB sebelum pakai Catatan Observasi Ruang OK)
+```sql
+-- Tabel data catatan observasi ruang operasi
+CREATE TABLE IF NOT EXISTS `catatan_observasi_ruang_ok` (
+  `no_rawat` varchar(17) NOT NULL,
+  `tgl_perawatan` date NOT NULL,
+  `jam_rawat` time NOT NULL,
+  `gcs` varchar(10) DEFAULT NULL,
+  `td` varchar(8) NOT NULL,
+  `hr` varchar(5) DEFAULT NULL,
+  `rr` varchar(5) DEFAULT NULL,
+  `suhu` varchar(5) DEFAULT NULL,
+  `spo2` varchar(3) NOT NULL,
+  `keterangan` varchar(100) NOT NULL,
+  `nip` varchar(20) NOT NULL,
+  PRIMARY KEY (`no_rawat`,`tgl_perawatan`,`jam_rawat`),
+  KEY `no_rawat` (`no_rawat`),
+  KEY `nip` (`nip`),
+  CONSTRAINT `catatan_observasi_ruang_ok_ibfk_1` FOREIGN KEY (`no_rawat`) REFERENCES `reg_periksa` (`no_rawat`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `catatan_observasi_ruang_ok_ibfk_2` FOREIGN KEY (`nip`) REFERENCES `petugas` (`nip`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Hak akses (dari v2026.06.18 — kalau belum dijalankan)
+ALTER TABLE user ADD COLUMN IF NOT EXISTS catatan_observasi_ruang_ok tinyint(1) DEFAULT 0;
+```
+
+### Catatan Deploy
+- Copy `rptCetakPenilaianAwalKebidananRanap.jasper` ke `/SynologyDrive/dist/dist/report/` (sudah dilakukan).
+
+---
+
 ## [v2026.06.18] — 2026-06-18 · `V.18.06.2026-30`
 
 ### Ditambah — Fitur dari upstream mas-elkhanza
