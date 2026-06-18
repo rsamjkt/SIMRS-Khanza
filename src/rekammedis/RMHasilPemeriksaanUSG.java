@@ -208,18 +208,19 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
         TaksiranPersalinan = new widget.TextBox();
         TaksiranPersalinan.setDocument(new batasInput((byte)10).getKata(TaksiranPersalinan));
         TaksiranPersalinan.setName("TaksiranPersalinan");
+        TaksiranPersalinan.setToolTipText("Format: YYYY-MM-DD");
         TaksiranPersalinan.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 TaksiranPersalinanKeyPressed(evt);
             }
         });
         jLabelTP = new widget.Label();
-        jLabelTP.setText("Taksiran Persalinan (HPL) :");
+        jLabelTP.setText("HPL :");
         jLabelTP.setName("jLabelTP");
         FormInput.add(jLabelTP);
-        jLabelTP.setBounds(10, 425, 165, 23);
+        jLabelTP.setBounds(325, 80, 40, 23);
         FormInput.add(TaksiranPersalinan);
-        TaksiranPersalinan.setBounds(180, 425, 120, 23);
+        TaksiranPersalinan.setBounds(370, 80, 120, 23);
         TCari.setDocument(new batasInput((int)100).getKata(TCari));
         
         if(koneksiDB.CARICEPAT().equals("aktif")){
@@ -626,7 +627,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
         FormInput.setBackground(new java.awt.Color(255, 255, 255));
         FormInput.setBorder(null);
         FormInput.setName("FormInput"); // NOI18N
-        FormInput.setPreferredSize(new java.awt.Dimension(750, 393));
+        FormInput.setPreferredSize(new java.awt.Dimension(750, 420));
         FormInput.setLayout(null);
 
         TNoRw.setHighlighter(null);
@@ -873,7 +874,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
         jLabel39b.setText("Lingkar Kepala (HC) :");
         jLabel39b.setName("jLabel39b");
         FormInput.add(jLabel39b);
-        jLabel39b.setBounds(250, 230, 180, 23);
+        jLabel39b.setBounds(510, 200, 140, 23);
 
         LingkarKepala.setFocusTraversalPolicyProvider(true);
         LingkarKepala.setName("LingkarKepala");
@@ -883,12 +884,12 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
             }
         });
         FormInput.add(LingkarKepala);
-        LingkarKepala.setBounds(440, 230, 60, 23);
+        LingkarKepala.setBounds(660, 200, 60, 23);
 
-        jLabel39.setText("Tafsiran berat Janin (TBJ) :");
+        jLabel39.setText("Tafsiran Berat Janin (TBJ) :");
         jLabel39.setName("jLabel39"); // NOI18N
         FormInput.add(jLabel39);
-        jLabel39.setBounds(520, 200, 150, 23);
+        jLabel39.setBounds(10, 230, 170, 23);
 
         TafsiranBerat.setFocusTraversalPolicyProvider(true);
         TafsiranBerat.setName("TafsiranBerat"); // NOI18N
@@ -898,7 +899,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
             }
         });
         FormInput.add(TafsiranBerat);
-        TafsiranBerat.setBounds(680, 200, 60, 23);
+        TafsiranBerat.setBounds(185, 230, 60, 23);
 
         jLabel41.setText("Plasenta Berimplatansi Di :");
         jLabel41.setName("jLabel41"); // NOI18N
@@ -1869,11 +1870,11 @@ usg = koneksiDB.CLOUDFLARER2HOST()+Sequel.cariIsi("select photo from hasil_pemer
     }//GEN-LAST:event_PeluangSexKeyPressed
 
     private void KesimpulanKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_KesimpulanKeyPressed
-        Valid.pindah2(evt,Kelainan,TaksiranPersalinan);
+        Valid.pindah2(evt,Kelainan,BtnSimpan);
     }//GEN-LAST:event_KesimpulanKeyPressed
 
     private void TaksiranPersalinanKeyPressed(java.awt.event.KeyEvent evt) {
-        Valid.pindah(evt,Kesimpulan,BtnSimpan);
+        Valid.pindah(evt,UsiaKehamilanHpht,Janin);
     }
 
     private void ChkAccorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChkAccorActionPerformed
@@ -1939,7 +1940,7 @@ usg = koneksiDB.CLOUDFLARER2HOST()+Sequel.cariIsi("select photo from hasil_pemer
     }//GEN-LAST:event_TabDataMouseClicked
 
     private void UsiaKehamilanHphtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_UsiaKehamilanHphtKeyPressed
-        Valid.pindah(evt,Tanggal,Janin);
+        Valid.pindah(evt,Tanggal,TaksiranPersalinan);
     }//GEN-LAST:event_UsiaKehamilanHphtKeyPressed
 
     private void JumlahJaninActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JumlahJaninActionPerformed
