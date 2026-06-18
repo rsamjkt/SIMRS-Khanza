@@ -5,6 +5,20 @@ Kategori: **Ditambah** (fitur baru), **Diubah**, **Diperbaiki** (fix), **Catatan
 
 ---
 
+## [v2026.06.19b] — 2026-06-19 · `V.19.06.2026-38 (Atta)`
+
+### Diubah
+- **Report Surat Pemesanan (`rptSuratPemesanan.jasper`) — tanda tangan jadi 5 kolom TTD**:
+  Tim Pembelian → Apoteker Penanggung Jawab → Manager Penunjang Medis → Manager Keuangan → Direktur.
+  - Tiap kolom lebar 111px (x=0/111/222/333/444, total 555). Label bold (baris atas) + nama dalam kurung (baris bawah).
+  - Nama dari param: Tim Pembelian = `petugas`, Apoteker = `apoteker`, Manager Keuangan = `kabidkeu`; Manager Penunjang Medis & Direktur kosong (tanda tangan manual).
+  - Band summary 247→250. Compile `--release 8` (major 52). Berlaku untuk cetak dari form utama maupun dialog Cari (dua-duanya pakai report yang sama).
+
+### Catatan Deploy
+- Copy `rptSuratPemesanan.jasper` ke `/SynologyDrive/dist/dist/report/` (sudah). Jar `khanza-19.06.2026-38.jar` (label saja, fix dialog Cari ikut dari -37).
+
+---
+
 ## [v2026.06.19] — 2026-06-19 · `V.19.06.2026-37 (Atta)`
 
 ### Diperbaiki
