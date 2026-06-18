@@ -5,6 +5,27 @@ Kategori: **Ditambah** (fitur baru), **Diubah**, **Diperbaiki** (fix), **Catatan
 
 ---
 
+## [v2026.06.18e] — 2026-06-18 · `V.18.06.2026-34 (Atta)`
+
+### Diubah
+- **CPPT tab — redesign layout AruniHealth** (style mirip hasil cetak, ada QR code per entri):
+  - Tab menampilkan card per entri dengan layout identik hasil cetak CPPT.
+  - **QR code** di setiap card (pojok kanan atas) menggunakan ZXing — payload: `SIMRS-CPPT|{no_rawat}|{tgl} {jam}|{nip}|{nama_petugas}`.
+  - SOAP tampil **1 kolom vertikal** (S → O → A → P) dengan strip warna kiri AruniHealth-style: Subyektif (#2563EB biru), Obyektif (#DC2626 merah), Asesmen (#D97706 oranye), Plan (#10B981 hijau).
+  - Instruksi + Evaluasi dalam kotak abu-abu (#F8FAFC).
+  - Verif DPJP: hijau (`#F0FFF4`) bila sudah terverifikasi; kuning (`#FFFBEB`) + "TBAK — Menunggu verifikasi DPJP" bila belum.
+- **Report cetak CPPT** (`rptCPPT.jasper`) — redesign lengkap:
+  - Ubah dari **landscape A4 → portrait A4** (595×842).
+  - **QR Code per entri** menggunakan `jr:QRCode` (barcode4j component JasperReports 6.8) — payload sama dengan tab.
+  - Layout card per baris: header (profesi/nama, tgl/jam) → konten SOAP+TTV+instruksi+verif (1 kolom markup HTML, auto-stretch) → QR di kanan.
+  - Field baru: `no_rawat`, `nip` (diambil dari SQL CPPT).
+- SQL `tampilCPPT` dan `cetakCPPT` ditambah `pr.nip AS nip`, `pr.no_rawat AS no_rawat`, `COALESCE(pr.evaluasi,'') AS evaluasi`.
+
+### Catatan Deploy
+- Copy `rptCPPT.jasper` ke `/SynologyDrive/dist/dist/report/` (sudah dilakukan).
+
+---
+
 ## [v2026.06.18d] — 2026-06-18 · `V.18.06.2026-33 (Atta)`
 
 ### Diubah

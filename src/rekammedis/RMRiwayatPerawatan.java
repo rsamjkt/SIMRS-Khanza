@@ -4358,13 +4358,30 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 .replace("\"", "&quot;").replace("\n", "<br>").replace("\r", "");
     }
 
+    private static String qrImg(String payload, int size) {
+        try {
+            com.google.zxing.qrcode.QRCodeWriter w = new com.google.zxing.qrcode.QRCodeWriter();
+            com.google.zxing.common.BitMatrix m = w.encode(
+                payload, com.google.zxing.BarcodeFormat.QR_CODE, size, size);
+            java.awt.image.BufferedImage img =
+                com.google.zxing.client.j2se.MatrixToImageWriter.toBufferedImage(m);
+            java.io.File tmp = java.io.File.createTempFile("cppt_qr_", ".png");
+            tmp.deleteOnExit();
+            javax.imageio.ImageIO.write(img, "PNG", tmp);
+            return tmp.toURI().toString();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     private void tampilCPPT(String noRawat) {
         if (noRawat == null || noRawat.isEmpty()) {
             editorCPPT.setText("<html><body><i>Pilih kunjungan terlebih dahulu.</i></body></html>");
             return;
         }
         String sql =
-            "SELECT pr.tgl_perawatan, LEFT(pr.jam_rawat,5) AS jam_rawat, " +
+            "SELECT pr.no_rawat AS no_rawat, pr.nip AS nip, " +
+            "pr.tgl_perawatan, LEFT(pr.jam_rawat,5) AS jam_rawat, " +
             "COALESCE(d.nm_dokter, pg.nama, pr.nip) AS nama, " +
             "CASE WHEN d.nm_dokter IS NOT NULL THEN 'Dokter' " +
                  "ELSE COALESCE(j.nama,'Petugas') END AS profesi, " +
@@ -4373,16 +4390,19 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             "COALESCE(pr.penilaian,'') AS penilaian, " +
             "COALESCE(pr.rtl,'') AS rtl, " +
             "COALESCE(pr.instruksi,'') AS instruksi, " +
+            "COALESCE(pr.evaluasi,'') AS evaluasi, " +
             "TRIM(CONCAT_WS(', '," +
                 "IF(pr.tensi IS NOT NULL AND pr.tensi<>'',CONCAT('TD ',pr.tensi,' mmHg'),NULL)," +
                 "IF(pr.nadi IS NOT NULL AND pr.nadi<>'',CONCAT('N ',pr.nadi,'x/mnt'),NULL)," +
                 "IF(pr.respirasi IS NOT NULL AND pr.respirasi<>'',CONCAT('RR ',pr.respirasi,'x/mnt'),NULL)," +
-                "IF(pr.suhu_tubuh IS NOT NULL AND pr.suhu_tubuh<>'',CONCAT('Suhu ',pr.suhu_tubuh,' °C'),NULL)," +
-                "IF(pr.spo2 IS NOT NULL AND pr.spo2<>'',CONCAT('SpO2 ',pr.spo2,'%'),NULL)" +
+                "IF(pr.suhu_tubuh IS NOT NULL AND pr.suhu_tubuh<>'',CONCAT('Suhu ',pr.suhu_tubuh,' C'),NULL)," +
+                "IF(pr.spo2 IS NOT NULL AND pr.spo2<>'',CONCAT('SpO2 ',pr.spo2,'%'),NULL)," +
+                "IF(pr.kesadaran IS NOT NULL AND pr.kesadaran<>'',pr.kesadaran,NULL)" +
             ")) AS ttv, " +
             "CASE WHEN v.status IS NOT NULL THEN " +
                 "CONCAT('Terverifikasi DPJP — '," +
-                    "COALESCE((SELECT nm_dokter FROM dokter WHERE kd_dokter=v.nip_dokter),v.nip_dokter,'')) " +
+                    "COALESCE((SELECT nm_dokter FROM dokter WHERE kd_dokter=v.nip_dokter),v.nip_dokter,''),', '," +
+                    "v.tgl_validasi,' ',LEFT(v.jam_validasi,5)) " +
                 "ELSE '' END AS verif " +
             "FROM pemeriksaan_ranap pr " +
             "LEFT JOIN dokter d ON d.kd_dokter=pr.nip " +
@@ -4392,7 +4412,8 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 "ON v.no_rawat=pr.no_rawat AND v.tgl_perawatan=pr.tgl_perawatan AND v.jam_rawat=pr.jam_rawat " +
             "WHERE pr.no_rawat=? " +
             "UNION ALL " +
-            "SELECT pr.tgl_perawatan, LEFT(pr.jam_rawat,5) AS jam_rawat, " +
+            "SELECT pr.no_rawat AS no_rawat, pr.nip AS nip, " +
+            "pr.tgl_perawatan, LEFT(pr.jam_rawat,5) AS jam_rawat, " +
             "COALESCE(d.nm_dokter, pg.nama, pr.nip) AS nama, " +
             "CONCAT(CASE WHEN d.nm_dokter IS NOT NULL THEN 'Dokter' " +
                         "ELSE COALESCE(j.nama,'Petugas') END,' (Asesmen Awal)') AS profesi, " +
@@ -4401,6 +4422,7 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             "COALESCE(pr.penilaian,'') AS penilaian, " +
             "COALESCE(pr.rtl,'') AS rtl, " +
             "COALESCE(pr.instruksi,'') AS instruksi, " +
+            "COALESCE(pr.evaluasi,'') AS evaluasi, " +
             "'' AS ttv, '' AS verif " +
             "FROM pemeriksaan_ralan pr " +
             "LEFT JOIN dokter d ON d.kd_dokter=pr.nip " +
@@ -4410,7 +4432,7 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             "ORDER BY tgl_perawatan, jam_rawat";
 
         StringBuilder html = new StringBuilder(
-            "<html><body>");
+            "<html><head><meta charset='UTF-8'></head><body bgcolor='#EBEBEB'>");
         int count = 0;
         try {
             ps = koneksi.prepareStatement(sql);
@@ -4419,6 +4441,8 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             rs = ps.executeQuery();
             while (rs.next()) {
                 count++;
+                String nrw    = rs.getString("no_rawat");
+                String nip    = rs.getString("nip");
                 String tgl    = hEsc(rs.getString("tgl_perawatan"));
                 String jam    = hEsc(rs.getString("jam_rawat"));
                 String profesi= hEsc(rs.getString("profesi"));
@@ -4428,79 +4452,102 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 String pen    = hEsc(rs.getString("penilaian"));
                 String rtl    = hEsc(rs.getString("rtl"));
                 String ins    = hEsc(rs.getString("instruksi"));
+                String eva    = hEsc(rs.getString("evaluasi"));
                 String ttv    = rs.getString("ttv");
                 String verif  = hEsc(rs.getString("verif"));
-                String empty  = "<font color='#AAAAAA'><i>—</i></font>";
 
-                // ── Card outer table ──────────────────────────────────────────
-                html.append("<table class='card' width='99%' cellspacing='0' cellpadding='0' border='1' bordercolor='#BBBBBB'>");
+                // QR code — ZXing to temp PNG
+                String qrPayload = "SIMRS-CPPT|" + (nrw!=null?nrw:"") + "|" + tgl + " " + jam
+                                 + "|" + (nip!=null?nip:"-") + "|" + nama;
+                String qrSrc = qrImg(qrPayload, 72);
 
-                // Header: tanggal jam | profesi — nama
-                html.append("<tr><td class='hdr' colspan='2'>")
-                    .append("<font face='Tahoma' size='3'><b>").append(tgl).append("</b>")
-                    .append("&nbsp;&nbsp;").append(jam)
-                    .append("&nbsp;&nbsp;|&nbsp;&nbsp;<b>").append(profesi).append("</b>")
-                    .append("&nbsp;&mdash;&nbsp;").append(nama)
-                    .append("</font></td></tr>");
+                // ── Card: 2-column outer table (content | QR) ──────────────
+                html.append("<table width='99%' cellspacing='0' cellpadding='0' border='1' bordercolor='#C5D5E8'>");
+                html.append("<tr>");
 
-                // TTV (hanya tampil kalau ada)
+                // ── Left: semua konten ──────────────────────────────────────
+                html.append("<td valign='top'>");
+
+                // Header (biru muda seperti AruniHealth)
+                html.append("<table width='100%' cellspacing='0' cellpadding='0' border='0'>")
+                    .append("<tr><td bgcolor='#DCE9F5' style='padding:5px 10px'>")
+                    .append("<font face='Tahoma' size='2'><b>")
+                    .append(profesi).append("</b>&nbsp;—&nbsp;").append(nama)
+                    .append("</font>")
+                    .append("<font face='Tahoma' size='2' color='#556677'>&nbsp;&nbsp;&nbsp;&nbsp;")
+                    .append(tgl).append("&nbsp;&nbsp;").append(jam)
+                    .append("</font>")
+                    .append("</td></tr></table>");
+
+                // TTV
                 if (ttv != null && !ttv.trim().isEmpty()) {
-                    html.append("<tr><td class='ttv' colspan='2'>")
-                        .append("<font face='Tahoma' size='2' color='#555555'>")
-                        .append("<b>TTV:</b>&nbsp;").append(hEsc(ttv))
-                        .append("</font></td></tr>");
+                    html.append("<table width='100%' cellspacing='0' cellpadding='0' border='0'>")
+                        .append("<tr><td bgcolor='#F2F6FA' style='padding:3px 10px'>")
+                        .append("<font face='Tahoma' size='2' color='#334455'><b>TTV:</b>&nbsp;")
+                        .append(hEsc(ttv))
+                        .append("</font></td></tr></table>");
                 }
 
-                // SOAP: baris 1 = S (kiri) | O (kanan)
-                html.append("<tr>")
-                    .append("<td class='sl' valign='top' style='border-right:1px solid #E0E0E0;border-top:1px solid #E0E0E0'>")
-                    .append("<font face='Tahoma' size='2'>")
-                    .append("<font color='#2980B9'><b>[S] Subjektif</b></font><br>")
-                    .append(kel.isEmpty() ? empty : kel)
-                    .append("</font></td>")
-                    .append("<td class='sr' valign='top' style='border-top:1px solid #E0E0E0'>")
-                    .append("<font face='Tahoma' size='2'>")
-                    .append("<font color='#27AE60'><b>[O] Objektif</b></font><br>")
-                    .append(pem.isEmpty() ? empty : pem)
-                    .append("</font></td>")
-                    .append("</tr>");
-
-                // SOAP: baris 2 = A (kiri) | P (kanan)
-                html.append("<tr>")
-                    .append("<td class='sl' valign='top' style='border-right:1px solid #E0E0E0;border-top:1px solid #E0E0E0'>")
-                    .append("<font face='Tahoma' size='2'>")
-                    .append("<font color='#D35400'><b>[A] Asesmen</b></font><br>")
-                    .append(pen.isEmpty() ? empty : pen)
-                    .append("</font></td>")
-                    .append("<td class='sr' valign='top' style='border-top:1px solid #E0E0E0'>")
-                    .append("<font face='Tahoma' size='2'>")
-                    .append("<font color='#8E44AD'><b>[P] Plan / RTL</b></font><br>")
-                    .append(rtl.isEmpty() ? empty : rtl)
-                    .append("</font></td>")
-                    .append("</tr>");
-
-                // Instruksi (hanya kalau ada)
-                if (!ins.isEmpty()) {
-                    html.append("<tr><td class='ins' colspan='2'>")
+                // SOAP — setiap bagian dengan strip warna di kiri (AruniHealth style)
+                String[][] soapData = {
+                    {"#2563EB", "Subyektif",  kel},
+                    {"#DC2626", "Obyektif",   pem},
+                    {"#D97706", "Asesmen",    pen},
+                    {"#10B981", "Plan / RTL", rtl},
+                };
+                html.append("<table width='100%' cellspacing='0' cellpadding='0' border='0'>");
+                for (String[] s : soapData) {
+                    if (s[2].isEmpty()) continue;
+                    html.append("<tr>")
+                        .append("<td width='4' bgcolor='").append(s[0]).append("'>&nbsp;</td>")
+                        .append("<td style='padding:4px 10px 4px 8px'>")
                         .append("<font face='Tahoma' size='2'>")
-                        .append("<font color='#C0392B'><b>[I] Instruksi:</b></font>&nbsp;").append(ins)
+                        .append("<font color='").append(s[0]).append("'><b>").append(s[1]).append("</b></font><br>")
+                        .append(s[2])
                         .append("</font></td></tr>");
+                    html.append("<tr><td colspan='2' height='3'></td></tr>");
+                }
+                html.append("</table>");
+
+                // Instruksi + Evaluasi (kotak dashed abu)
+                if (!ins.isEmpty() || !eva.isEmpty()) {
+                    html.append("<table width='100%' cellspacing='0' cellpadding='0' border='0'>")
+                        .append("<tr><td bgcolor='#F8FAFC' style='padding:5px 10px'>")
+                        .append("<font face='Tahoma' size='2'>");
+                    if (!ins.isEmpty())
+                        html.append("<font color='#6D28D9'><b>Instruksi:</b></font>&nbsp;").append(ins);
+                    if (!ins.isEmpty() && !eva.isEmpty()) html.append("<br>");
+                    if (!eva.isEmpty())
+                        html.append("<font color='#0F766E'><b>Evaluasi:</b></font>&nbsp;").append(eva);
+                    html.append("</font></td></tr></table>");
                 }
 
                 // Verifikasi DPJP
                 if (!verif.isEmpty()) {
-                    html.append("<tr><td class='vok' colspan='2'>")
-                        .append("<font face='Tahoma' size='2' color='#27AE60'>")
-                        .append("&#10003;&nbsp;").append(verif)
-                        .append("</font></td></tr>");
+                    html.append("<table width='100%' cellspacing='0' cellpadding='0' border='0'>")
+                        .append("<tr><td bgcolor='#F0FFF4' style='padding:3px 10px'>")
+                        .append("<font face='Tahoma' size='2' color='#166534'>&#10003;&nbsp;").append(verif)
+                        .append("</font></td></tr></table>");
                 } else {
-                    html.append("<tr><td class='vno' colspan='2'>")
-                        .append("<font face='Tahoma' size='2' color='#AAAAAA'>")
-                        .append("Belum diverifikasi DPJP")
-                        .append("</font></td></tr>");
+                    html.append("<table width='100%' cellspacing='0' cellpadding='0' border='0'>")
+                        .append("<tr><td bgcolor='#FFFBEB' style='padding:3px 10px'>")
+                        .append("<font face='Tahoma' size='2' color='#92400E'>TBAK — Menunggu verifikasi DPJP")
+                        .append("</font></td></tr></table>");
                 }
 
-                html.append("</table><br>");
+                html.append("</td>"); // end left td
+
+                // ── Right: QR code + stamp ──────────────────────────────────
+                html.append("<td valign='top' bgcolor='#FAFBFC' width='86' style='padding:8px;text-align:center'>");
+                if (qrSrc != null) {
+                    html.append("<img src='").append(qrSrc).append("' width='70' height='70'><br>");
+                    html.append("<font face='Tahoma' size='1' color='#9CA3AF'>Scan QR untuk<br>verifikasi keaslian</font>");
+                } else {
+                    html.append("<font face='Tahoma' size='1' color='#AAAAAA'>[QR]</font>");
+                }
+                html.append("</td>");
+
+                html.append("</tr></table><br>");
             }
         } catch (Exception e) {
             System.out.println("tampilCPPT: " + e);
@@ -4512,8 +4559,19 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             html.append("<font face='Tahoma' size='2' color='#AAAAAA'><i>Tidak ada data CPPT untuk kunjungan ini.</i></font>");
         }
         html.append("</body></html>");
-        editorCPPT.setText(html.toString());
-        editorCPPT.setCaretPosition(0);
+
+        // Tulis ke temp HTML agar img file:// URL terload dengan benar
+        try {
+            java.io.File tmpHtml = java.io.File.createTempFile("cppt_view_", ".html");
+            tmpHtml.deleteOnExit();
+            java.io.PrintWriter pw = new java.io.PrintWriter(tmpHtml, "UTF-8");
+            pw.print(html.toString());
+            pw.close();
+            editorCPPT.setPage(tmpHtml.toURI().toURL());
+        } catch (Exception ex) {
+            editorCPPT.setText(html.toString());
+        }
+        javax.swing.SwingUtilities.invokeLater(() -> editorCPPT.setCaretPosition(0));
     }
 
     private void cetakCPPT(String noRawat) {
@@ -4563,7 +4621,8 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
         String nr = noRawat.replace("'", "''");
         String sql =
-            "SELECT pr.tgl_perawatan, LEFT(pr.jam_rawat,5) AS jam_rawat, " +
+            "SELECT pr.no_rawat AS no_rawat, pr.nip AS nip, " +
+            "pr.tgl_perawatan, LEFT(pr.jam_rawat,5) AS jam_rawat, " +
             "COALESCE(d.nm_dokter, pg.nama, pr.nip) AS nama, " +
             "CASE WHEN d.nm_dokter IS NOT NULL THEN 'Dokter' " +
                  "ELSE COALESCE(j.nama,'Petugas') END AS profesi, " +
@@ -4594,7 +4653,8 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 "ON v.no_rawat=pr.no_rawat AND v.tgl_perawatan=pr.tgl_perawatan AND v.jam_rawat=pr.jam_rawat " +
             "WHERE pr.no_rawat='" + nr + "' " +
             "UNION ALL " +
-            "SELECT pr.tgl_perawatan, LEFT(pr.jam_rawat,5) AS jam_rawat, " +
+            "SELECT pr.no_rawat AS no_rawat, pr.nip AS nip, " +
+            "pr.tgl_perawatan, LEFT(pr.jam_rawat,5) AS jam_rawat, " +
             "COALESCE(d.nm_dokter, pg.nama, pr.nip) AS nama, " +
             "CONCAT(CASE WHEN d.nm_dokter IS NOT NULL THEN 'Dokter' " +
                         "ELSE COALESCE(j.nama,'Petugas') END,' (Asesmen Awal)') AS profesi, " +
