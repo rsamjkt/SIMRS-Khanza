@@ -5,6 +5,18 @@ Kategori: **Ditambah** (fitur baru), **Diubah**, **Diperbaiki** (fix), **Catatan
 
 ---
 
+## [v2026.06.18f] — 2026-06-18 · `V.18.06.2026-35 (Atta)`
+
+### Diubah
+- **Report Surat Pemesanan Obat** (`rptSuratPemesanan.jasper`) — tanda tangan diganti dari 4 kolom menjadi **5 kolom TTD**:
+  - Tim Pembelian → Apoteker Penanggung Jawab → Manager Penunjang Medis → Manager Keuangan → Direktur
+  - Kolom nama dari parameter: Tim Pembelian (`$P{petugas}`), Apoteker (`$P{apoteker}`), Manager Keuangan (`$P{kabidkeu}`); Penunjang Medis & Direktur kosong (isi tangan).
+
+### Catatan Deploy
+- Copy `rptSuratPemesanan.jasper` ke `/SynologyDrive/dist/dist/report/` (sudah dilakukan).
+
+---
+
 ## [v2026.06.18e] — 2026-06-18 · `V.18.06.2026-34 (Atta)`
 
 ### Diubah
