@@ -94,7 +94,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
         tabMode=new DefaultTableModel(null,new Object[]{
             "No.Rawat","No.RM","Nama Pasien","Tgl.Lahir","Kode Dokter","Nama Dokter","Tanggal","Usia Kehamilan",
             "Janin","Jumlah Janin","Lokasi","Letak Janin","Frekuensi HR","Presentasi","GS","CRL","DBP","FL","AC","HC","TBJ","Diagnosa Klinis",
-            "Plasenta Berimplatansi","Derajat Maturitas","Air Ketuban","Jenis Kelamin","ICA","Kelainan Kongenital Mayor","Kesimpulan"
+            "Plasenta Berimplatansi","Derajat Maturitas","Air Ketuban","Jenis Kelamin","ICA","Kelainan Kongenital Mayor","Kesimpulan","Taksiran Persalinan"
         }){
               @Override public boolean isCellEditable(int rowIndex, int colIndex){return false;}
         };
@@ -103,7 +103,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
         tbObat.setPreferredScrollableViewportSize(new Dimension(500,500));
         tbObat.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-        for (i = 0; i < 29; i++) {
+        for (i = 0; i < 30; i++) {
             TableColumn column = tbObat.getColumnModel().getColumn(i);
             if(i==0){
                 column.setPreferredWidth(105);
@@ -163,6 +163,8 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
                 column.setPreferredWidth(147);
             }else if(i==28){
                 column.setPreferredWidth(60);
+            }else if(i==29){
+                column.setPreferredWidth(100);
             }
         }
         tbObat.setDefaultRenderer(Object.class, new WarnaTable());
@@ -203,6 +205,21 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
         IndexCairan.setDocument(new batasInput((int)40).getKata(IndexCairan));
         Kelainan.setDocument(new batasInput((int)60).getKata(Kelainan));
         Kesimpulan.setDocument(new batasInput((int)200).getKata(Kesimpulan));
+        TaksiranPersalinan = new widget.TextBox();
+        TaksiranPersalinan.setDocument(new batasInput((byte)10).getKata(TaksiranPersalinan));
+        TaksiranPersalinan.setName("TaksiranPersalinan");
+        TaksiranPersalinan.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                TaksiranPersalinanKeyPressed(evt);
+            }
+        });
+        jLabelTP = new widget.Label();
+        jLabelTP.setText("Taksiran Persalinan (HPL) :");
+        jLabelTP.setName("jLabelTP");
+        FormInput.add(jLabelTP);
+        jLabelTP.setBounds(10, 425, 165, 23);
+        FormInput.add(TaksiranPersalinan);
+        TaksiranPersalinan.setBounds(180, 425, 120, 23);
         TCari.setDocument(new batasInput((int)100).getKata(TCari));
         
         if(koneksiDB.CARICEPAT().equals("aktif")){
@@ -1352,7 +1369,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
         }else if(Kesimpulan.getText().trim().equals("")){
             Valid.textKosong(Kesimpulan,"Kesimpulan");
         }else{
-            if(Sequel.menyimpantf("hasil_pemeriksaan_usg","?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?","No.Rawat",26,new String[]{
+            if(Sequel.menyimpantf("hasil_pemeriksaan_usg","?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?","No.Rawat",27,new String[]{
         TNoRw.getText(),
         Valid.SetTgl(Tanggal.getSelectedItem()+"")+" "+Tanggal.getSelectedItem().toString().substring(11,19),
         KdDokter.getText(),
@@ -1378,7 +1395,8 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
         IndexCairan.getText(),
         Kelainan.getText(),
         Kesimpulan.getText(),
-        ""
+        "",
+        TaksiranPersalinan.getText()
     })==true){
         emptTeks();
 }
@@ -1478,7 +1496,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
                     ps=koneksi.prepareStatement(
                             "select reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,pasien.tgl_lahir,hasil_pemeriksaan_usg.tanggal,"+
                             "hasil_pemeriksaan_usg.kd_dokter,dokter.nm_dokter,hasil_pemeriksaan_usg.diagnosa_klinis,"+
-                            "hasil_pemeriksaan_usg.usiakehamilanhpht,hasil_pemeriksaan_usg.usiakehamilanhpht,"+        
+                            "hasil_pemeriksaan_usg.usiakehamilanhpht,hasil_pemeriksaan_usg.usiakehamilanhpht,"+
                             "hasil_pemeriksaan_usg.janin,hasil_pemeriksaan_usg.jumlahjanin,hasil_pemeriksaan_usg.lokasi,hasil_pemeriksaan_usg.letakjanin,"+
                             "hasil_pemeriksaan_usg.frekuensi_hr,hasil_pemeriksaan_usg.presentasi,"+
                             "hasil_pemeriksaan_usg.kantong_gestasi,hasil_pemeriksaan_usg.ukuran_bokongkepala,"+
@@ -1487,7 +1505,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
                             "hasil_pemeriksaan_usg.lingkar_abdomen,hasil_pemeriksaan_usg.lingkar_kepala,hasil_pemeriksaan_usg.tafsiran_berat_janin,"+
                             "hasil_pemeriksaan_usg.plasenta_berimplatansi,hasil_pemeriksaan_usg.derajat_maturitas,hasil_pemeriksaan_usg.jumlah_air_ketuban,"+
                             "hasil_pemeriksaan_usg.indek_cairan_ketuban,hasil_pemeriksaan_usg.kelainan_kongenital,hasil_pemeriksaan_usg.peluang_sex,"+
-                            "hasil_pemeriksaan_usg.kesimpulan from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
+                            "hasil_pemeriksaan_usg.kesimpulan,hasil_pemeriksaan_usg.taksiran_persalinan from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
                             "inner join hasil_pemeriksaan_usg on reg_periksa.no_rawat=hasil_pemeriksaan_usg.no_rawat "+
                             "inner join dokter on hasil_pemeriksaan_usg.kd_dokter=dokter.kd_dokter where "+
                             "hasil_pemeriksaan_usg.tanggal between ? and ? order by hasil_pemeriksaan_usg.tanggal");
@@ -1495,17 +1513,15 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
                     ps=koneksi.prepareStatement(
                             "select reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,pasien.tgl_lahir,hasil_pemeriksaan_usg.tanggal,"+
                             "hasil_pemeriksaan_usg.kd_dokter,dokter.nm_dokter,hasil_pemeriksaan_usg.diagnosa_klinis,"+
-                            "hasil_pemeriksaan_usg.usiakehamilanhpht,"+        
+                            "hasil_pemeriksaan_usg.usiakehamilanhpht,"+
                             "hasil_pemeriksaan_usg.janin,hasil_pemeriksaan_usg.jumlahjanin,hasil_pemeriksaan_usg.lokasi,hasil_pemeriksaan_usg.letakjanin,"+
                             "hasil_pemeriksaan_usg.frekuensi_hr,hasil_pemeriksaan_usg.presentasi,"+
                             "hasil_pemeriksaan_usg.kantong_gestasi,hasil_pemeriksaan_usg.ukuran_bokongkepala,"+
-                                    
-                                    
                             "hasil_pemeriksaan_usg.diameter_biparietal,hasil_pemeriksaan_usg.panjang_femur,"+
                             "hasil_pemeriksaan_usg.lingkar_abdomen,hasil_pemeriksaan_usg.lingkar_kepala,hasil_pemeriksaan_usg.tafsiran_berat_janin,"+
                             "hasil_pemeriksaan_usg.plasenta_berimplatansi,hasil_pemeriksaan_usg.derajat_maturitas,hasil_pemeriksaan_usg.jumlah_air_ketuban,"+
                             "hasil_pemeriksaan_usg.indek_cairan_ketuban,hasil_pemeriksaan_usg.kelainan_kongenital,hasil_pemeriksaan_usg.peluang_sex,"+
-                            "hasil_pemeriksaan_usg.kesimpulan from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
+                            "hasil_pemeriksaan_usg.kesimpulan,hasil_pemeriksaan_usg.taksiran_persalinan from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
                             "inner join hasil_pemeriksaan_usg on reg_periksa.no_rawat=hasil_pemeriksaan_usg.no_rawat "+
                             "inner join dokter on hasil_pemeriksaan_usg.kd_dokter=dokter.kd_dokter where "+
                             "hasil_pemeriksaan_usg.tanggal between ? and ? and (reg_periksa.no_rawat like ? or pasien.no_rkm_medis like ? or pasien.nm_pasien like ? or "+
@@ -1558,6 +1574,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
                             "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Indeks Cairan Amnion (ICA)</b></td>"+
                             "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Kelainan Kongenital Mayor</b></td>"+
                             "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Kesimpulan</b></td>"+
+                            "<td valign='middle' bgcolor='#FFFAF8' align='center'><b>Taksiran Persalinan (HPL)</b></td>"+
                         "</tr>"
                     );
                     while(rs.next()){
@@ -1591,8 +1608,9 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
                                "<td valign='top'>"+rs.getString("jumlah_air_ketuban")+"</td>"+
                                "<td valign='top'>"+rs.getString("indek_cairan_ketuban")+"</td>"+
                                "<td valign='top'>"+rs.getString("kelainan_kongenital")+"</td>"+
-                               "<td valign='top'>"+rs.getString("peluang_sex")+"</td>"+                                       
+                               "<td valign='top'>"+rs.getString("peluang_sex")+"</td>"+
                                "<td valign='top'>"+rs.getString("kesimpulan")+"</td>"+
+                               "<td valign='top'>"+rs.getString("taksiran_persalinan")+"</td>"+
                             "</tr>");
                     }
                     LoadHTML.setText(
@@ -1783,11 +1801,8 @@ usg = koneksiDB.CLOUDFLARER2HOST()+Sequel.cariIsi("select photo from hasil_pemer
                 "hasil_pemeriksaan_usg.diameter_biparietal,hasil_pemeriksaan_usg.panjang_femur,"+
                 "hasil_pemeriksaan_usg.lingkar_abdomen,hasil_pemeriksaan_usg.lingkar_kepala,hasil_pemeriksaan_usg.tafsiran_berat_janin,"+
                 "hasil_pemeriksaan_usg.plasenta_berimplatansi,hasil_pemeriksaan_usg.derajat_maturitas,hasil_pemeriksaan_usg.jumlah_air_ketuban,"+
-                "hasil_pemeriksaan_usg.indek_cairan_ketuban,hasil_pemeriksaan_usg.kelainan_kongenital,hasil_pemeriksaan_usg.peluang_sex, "+
-                
-                        
-                        
-                "hasil_pemeriksaan_usg.kesimpulan from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+    
+                "hasil_pemeriksaan_usg.indek_cairan_ketuban,hasil_pemeriksaan_usg.kelainan_kongenital,hasil_pemeriksaan_usg.peluang_sex,"+
+                "hasil_pemeriksaan_usg.kesimpulan,hasil_pemeriksaan_usg.taksiran_persalinan from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
                 "inner join hasil_pemeriksaan_usg on reg_periksa.no_rawat=hasil_pemeriksaan_usg.no_rawat "+
                 "inner join dokter on hasil_pemeriksaan_usg.kd_dokter=dokter.kd_dokter where hasil_pemeriksaan_usg.no_rawat='"+tbObat.getValueAt(tbObat.getSelectedRow(),0).toString()+"'",param);
         }
@@ -1854,8 +1869,12 @@ usg = koneksiDB.CLOUDFLARER2HOST()+Sequel.cariIsi("select photo from hasil_pemer
     }//GEN-LAST:event_PeluangSexKeyPressed
 
     private void KesimpulanKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_KesimpulanKeyPressed
-        Valid.pindah2(evt,Kelainan,BtnSimpan);
+        Valid.pindah2(evt,Kelainan,TaksiranPersalinan);
     }//GEN-LAST:event_KesimpulanKeyPressed
+
+    private void TaksiranPersalinanKeyPressed(java.awt.event.KeyEvent evt) {
+        Valid.pindah(evt,Kesimpulan,BtnSimpan);
+    }
 
     private void ChkAccorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChkAccorActionPerformed
         if(tbObat.getSelectedRow()!= -1){
@@ -2216,6 +2235,8 @@ usg = koneksiDB.CLOUDFLARER2HOST()+Sequel.cariIsi("select photo from hasil_pemer
     private widget.ScrollPane scrollPane17;
     private widget.Table tbListDicom;
     private widget.Table tbObat;
+    private widget.TextBox TaksiranPersalinan;
+    private widget.Label jLabelTP;
     // End of variables declaration//GEN-END:variables
 
     public void tampil() {
@@ -2229,12 +2250,11 @@ usg = koneksiDB.CLOUDFLARER2HOST()+Sequel.cariIsi("select photo from hasil_pemer
                         "hasil_pemeriksaan_usg.janin,hasil_pemeriksaan_usg.jumlahjanin,hasil_pemeriksaan_usg.lokasi,hasil_pemeriksaan_usg.letakjanin,"+
                         "hasil_pemeriksaan_usg.frekuensi_hr,hasil_pemeriksaan_usg.presentasi,"+
                         "hasil_pemeriksaan_usg.kantong_gestasi,hasil_pemeriksaan_usg.ukuran_bokongkepala,"+
-                                    
                         "hasil_pemeriksaan_usg.diameter_biparietal,hasil_pemeriksaan_usg.panjang_femur,"+
                         "hasil_pemeriksaan_usg.lingkar_abdomen,hasil_pemeriksaan_usg.lingkar_kepala,hasil_pemeriksaan_usg.tafsiran_berat_janin,"+
                         "hasil_pemeriksaan_usg.plasenta_berimplatansi,hasil_pemeriksaan_usg.derajat_maturitas,hasil_pemeriksaan_usg.jumlah_air_ketuban,"+
                         "hasil_pemeriksaan_usg.indek_cairan_ketuban,hasil_pemeriksaan_usg.kelainan_kongenital,hasil_pemeriksaan_usg.peluang_sex,"+
-                        "hasil_pemeriksaan_usg.kesimpulan from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
+                        "hasil_pemeriksaan_usg.kesimpulan,hasil_pemeriksaan_usg.taksiran_persalinan from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
                         "inner join hasil_pemeriksaan_usg on reg_periksa.no_rawat=hasil_pemeriksaan_usg.no_rawat "+
                         "inner join dokter on hasil_pemeriksaan_usg.kd_dokter=dokter.kd_dokter where "+
                         "hasil_pemeriksaan_usg.tanggal between ? and ? order by hasil_pemeriksaan_usg.tanggal");
@@ -2246,12 +2266,11 @@ usg = koneksiDB.CLOUDFLARER2HOST()+Sequel.cariIsi("select photo from hasil_pemer
                         "hasil_pemeriksaan_usg.janin,hasil_pemeriksaan_usg.jumlahjanin,hasil_pemeriksaan_usg.lokasi,hasil_pemeriksaan_usg.letakjanin,"+
                         "hasil_pemeriksaan_usg.frekuensi_hr,hasil_pemeriksaan_usg.presentasi,"+
                         "hasil_pemeriksaan_usg.kantong_gestasi,hasil_pemeriksaan_usg.ukuran_bokongkepala,"+
-                                
                         "hasil_pemeriksaan_usg.diameter_biparietal,hasil_pemeriksaan_usg.panjang_femur,"+
                         "hasil_pemeriksaan_usg.lingkar_abdomen,hasil_pemeriksaan_usg.lingkar_kepala,hasil_pemeriksaan_usg.tafsiran_berat_janin,"+
                         "hasil_pemeriksaan_usg.plasenta_berimplatansi,hasil_pemeriksaan_usg.derajat_maturitas,hasil_pemeriksaan_usg.jumlah_air_ketuban,"+
                         "hasil_pemeriksaan_usg.indek_cairan_ketuban,hasil_pemeriksaan_usg.kelainan_kongenital,hasil_pemeriksaan_usg.peluang_sex,"+
-                        "hasil_pemeriksaan_usg.kesimpulan from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
+                        "hasil_pemeriksaan_usg.kesimpulan,hasil_pemeriksaan_usg.taksiran_persalinan from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
                         "inner join hasil_pemeriksaan_usg on reg_periksa.no_rawat=hasil_pemeriksaan_usg.no_rawat "+
                         "inner join dokter on hasil_pemeriksaan_usg.kd_dokter=dokter.kd_dokter where "+
                         "hasil_pemeriksaan_usg.tanggal between ? and ? and (reg_periksa.no_rawat like ? or pasien.no_rkm_medis like ? or pasien.nm_pasien like ? or "+
@@ -2279,8 +2298,8 @@ usg = koneksiDB.CLOUDFLARER2HOST()+Sequel.cariIsi("select photo from hasil_pemer
                         rs.getString("letakjanin"),rs.getString("frekuensi_hr"),rs.getString("presentasi"),rs.getString("kantong_gestasi"),
                         rs.getString("ukuran_bokongkepala"),rs.getString("diameter_biparietal"),rs.getString("panjang_femur"),rs.getString("lingkar_abdomen"),
                         rs.getString("lingkar_kepala"),rs.getString("tafsiran_berat_janin"),rs.getString("diagnosa_klinis"),rs.getString("plasenta_berimplatansi"),rs.getString("derajat_maturitas"),
-                        rs.getString("jumlah_air_ketuban"),rs.getString("peluang_sex"),rs.getString("indek_cairan_ketuban"),rs.getString("kelainan_kongenital"),rs.getString("kesimpulan")
-                        
+                        rs.getString("jumlah_air_ketuban"),rs.getString("peluang_sex"),rs.getString("indek_cairan_ketuban"),rs.getString("kelainan_kongenital"),rs.getString("kesimpulan"),
+                        rs.getString("taksiran_persalinan")
                     });
 
                 }
@@ -2325,6 +2344,7 @@ usg = koneksiDB.CLOUDFLARER2HOST()+Sequel.cariIsi("select photo from hasil_pemer
         PeluangSex.setSelectedIndex(0);
         Kelainan.setText("");
         Kesimpulan.setText("");
+        TaksiranPersalinan.setText("");
         Tanggal.setDate(new Date());
         TabRawat.setSelectedIndex(0);
         UsiaKehamilanHpht.requestFocus();
@@ -2361,6 +2381,7 @@ usg = koneksiDB.CLOUDFLARER2HOST()+Sequel.cariIsi("select photo from hasil_pemer
             IndexCairan.setText(tbObat.getValueAt(tbObat.getSelectedRow(),26).toString());
             Kelainan.setText(tbObat.getValueAt(tbObat.getSelectedRow(),27).toString());
             Kesimpulan.setText(tbObat.getValueAt(tbObat.getSelectedRow(),28).toString());
+            TaksiranPersalinan.setText(tbObat.getValueAt(tbObat.getSelectedRow(),29)==null?"":tbObat.getValueAt(tbObat.getSelectedRow(),29).toString());
             Valid.SetTgl2(Tanggal,tbObat.getValueAt(tbObat.getSelectedRow(),6).toString());
         }
     }
@@ -2443,7 +2464,7 @@ usg = koneksiDB.CLOUDFLARER2HOST()+Sequel.cariIsi("select photo from hasil_pemer
     // [PERBAIKAN] Query UPDATE ini sekarang benar dan mencakup semua kolom
     if(Sequel.mengedittf("hasil_pemeriksaan_usg","no_rawat=?","no_rawat=?, tanggal=?, kd_dokter=?, usiakehamilanhpht=?, janin=?, jumlahjanin=?, lokasi=?, letakjanin=?, "+
             "frekuensi_hr=?, presentasi=?, kantong_gestasi=?, ukuran_bokongkepala=?, diameter_biparietal=?, panjang_femur=?, lingkar_abdomen=?, lingkar_kepala=?, tafsiran_berat_janin=?, "+
-            "diagnosa_klinis=?, plasenta_berimplatansi=?, derajat_maturitas=?, jumlah_air_ketuban=?, peluang_sex=?, indek_cairan_ketuban=?, kelainan_kongenital=?, kesimpulan=?", 26, new String[]{
+            "diagnosa_klinis=?, plasenta_berimplatansi=?, derajat_maturitas=?, jumlah_air_ketuban=?, peluang_sex=?, indek_cairan_ketuban=?, kelainan_kongenital=?, kesimpulan=?, taksiran_persalinan=?", 27, new String[]{
             TNoRw.getText(),
             Valid.SetTgl(Tanggal.getSelectedItem()+"")+" "+Tanggal.getSelectedItem().toString().substring(11,19),
             KdDokter.getText(),
@@ -2469,6 +2490,7 @@ usg = koneksiDB.CLOUDFLARER2HOST()+Sequel.cariIsi("select photo from hasil_pemer
             IndexCairan.getText(),
             Kelainan.getText(),
             Kesimpulan.getText(),
+            TaksiranPersalinan.getText(),
             tbObat.getValueAt(tbObat.getSelectedRow(),0).toString()
         })==true){
            tampil();
