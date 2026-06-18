@@ -5,6 +5,19 @@ Kategori: **Ditambah** (fitur baru), **Diubah**, **Diperbaiki** (fix), **Catatan
 
 ---
 
+## [v2026.06.19] — 2026-06-19 · `V.19.06.2026-37 (Atta)`
+
+### Diperbaiki
+- **Cetak Surat Pemesanan dari dialog Cari (`DlgCariSuratPemesanan`) — kursor "muter" selamanya** saat surat tidak bisa dicetak. Penyebab: `this.setCursor(default)` ditaruh **di dalam blok `if(rs.next())`**, jadi kalau query header (INNER JOIN 8 tabel: `surat_pemesanan_medis`↔`pegawai.nik`, `databarang.kode_industri`↔`industrifarmasi`, suplier, satuan, jenis) **0 baris** (master data barang/petugas tak lengkap) → cursor tak pernah balik → muter tanpa report & tanpa pesan.
+  - Fix: pindah `setCursor(default)` ke **`finally`** (selalu jalan walau 0 baris / error).
+  - Tambah pesan kalau 0 baris: *"data surat pemesanan tidak lengkap... periksa Industri Farmasi & Petugas (NIP) pada barang"* — agar penyebab jelas, tidak diam muter.
+  - Bug pre-existing, hanya 1 file (`src/inventory/DlgCariSuratPemesanan.java`). Report `.jasper` tidak disentuh.
+
+### Catatan Deploy
+- Jar: `khanza-19.06.2026-37.jar` (dari -34 + fix). Launcher `.bat`/`.command` → -37. Jar -34 dipertahankan untuk rollback.
+
+---
+
 ## [v2026.06.18e] — 2026-06-18 · `V.18.06.2026-34 (Atta)`
 
 ### Diubah

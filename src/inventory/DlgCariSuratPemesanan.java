@@ -1270,7 +1270,8 @@ private void ppHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                         }
 
                         Valid.MyReportqry("rptSuratPemesanan.jasper","report","::[ Transaksi Pemesanan Barang ]::","select * from temporary where temporary.temp37='"+akses.getalamatip()+"' order by temporary.no",param);
-                        this.setCursor(Cursor.getDefaultCursor());
+                    }else{
+                        JOptionPane.showMessageDialog(null,"Maaf, data surat pemesanan tidak lengkap sehingga tidak bisa dicetak.\nPeriksa data Industri Farmasi & Petugas (NIP) pada barang di pesanan ini.");
                     }
                 } catch (Exception e) {
                     System.out.println("Notif : "+e);
@@ -1284,6 +1285,8 @@ private void ppHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                 }
             } catch (Exception e) {
                 System.out.println("Notif : "+e);
+            } finally{
+                this.setCursor(Cursor.getDefaultCursor());
             }
         }
     }//GEN-LAST:event_BtnPrint5ActionPerformed
