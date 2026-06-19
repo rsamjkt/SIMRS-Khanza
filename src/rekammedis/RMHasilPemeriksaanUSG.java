@@ -1388,6 +1388,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
         LingkarAbdomen.getText(),
         LingkarKepala.getText(),
         TafsiranBerat.getText(),
+        TaksiranPersalinan.getText(),
         DiagnosaKlinis.getText(),
         Plasenta.getText(),
         DerajatMaturitas.getSelectedItem().toString(),
@@ -1396,8 +1397,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
         IndexCairan.getText(),
         Kelainan.getText(),
         Kesimpulan.getText(),
-        "",
-        TaksiranPersalinan.getText()
+        ""
     })==true){
         emptTeks();
 }
@@ -1506,7 +1506,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
                             "hasil_pemeriksaan_usg.lingkar_abdomen,hasil_pemeriksaan_usg.lingkar_kepala,hasil_pemeriksaan_usg.tafsiran_berat_janin,"+
                             "hasil_pemeriksaan_usg.plasenta_berimplatansi,hasil_pemeriksaan_usg.derajat_maturitas,hasil_pemeriksaan_usg.jumlah_air_ketuban,"+
                             "hasil_pemeriksaan_usg.indek_cairan_ketuban,hasil_pemeriksaan_usg.kelainan_kongenital,hasil_pemeriksaan_usg.peluang_sex,"+
-                            "hasil_pemeriksaan_usg.kesimpulan,hasil_pemeriksaan_usg.taksiran_persalinan from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
+                            "hasil_pemeriksaan_usg.kesimpulan,hasil_pemeriksaan_usg.kiriman_dari,hasil_pemeriksaan_usg.taksiran_persalinan from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
                             "inner join hasil_pemeriksaan_usg on reg_periksa.no_rawat=hasil_pemeriksaan_usg.no_rawat "+
                             "inner join dokter on hasil_pemeriksaan_usg.kd_dokter=dokter.kd_dokter where "+
                             "hasil_pemeriksaan_usg.tanggal between ? and ? order by hasil_pemeriksaan_usg.tanggal");
@@ -1522,7 +1522,7 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
                             "hasil_pemeriksaan_usg.lingkar_abdomen,hasil_pemeriksaan_usg.lingkar_kepala,hasil_pemeriksaan_usg.tafsiran_berat_janin,"+
                             "hasil_pemeriksaan_usg.plasenta_berimplatansi,hasil_pemeriksaan_usg.derajat_maturitas,hasil_pemeriksaan_usg.jumlah_air_ketuban,"+
                             "hasil_pemeriksaan_usg.indek_cairan_ketuban,hasil_pemeriksaan_usg.kelainan_kongenital,hasil_pemeriksaan_usg.peluang_sex,"+
-                            "hasil_pemeriksaan_usg.kesimpulan,hasil_pemeriksaan_usg.taksiran_persalinan from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
+                            "hasil_pemeriksaan_usg.kesimpulan,hasil_pemeriksaan_usg.kiriman_dari,hasil_pemeriksaan_usg.taksiran_persalinan from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
                             "inner join hasil_pemeriksaan_usg on reg_periksa.no_rawat=hasil_pemeriksaan_usg.no_rawat "+
                             "inner join dokter on hasil_pemeriksaan_usg.kd_dokter=dokter.kd_dokter where "+
                             "hasil_pemeriksaan_usg.tanggal between ? and ? and (reg_periksa.no_rawat like ? or pasien.no_rkm_medis like ? or pasien.nm_pasien like ? or "+
