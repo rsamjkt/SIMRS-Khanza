@@ -62,8 +62,6 @@ import simrskhanza.DlgInputResepPulang;
 import simrskhanza.DlgPeriksaLaboratoriumMB;
 import simrskhanza.DlgPeriksaLaboratoriumPA;
 import simrskhanza.DlgTagihanOperasi;
-import java.text.SimpleDateFormat;
-import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -216,8 +214,7 @@ public class DlgBilingRanap extends javax.swing.JDialog {
             laboratserv=0,radiologiserv=0,operasiserv=0,obatserv=0,obatlangsung=0,
             ranap_dokterserv=0,ranap_paramedisserv=0,ralan_dokterserv=0,
             ralan_paramedisserv=0,tambahanserv=0,potonganserv=0,
-            kamarserv=0,registrasiserv=0,harianserv=0,retur_Obatserv=0,resep_Pulangserv=0,ttlService=0,
-            persenbayi=Sequel.cariInteger("select set_jam_minimal.bayi from set_jam_minimal");
+            kamarserv=0,registrasiserv=0,harianserv=0,retur_Obatserv=0,resep_Pulangserv=0,ttlService=0;
     private int x=0,z=0,i=0,countbayar=0,jml=0,r=0,row2=0;
     private WarnaTable2 warna=new WarnaTable2();
     private WarnaTable2 warna2=new WarnaTable2();
@@ -5010,11 +5007,7 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
         Valid.tabelKosong(tabModeRwJlDr);
         try{  
             psreg=koneksi.prepareStatement(
-    "select reg_periksa.no_rkm_medis,concat(DATE_FORMAT(reg_periksa.tgl_registrasi, '%e %M %Y'),' ',reg_periksa.jam_reg) as registrasi, " +
-    "reg_periksa.tgl_registrasi, reg_periksa.jam_reg, " + // tambahan kolom
-    "kamar_inap.kd_kamar,concat(if(kamar_inap.tgl_keluar='0000-00-00',DATE_FORMAT(CURDATE(), '%e %M %Y'),DATE_FORMAT(kamar_inap.tgl_keluar, '%e %M %Y')),' ',kamar_inap.jam_keluar) as keluar, " +
-    "if(kamar_inap.tgl_keluar='0000-00-00',curdate(),kamar_inap.tgl_keluar) as tgl_keluar, " + // tambahan kolom
-    "if(kamar_inap.jam_keluar='00:00:00',curtime(),kamar_inap.jam_keluar) as jam_keluar, " + // tambahan kolom
+                    "select reg_periksa.no_rkm_medis,concat(DATE_FORMAT(reg_periksa.tgl_registrasi, '%e %M %Y'),' ',reg_periksa.jam_reg) as registrasi,kamar_inap.kd_kamar,concat(if(kamar_inap.tgl_keluar='0000-00-00',DATE_FORMAT(CURDATE(), '%e %M %Y'),DATE_FORMAT(kamar_inap.tgl_keluar, '%e %M %Y')),' ',kamar_inap.jam_keluar) as keluar,  "+
                     "(select sum(kamar_inap.lama) from kamar_inap where kamar_inap.no_rawat=reg_periksa.no_rawat ) as lama,reg_periksa.biaya_reg,reg_periksa.umurdaftar,reg_periksa.sttsumur,reg_periksa.tgl_registrasi "+
                     "from reg_periksa inner join kamar_inap on reg_periksa.no_rawat=kamar_inap.no_rawat where reg_periksa.no_rawat=? "+
                     "order by kamar_inap.tgl_keluar desc limit 1");
@@ -5046,33 +5039,8 @@ private void BtnCariKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_B
                     umurdaftar=rsreg.getString("umurdaftar")+rsreg.getString("sttsumur");
                     tgl_registrasi=rsreg.getString("tgl_registrasi");
                     DTPTgl.setDate(new Date());
-                     //--- PERBAIKAN: Hitung durasi detail terlebih dahulu ---
-                    // --- LOGIKA HITUNG DURASI (Ini sudah ada di kode Anda, pastikan sama) ---
-String durasiDetail = "";
-try {
-    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    // Mengambil tanggal masuk dan keluar
-    java.util.Date tglMasuk = sdf.parse(rsreg.getString("tgl_registrasi") + " " + rsreg.getString("jam_reg"));
-    java.util.Date tglKeluar = sdf.parse(rsreg.getString("tgl_keluar") + " " + rsreg.getString("jam_keluar"));
+                    tabModeRwJlDr.addRow(new Object[]{true,"Tgl.Perawatan",": "+rsreg.getString("registrasi")+" s.d. "+rsreg.getString("keluar")+" ( "+rsreg.getString("lama")+" Hari )","",null,null,null,null,"-"});
 
-    long diffInMillies = Math.abs(tglKeluar.getTime() - tglMasuk.getTime());
-    long days = java.util.concurrent.TimeUnit.DAYS.convert(diffInMillies, java.util.concurrent.TimeUnit.MILLISECONDS);
-    long hours = java.util.concurrent.TimeUnit.HOURS.convert(diffInMillies, java.util.concurrent.TimeUnit.MILLISECONDS) % 24;
-    long minutes = java.util.concurrent.TimeUnit.MINUTES.convert(diffInMillies, java.util.concurrent.TimeUnit.MILLISECONDS) % 60;
-    long seconds = java.util.concurrent.TimeUnit.SECONDS.convert(diffInMillies, java.util.concurrent.TimeUnit.MILLISECONDS) % 60;
-
-    // Format string hasil
-    durasiDetail = days + " Hari " + hours + " Jam " + minutes + " Menit " + seconds + " Detik";
-} catch (Exception e) {
-    // Fallback jika error parsing tanggal
-    durasiDetail = rsreg.getString("lama") + " Hari";
-}
-// --- AKHIR LOGIKA HITUNG ---
-                    
-                    // PERBAIKAN DI SINI: Gunakan variabel durasiDetail
-tabModeRwJlDr.addRow(new Object[]{true,"Tgl.Perawatan",": "+rsreg.getString("registrasi")+" s.d. "+rsreg.getString("keluar")+" ( "+durasiDetail+" )","",null,null,null,null,"-"});
-                    
-                    
                     norawatbayi="";
                     psanak=koneksi.prepareStatement(sqlpsanak);
                     try {
@@ -5646,13 +5614,6 @@ tabModeRwJlDr.addRow(new Object[]{true,"Tgl.Perawatan",": "+rsreg.getString("reg
     }
 
     private void prosesCariService(){
-        // --- MODIFIKASI KHANZA.SOFT MEDIA START ---
-        // Cek dulu kode penjab pasien (BPJ atau bukan)
-        // Jika KD_PJ adalah BPJ, maka langsung keluar dari void (Service/Admin Rp 0)
-        String kode_penjab = Sequel.cariIsi("select kd_pj from reg_periksa where no_rawat=?",TNoRw.getText());
-        if(kode_penjab.trim().equals("BPJ")){
-            return;
-        }
         try {   
             if(ChkPiutang.isSelected()==false){
                 psservice=koneksi.prepareStatement("select * from set_service_ranap");

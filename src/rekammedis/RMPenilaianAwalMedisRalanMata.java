@@ -3202,7 +3202,7 @@ public final class RMPenilaianAwalMedisRalanMata extends javax.swing.JDialog {
             NmDokter.setText(Sequel.CariDokter(KdDokter.getText()));
             if(NmDokter.getText().equals("")){
                 KdDokter.setText("");
-                BtnDokter.setEnabled(true);
+                JOptionPane.showMessageDialog(null,"User login bukan Dokter...!!");
             }
         } 
         

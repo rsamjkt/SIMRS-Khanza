@@ -528,8 +528,7 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                             Valid.MyReportqry("rptItemResepPulang.jasper","report","::[ Aturan Pakai Obat ]::",
                                 "select resep_pulang.no_rawat,resep_pulang.tanggal, "+
                                 "reg_periksa.no_rkm_medis,pasien.nm_pasien,databarang.nama_brng,"+
-                                "resep_pulang.dosis,resep_pulang.jml_barang,kodesatuan.satuan,"+
-                                "date_format(databarang.expire,'%d/%m/%Y') as expire "+
+                                "resep_pulang.dosis,resep_pulang.jml_barang,kodesatuan.satuan "+
                                 "from resep_pulang inner join reg_periksa on resep_pulang.no_rawat=reg_periksa.no_rawat "+
                                 "inner join databarang on resep_pulang.kode_brng=databarang.kode_brng "+
                                 "inner join kodesatuan on databarang.kode_sat=kodesatuan.kode_sat "+
@@ -546,8 +545,7 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                             Valid.MyReportqry("rptItemResepPulang2.jasper","report","::[ Aturan Pakai Obat ]::",
                                 "select resep_pulang.no_rawat,resep_pulang.tanggal,jenis.nama,"+
                                 "reg_periksa.no_rkm_medis,pasien.nm_pasien,databarang.nama_brng,"+
-                                "resep_pulang.dosis,resep_pulang.jml_barang,kodesatuan.satuan,"+
-                                "date_format(databarang.expire,'%d/%m/%Y') as expire "+
+                                "resep_pulang.dosis,resep_pulang.jml_barang,kodesatuan.satuan "+
                                 "from resep_pulang inner join reg_periksa on resep_pulang.no_rawat=reg_periksa.no_rawat "+
                                 "inner join databarang on resep_pulang.kode_brng=databarang.kode_brng "+
                                 "inner join kodesatuan on databarang.kode_sat=kodesatuan.kode_sat "+
@@ -565,8 +563,7 @@ private void BtnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                             Valid.MyReportqry("rptItemResepPulang3.jasper","report","::[ Aturan Pakai Obat ]::",
                                 "select resep_pulang.no_rawat,resep_pulang.tanggal, "+
                                 "reg_periksa.no_rkm_medis,pasien.nm_pasien,databarang.nama_brng,"+
-                                "resep_pulang.dosis,resep_pulang.jml_barang,kodesatuan.satuan,"+
-                                "date_format(databarang.expire,'%d/%m/%Y') as expire "+
+                                "resep_pulang.dosis,resep_pulang.jml_barang,kodesatuan.satuan "+
                                 "from resep_pulang inner join reg_periksa on resep_pulang.no_rawat=reg_periksa.no_rawat "+
                                 "inner join databarang on resep_pulang.kode_brng=databarang.kode_brng "+
                                 "inner join kodesatuan on databarang.kode_sat=kodesatuan.kode_sat "+

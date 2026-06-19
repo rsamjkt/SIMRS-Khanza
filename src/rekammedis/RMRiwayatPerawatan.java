@@ -148,6 +148,7 @@ public final class RMRiwayatPerawatan extends javax.swing.JDialog {
         LoadHTMLPembelian.setEditorKit(kit);
         LoadHTMLPiutang.setEditorKit(kit);
         LoadHTMLRetensi.setEditorKit(kit);
+        LoadHTMLWearable.setEditorKit(kit);
         StyleSheet styleSheet = kit.getStyleSheet();
         styleSheet.addRule(".isi td{border-right: 1px solid #e2e7dd;font: 8.5px tahoma;height:12px;border-bottom: 1px solid #e2e7dd;background: #ffffff;color:#323232;}.isi a{text-decoration:none;color:#8b9b95;padding:0 0 0 0px;font-family: Tahoma;font-size: 8.5px;border: white;}");
         Document doc = kit.createDefaultDocument();
@@ -211,11 +212,22 @@ public final class RMRiwayatPerawatan extends javax.swing.JDialog {
                 }
             }
         });
+        LoadHTMLWearable.setDocument(doc);
+        LoadHTMLWearable.setEditable(false);
+        LoadHTMLWearable.addHyperlinkListener(e -> {
+            if (HyperlinkEvent.EventType.ACTIVATED.equals(e.getEventType())) {
+                Desktop desktop = Desktop.getDesktop();
+                try {
+                   desktop.browse(e.getURL().toURI());
+                } catch (Exception ex) {
+                  ex.printStackTrace();
+                }
+            }
+        });
         
         ChkAccor.setSelected(false);
-        initCPPTTab();
         isMenu();
-    }
+    }    
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -373,6 +385,7 @@ public final class RMRiwayatPerawatan extends javax.swing.JDialog {
         chkSkorStewardPascaAnestesi = new widget.CekBox();
         chkSkorBromagePascaAnestesi = new widget.CekBox();
         chkCatatanPengkajianPaskaOperasi = new widget.CekBox();
+        chkCatatanObservasiRuangOperasi = new widget.CekBox();
         chkChecklistKriteriaMasukHCU = new widget.CekBox();
         chkChecklistKriteriaKeluarHCU = new widget.CekBox();
         chkChecklistKriteriaMasukICU = new widget.CekBox();
@@ -484,6 +497,8 @@ public final class RMRiwayatPerawatan extends javax.swing.JDialog {
         LoadHTMLPiutang = new widget.editorpane();
         Scroll3 = new widget.ScrollPane();
         LoadHTMLRetensi = new widget.editorpane();
+        Scroll6 = new widget.ScrollPane();
+        LoadHTMLWearable = new widget.editorpane();
         PanelInput = new javax.swing.JPanel();
         ChkInput = new widget.CekBox();
         FormInput = new widget.panelisi();
@@ -638,7 +653,7 @@ public final class RMRiwayatPerawatan extends javax.swing.JDialog {
         WindowPhrase.getContentPane().add(internalFrame8, java.awt.BorderLayout.CENTER);
 
         Tanggal.setForeground(new java.awt.Color(50, 70, 50));
-        Tanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "16-04-2026 06:40:20" }));
+        Tanggal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "19-06-2026 07:00:35" }));
         Tanggal.setDisplayFormat("dd-MM-yyyy HH:mm:ss");
         Tanggal.setName("Tanggal"); // NOI18N
         Tanggal.setOpaque(false);
@@ -947,7 +962,7 @@ public final class RMRiwayatPerawatan extends javax.swing.JDialog {
         FormMenu.setBackground(new java.awt.Color(255, 255, 255));
         FormMenu.setBorder(null);
         FormMenu.setName("FormMenu"); // NOI18N
-        FormMenu.setPreferredSize(new java.awt.Dimension(255, 4605));
+        FormMenu.setPreferredSize(new java.awt.Dimension(255, 4635));
         FormMenu.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 1, 1));
 
         chkSemua.setSelected(true);
@@ -1714,6 +1729,14 @@ public final class RMRiwayatPerawatan extends javax.swing.JDialog {
         chkCatatanPengkajianPaskaOperasi.setOpaque(false);
         chkCatatanPengkajianPaskaOperasi.setPreferredSize(new java.awt.Dimension(245, 22));
         FormMenu.add(chkCatatanPengkajianPaskaOperasi);
+
+        chkCatatanObservasiRuangOperasi.setSelected(true);
+        chkCatatanObservasiRuangOperasi.setText("Catatan Observasi Ruang Operasi");
+        chkCatatanObservasiRuangOperasi.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        chkCatatanObservasiRuangOperasi.setName("chkCatatanObservasiRuangOperasi"); // NOI18N
+        chkCatatanObservasiRuangOperasi.setOpaque(false);
+        chkCatatanObservasiRuangOperasi.setPreferredSize(new java.awt.Dimension(245, 22));
+        FormMenu.add(chkCatatanObservasiRuangOperasi);
 
         chkChecklistKriteriaMasukHCU.setSelected(true);
         chkChecklistKriteriaMasukHCU.setText("Check List Kriteria Masuk HCU");
@@ -2593,6 +2616,16 @@ public final class RMRiwayatPerawatan extends javax.swing.JDialog {
 
         TabRawat.addTab("Retensi Berkas", Scroll3);
 
+        Scroll6.setBorder(null);
+        Scroll6.setName("Scroll6"); // NOI18N
+        Scroll6.setOpaque(true);
+
+        LoadHTMLWearable.setBorder(null);
+        LoadHTMLWearable.setName("LoadHTMLWearable"); // NOI18N
+        Scroll6.setViewportView(LoadHTMLWearable);
+
+        TabRawat.addTab("Wearable", Scroll6);
+
         internalFrame1.add(TabRawat, java.awt.BorderLayout.CENTER);
 
         PanelInput.setBackground(new java.awt.Color(255, 255, 255));
@@ -2935,6 +2968,9 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 case 5:
                     panggilLaporan(LoadHTMLRetensi.getText()); 
                     break;
+                case 6:
+                    panggilLaporan(LoadHTMLWearable.getText()); 
+                    break;
                 default:
                     break;
             }
@@ -2976,6 +3012,9 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 break;
             case 5:
                 runBackground(() -> tampilRetensi());
+                break;
+            case 6:
+                runBackground(() -> tampilWearable());
                 break;
             default:
                 break;
@@ -3191,6 +3230,7 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             chkSkriningCRUB65.setSelected(true);
             chkSkriningGiziKehamilan.setSelected(true);
             chkKonsultasiPerawat.setSelected(true);
+            chkCatatanObservasiRuangOperasi.setSelected(true);
         }else{
             chkTriase.setSelected(false);
             chkAsuhanKeperawatanRalan.setSelected(false);
@@ -3391,6 +3431,7 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             chkSkriningCRUB65.setSelected(false);
             chkSkriningGiziKehamilan.setSelected(false);
             chkKonsultasiPerawat.setSelected(false);
+            chkCatatanObservasiRuangOperasi.setSelected(false);
         }
     }//GEN-LAST:event_chkSemuaItemStateChanged
 
@@ -3969,6 +4010,7 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     private widget.editorpane LoadHTMLRetensi;
     private widget.editorpane LoadHTMLRiwayatPerawatan;
     private widget.editorpane LoadHTMLSOAPI;
+    private widget.editorpane LoadHTMLWearable;
     private javax.swing.JMenuItem MnGeneratePDF;
     private javax.swing.JMenuItem MnGeneratePDFESign;
     private javax.swing.JMenuItem MnGeneratePDFSertiSign;
@@ -3990,6 +4032,7 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     private widget.ScrollPane Scroll3;
     private widget.ScrollPane Scroll4;
     private widget.ScrollPane Scroll5;
+    private widget.ScrollPane Scroll6;
     private widget.ScrollPane ScrollMenu;
     private widget.TextBox StatusNikah;
     private javax.swing.JTabbedPane TabRawat;
@@ -4077,6 +4120,7 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     private widget.CekBox chkCatatanObservasiRanapKebidanan;
     private widget.CekBox chkCatatanObservasiRanapPostPartum;
     private widget.CekBox chkCatatanObservasiRestrainNonFarmakologi;
+    private widget.CekBox chkCatatanObservasiRuangOperasi;
     private widget.CekBox chkCatatanObservasiVentilator;
     private widget.CekBox chkCatatanPengkajianPaskaOperasi;
     private widget.CekBox chkCatatanPersalinan;
@@ -4289,396 +4333,6 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         }
     }
     
-    // ── CPPT Tab ────────────────────────────────────────────────────────────────
-    private javax.swing.JEditorPane editorCPPT;
-
-    private void initCPPTTab() {
-        editorCPPT = new javax.swing.JEditorPane();
-        editorCPPT.setEditable(false);
-
-        javax.swing.text.html.HTMLEditorKit kit = new javax.swing.text.html.HTMLEditorKit();
-        javax.swing.text.html.StyleSheet css = kit.getStyleSheet();
-        css.addRule("body { font-family: Tahoma; font-size: 11pt; margin: 6px; background: #EBEBEB; }");
-        css.addRule("table.card { background: #FFFFFF; margin-bottom: 10px; }");
-        css.addRule("td.hdr { background: #DCE9F5; padding: 5px 8px; }");
-        css.addRule("td.ttv { background: #F5F5F5; padding: 3px 8px; }");
-        css.addRule("td.sl { padding: 6px 8px; width: 50%; }");
-        css.addRule("td.sr { padding: 6px 8px; width: 50%; }");
-        css.addRule("td.ins { background: #FFFBF0; padding: 4px 8px; }");
-        css.addRule("td.vok { background: #F0FFF4; padding: 3px 8px; }");
-        css.addRule("td.vno { background: #FFFFFF; padding: 3px 8px; }");
-        editorCPPT.setEditorKit(kit);
-        editorCPPT.setDocument(kit.createDefaultDocument());
-        editorCPPT.setText("<html><body><i>Pilih kunjungan terlebih dahulu.</i></body></html>");
-
-        javax.swing.JScrollPane scrollCPPT = new javax.swing.JScrollPane(editorCPPT);
-
-        widget.Button btnCetakCPPT = new widget.Button();
-        btnCetakCPPT.setText("Cetak CPPT");
-        try {
-            btnCetakCPPT.setIcon(new javax.swing.ImageIcon(
-                getClass().getResource("/48x48/print.png")));
-        } catch (Exception ignored) {}
-
-        btnCetakCPPT.addActionListener(evt -> {
-            if (tbRegistrasi.getSelectedRow() < 0) {
-                JOptionPane.showMessageDialog(null,
-                    "Pilih dulu kunjungan di tab Riwayat Kunjungan.");
-                return;
-            }
-            String nr = tabModeRegistrasi.getValueAt(
-                tbRegistrasi.getSelectedRow(), 1).toString();
-            cetakCPPT(nr);
-        });
-
-        javax.swing.JPanel topBar = new javax.swing.JPanel(
-            new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 6, 4));
-        topBar.add(btnCetakCPPT);
-
-        final javax.swing.JPanel panelCPPT = new javax.swing.JPanel(
-            new java.awt.BorderLayout(0, 2));
-        panelCPPT.add(topBar, java.awt.BorderLayout.NORTH);
-        panelCPPT.add(scrollCPPT, java.awt.BorderLayout.CENTER);
-
-        TabRawat.addTab("CPPT", panelCPPT);
-
-        TabRawat.addChangeListener(e -> {
-            if (TabRawat.getSelectedComponent() == panelCPPT
-                    && tbRegistrasi.getSelectedRow() >= 0) {
-                String nr = tabModeRegistrasi.getValueAt(
-                    tbRegistrasi.getSelectedRow(), 1).toString();
-                tampilCPPT(nr);
-            }
-        });
-    }
-
-    private static String hEsc(String s) {
-        if (s == null || s.isEmpty()) return "";
-        return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-                .replace("\"", "&quot;").replace("\n", "<br>").replace("\r", "");
-    }
-
-    private static String qrImg(String payload, int size) {
-        try {
-            com.google.zxing.qrcode.QRCodeWriter w = new com.google.zxing.qrcode.QRCodeWriter();
-            com.google.zxing.common.BitMatrix m = w.encode(
-                payload, com.google.zxing.BarcodeFormat.QR_CODE, size, size);
-            java.awt.image.BufferedImage img =
-                com.google.zxing.client.j2se.MatrixToImageWriter.toBufferedImage(m);
-            java.io.File tmp = java.io.File.createTempFile("cppt_qr_", ".png");
-            tmp.deleteOnExit();
-            javax.imageio.ImageIO.write(img, "PNG", tmp);
-            return tmp.toURI().toString();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    private void tampilCPPT(String noRawat) {
-        if (noRawat == null || noRawat.isEmpty()) {
-            editorCPPT.setText("<html><body><i>Pilih kunjungan terlebih dahulu.</i></body></html>");
-            return;
-        }
-        String sql =
-            "SELECT pr.no_rawat AS no_rawat, pr.nip AS nip, " +
-            "pr.tgl_perawatan, LEFT(pr.jam_rawat,5) AS jam_rawat, " +
-            "COALESCE(d.nm_dokter, pg.nama, pr.nip) AS nama, " +
-            "CASE WHEN d.nm_dokter IS NOT NULL THEN 'Dokter' " +
-                 "ELSE COALESCE(j.nama,'Petugas') END AS profesi, " +
-            "COALESCE(pr.keluhan,'') AS keluhan, " +
-            "COALESCE(pr.pemeriksaan,'') AS pemeriksaan, " +
-            "COALESCE(pr.penilaian,'') AS penilaian, " +
-            "COALESCE(pr.rtl,'') AS rtl, " +
-            "COALESCE(pr.instruksi,'') AS instruksi, " +
-            "COALESCE(pr.evaluasi,'') AS evaluasi, " +
-            "TRIM(CONCAT_WS(', '," +
-                "IF(pr.tensi IS NOT NULL AND pr.tensi<>'',CONCAT('TD ',pr.tensi,' mmHg'),NULL)," +
-                "IF(pr.nadi IS NOT NULL AND pr.nadi<>'',CONCAT('N ',pr.nadi,'x/mnt'),NULL)," +
-                "IF(pr.respirasi IS NOT NULL AND pr.respirasi<>'',CONCAT('RR ',pr.respirasi,'x/mnt'),NULL)," +
-                "IF(pr.suhu_tubuh IS NOT NULL AND pr.suhu_tubuh<>'',CONCAT('Suhu ',pr.suhu_tubuh,' C'),NULL)," +
-                "IF(pr.spo2 IS NOT NULL AND pr.spo2<>'',CONCAT('SpO2 ',pr.spo2,'%'),NULL)," +
-                "IF(pr.kesadaran IS NOT NULL AND pr.kesadaran<>'',pr.kesadaran,NULL)" +
-            ")) AS ttv, " +
-            "CASE WHEN v.status IS NOT NULL THEN " +
-                "CONCAT('Terverifikasi DPJP — '," +
-                    "COALESCE((SELECT nm_dokter FROM dokter WHERE kd_dokter=v.nip_dokter),v.nip_dokter,''),', '," +
-                    "v.tgl_validasi,' ',LEFT(v.jam_validasi,5)) " +
-                "ELSE '' END AS verif " +
-            "FROM pemeriksaan_ranap pr " +
-            "LEFT JOIN dokter d ON d.kd_dokter=pr.nip " +
-            "LEFT JOIN petugas pg ON pg.nip=pr.nip " +
-            "LEFT JOIN jnj_jabatan j ON j.kode=pg.kd_jbtn " +
-            "LEFT JOIN validasi_pemeriksaan_ranap v " +
-                "ON v.no_rawat=pr.no_rawat AND v.tgl_perawatan=pr.tgl_perawatan AND v.jam_rawat=pr.jam_rawat " +
-            "WHERE pr.no_rawat=? " +
-            "UNION ALL " +
-            "SELECT pr.no_rawat AS no_rawat, pr.nip AS nip, " +
-            "pr.tgl_perawatan, LEFT(pr.jam_rawat,5) AS jam_rawat, " +
-            "COALESCE(d.nm_dokter, pg.nama, pr.nip) AS nama, " +
-            "CONCAT(CASE WHEN d.nm_dokter IS NOT NULL THEN 'Dokter' " +
-                        "ELSE COALESCE(j.nama,'Petugas') END,' (Asesmen Awal)') AS profesi, " +
-            "COALESCE(pr.keluhan,'') AS keluhan, " +
-            "COALESCE(pr.pemeriksaan,'') AS pemeriksaan, " +
-            "COALESCE(pr.penilaian,'') AS penilaian, " +
-            "COALESCE(pr.rtl,'') AS rtl, " +
-            "COALESCE(pr.instruksi,'') AS instruksi, " +
-            "COALESCE(pr.evaluasi,'') AS evaluasi, " +
-            "'' AS ttv, '' AS verif " +
-            "FROM pemeriksaan_ralan pr " +
-            "LEFT JOIN dokter d ON d.kd_dokter=pr.nip " +
-            "LEFT JOIN petugas pg ON pg.nip=pr.nip " +
-            "LEFT JOIN jnj_jabatan j ON j.kode=pg.kd_jbtn " +
-            "WHERE pr.no_rawat=? " +
-            "ORDER BY tgl_perawatan, jam_rawat";
-
-        StringBuilder html = new StringBuilder(
-            "<html><head><meta charset='UTF-8'></head><body bgcolor='#EBEBEB'>");
-        int count = 0;
-        try {
-            ps = koneksi.prepareStatement(sql);
-            ps.setString(1, noRawat);
-            ps.setString(2, noRawat);
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                count++;
-                String nrw    = rs.getString("no_rawat");
-                String nip    = rs.getString("nip");
-                String tgl    = hEsc(rs.getString("tgl_perawatan"));
-                String jam    = hEsc(rs.getString("jam_rawat"));
-                String profesi= hEsc(rs.getString("profesi"));
-                String nama   = hEsc(rs.getString("nama"));
-                String kel    = hEsc(rs.getString("keluhan"));
-                String pem    = hEsc(rs.getString("pemeriksaan"));
-                String pen    = hEsc(rs.getString("penilaian"));
-                String rtl    = hEsc(rs.getString("rtl"));
-                String ins    = hEsc(rs.getString("instruksi"));
-                String eva    = hEsc(rs.getString("evaluasi"));
-                String ttv    = rs.getString("ttv");
-                String verif  = hEsc(rs.getString("verif"));
-
-                // QR code — ZXing to temp PNG
-                String qrPayload = "SIMRS-CPPT|" + (nrw!=null?nrw:"") + "|" + tgl + " " + jam
-                                 + "|" + (nip!=null?nip:"-") + "|" + nama;
-                String qrSrc = qrImg(qrPayload, 72);
-
-                // ── Card: 2-column outer table (content | QR) ──────────────
-                html.append("<table width='99%' cellspacing='0' cellpadding='0' border='1' bordercolor='#C5D5E8'>");
-                html.append("<tr>");
-
-                // ── Left: semua konten ──────────────────────────────────────
-                html.append("<td valign='top'>");
-
-                // Header (biru muda seperti AruniHealth)
-                html.append("<table width='100%' cellspacing='0' cellpadding='0' border='0'>")
-                    .append("<tr><td bgcolor='#DCE9F5' style='padding:5px 10px'>")
-                    .append("<font face='Tahoma' size='2'><b>")
-                    .append(profesi).append("</b>&nbsp;—&nbsp;").append(nama)
-                    .append("</font>")
-                    .append("<font face='Tahoma' size='2' color='#556677'>&nbsp;&nbsp;&nbsp;&nbsp;")
-                    .append(tgl).append("&nbsp;&nbsp;").append(jam)
-                    .append("</font>")
-                    .append("</td></tr></table>");
-
-                // TTV
-                if (ttv != null && !ttv.trim().isEmpty()) {
-                    html.append("<table width='100%' cellspacing='0' cellpadding='0' border='0'>")
-                        .append("<tr><td bgcolor='#F2F6FA' style='padding:3px 10px'>")
-                        .append("<font face='Tahoma' size='2' color='#334455'><b>TTV:</b>&nbsp;")
-                        .append(hEsc(ttv))
-                        .append("</font></td></tr></table>");
-                }
-
-                // SOAP — setiap bagian dengan strip warna di kiri (AruniHealth style)
-                String[][] soapData = {
-                    {"#2563EB", "Subyektif",  kel},
-                    {"#DC2626", "Obyektif",   pem},
-                    {"#D97706", "Asesmen",    pen},
-                    {"#10B981", "Plan / RTL", rtl},
-                };
-                html.append("<table width='100%' cellspacing='0' cellpadding='0' border='0'>");
-                for (String[] s : soapData) {
-                    if (s[2].isEmpty()) continue;
-                    html.append("<tr>")
-                        .append("<td width='4' bgcolor='").append(s[0]).append("'>&nbsp;</td>")
-                        .append("<td style='padding:4px 10px 4px 8px'>")
-                        .append("<font face='Tahoma' size='2'>")
-                        .append("<font color='").append(s[0]).append("'><b>").append(s[1]).append("</b></font><br>")
-                        .append(s[2])
-                        .append("</font></td></tr>");
-                    html.append("<tr><td colspan='2' height='3'></td></tr>");
-                }
-                html.append("</table>");
-
-                // Instruksi + Evaluasi (kotak dashed abu)
-                if (!ins.isEmpty() || !eva.isEmpty()) {
-                    html.append("<table width='100%' cellspacing='0' cellpadding='0' border='0'>")
-                        .append("<tr><td bgcolor='#F8FAFC' style='padding:5px 10px'>")
-                        .append("<font face='Tahoma' size='2'>");
-                    if (!ins.isEmpty())
-                        html.append("<font color='#6D28D9'><b>Instruksi:</b></font>&nbsp;").append(ins);
-                    if (!ins.isEmpty() && !eva.isEmpty()) html.append("<br>");
-                    if (!eva.isEmpty())
-                        html.append("<font color='#0F766E'><b>Evaluasi:</b></font>&nbsp;").append(eva);
-                    html.append("</font></td></tr></table>");
-                }
-
-                // Verifikasi DPJP
-                if (!verif.isEmpty()) {
-                    html.append("<table width='100%' cellspacing='0' cellpadding='0' border='0'>")
-                        .append("<tr><td bgcolor='#F0FFF4' style='padding:3px 10px'>")
-                        .append("<font face='Tahoma' size='2' color='#166534'>&#10003;&nbsp;").append(verif)
-                        .append("</font></td></tr></table>");
-                } else {
-                    html.append("<table width='100%' cellspacing='0' cellpadding='0' border='0'>")
-                        .append("<tr><td bgcolor='#FFFBEB' style='padding:3px 10px'>")
-                        .append("<font face='Tahoma' size='2' color='#92400E'>TBAK — Menunggu verifikasi DPJP")
-                        .append("</font></td></tr></table>");
-                }
-
-                html.append("</td>"); // end left td
-
-                // ── Right: QR code + stamp ──────────────────────────────────
-                html.append("<td valign='top' bgcolor='#FAFBFC' width='86' style='padding:8px;text-align:center'>");
-                if (qrSrc != null) {
-                    html.append("<img src='").append(qrSrc).append("' width='70' height='70'><br>");
-                    html.append("<font face='Tahoma' size='1' color='#9CA3AF'>Scan QR untuk<br>verifikasi keaslian</font>");
-                } else {
-                    html.append("<font face='Tahoma' size='1' color='#AAAAAA'>[QR]</font>");
-                }
-                html.append("</td>");
-
-                html.append("</tr></table><br>");
-            }
-        } catch (Exception e) {
-            System.out.println("tampilCPPT: " + e);
-        } finally {
-            try { if (rs != null) rs.close(); if (ps != null) ps.close(); } catch (Exception ignored) {}
-        }
-
-        if (count == 0) {
-            html.append("<font face='Tahoma' size='2' color='#AAAAAA'><i>Tidak ada data CPPT untuk kunjungan ini.</i></font>");
-        }
-        html.append("</body></html>");
-
-        // Tulis ke temp HTML agar img file:// URL terload dengan benar
-        try {
-            java.io.File tmpHtml = java.io.File.createTempFile("cppt_view_", ".html");
-            tmpHtml.deleteOnExit();
-            java.io.PrintWriter pw = new java.io.PrintWriter(tmpHtml, "UTF-8");
-            pw.print(html.toString());
-            pw.close();
-            editorCPPT.setPage(tmpHtml.toURI().toURL());
-        } catch (Exception ex) {
-            editorCPPT.setText(html.toString());
-        }
-        javax.swing.SwingUtilities.invokeLater(() -> editorCPPT.setCaretPosition(0));
-    }
-
-    private void cetakCPPT(String noRawat) {
-        // Ambil info pasien untuk parameter header report
-        String nmPasien = "", noRkm = "", kamar = "", umur = "", jk = "";
-        try {
-            ps = koneksi.prepareStatement(
-                "SELECT r.no_rkm_medis, p.nm_pasien, p.jk, " +
-                "CONCAT(r.umurdaftar,' ',r.sttsumur) AS umur, " +
-                "COALESCE(CONCAT(b.nm_bangsal,' ',ki.kd_kamar),'—') AS kamar " +
-                "FROM reg_periksa r " +
-                "JOIN pasien p ON p.no_rkm_medis=r.no_rkm_medis " +
-                "LEFT JOIN kamar_inap ki ON ki.no_rawat=r.no_rawat " +
-                "LEFT JOIN kamar k ON k.kd_kamar=ki.kd_kamar " +
-                "LEFT JOIN bangsal b ON b.kd_bangsal=k.kd_bangsal " +
-                "WHERE r.no_rawat=? " +
-                "ORDER BY ki.tgl_masuk DESC LIMIT 1");
-            ps.setString(1, noRawat);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                noRkm    = rs.getString("no_rkm_medis");
-                nmPasien = rs.getString("nm_pasien");
-                jk       = rs.getString("jk");
-                umur     = rs.getString("umur");
-                kamar    = rs.getString("kamar");
-            }
-        } catch (Exception e) {
-            System.out.println("cetakCPPT header: " + e);
-        } finally {
-            try { if (rs != null) rs.close(); if (ps != null) ps.close(); } catch (Exception ignored) {}
-        }
-
-        Map<String, Object> param = new HashMap<>();
-        param.put("namars",    akses.getnamars());
-        param.put("alamatrs",  akses.getalamatrs());
-        param.put("kotars",    akses.getkabupatenrs());
-        param.put("propinsirs",akses.getpropinsirs());
-        param.put("kontakrs",  akses.getkontakrs());
-        param.put("emailrs",   akses.getemailrs());
-        param.put("logo",      Sequel.cariGambar("select setting.logo from setting"));
-        param.put("no_rawat",  noRawat);
-        param.put("no_rkm",    noRkm);
-        param.put("nm_pasien", nmPasien);
-        param.put("jk",        jk.equals("L") ? "Laki-laki" : jk.equals("P") ? "Perempuan" : jk);
-        param.put("umur",      umur);
-        param.put("kamar",     kamar);
-
-        String nr = noRawat.replace("'", "''");
-        String sql =
-            "SELECT pr.no_rawat AS no_rawat, pr.nip AS nip, " +
-            "pr.tgl_perawatan, LEFT(pr.jam_rawat,5) AS jam_rawat, " +
-            "COALESCE(d.nm_dokter, pg.nama, pr.nip) AS nama, " +
-            "CASE WHEN d.nm_dokter IS NOT NULL THEN 'Dokter' " +
-                 "ELSE COALESCE(j.nama,'Petugas') END AS profesi, " +
-            "COALESCE(pr.keluhan,'') AS keluhan, " +
-            "COALESCE(pr.pemeriksaan,'') AS pemeriksaan, " +
-            "COALESCE(pr.penilaian,'') AS penilaian, " +
-            "COALESCE(pr.rtl,'') AS rtl, " +
-            "COALESCE(pr.instruksi,'') AS instruksi, " +
-            "COALESCE(pr.evaluasi,'') AS evaluasi, " +
-            "TRIM(CONCAT_WS(', '," +
-                "IF(pr.tensi IS NOT NULL AND pr.tensi<>'',CONCAT('TD ',pr.tensi,' mmHg'),NULL)," +
-                "IF(pr.nadi IS NOT NULL AND pr.nadi<>'',CONCAT('N ',pr.nadi,'x/mnt'),NULL)," +
-                "IF(pr.respirasi IS NOT NULL AND pr.respirasi<>'',CONCAT('RR ',pr.respirasi,'x/mnt'),NULL)," +
-                "IF(pr.suhu_tubuh IS NOT NULL AND pr.suhu_tubuh<>'',CONCAT('S ',pr.suhu_tubuh,' C'),NULL)," +
-                "IF(pr.spo2 IS NOT NULL AND pr.spo2<>'',CONCAT('SpO2 ',pr.spo2,'%'),NULL)," +
-                "IF(pr.kesadaran IS NOT NULL AND pr.kesadaran<>'',pr.kesadaran,NULL)" +
-            ")) AS ttv, " +
-            "CASE WHEN v.status IS NOT NULL THEN " +
-                "CONCAT('Terverifikasi',' — '," +
-                    "COALESCE((SELECT nm_dokter FROM dokter WHERE kd_dokter=v.nip_dokter),v.nip_dokter,''),', '," +
-                    "v.tgl_validasi,' ',LEFT(v.jam_validasi,5)) " +
-                "ELSE '' END AS verif " +
-            "FROM pemeriksaan_ranap pr " +
-            "LEFT JOIN dokter d ON d.kd_dokter=pr.nip " +
-            "LEFT JOIN petugas pg ON pg.nip=pr.nip " +
-            "LEFT JOIN jnj_jabatan j ON j.kode=pg.kd_jbtn " +
-            "LEFT JOIN validasi_pemeriksaan_ranap v " +
-                "ON v.no_rawat=pr.no_rawat AND v.tgl_perawatan=pr.tgl_perawatan AND v.jam_rawat=pr.jam_rawat " +
-            "WHERE pr.no_rawat='" + nr + "' " +
-            "UNION ALL " +
-            "SELECT pr.no_rawat AS no_rawat, pr.nip AS nip, " +
-            "pr.tgl_perawatan, LEFT(pr.jam_rawat,5) AS jam_rawat, " +
-            "COALESCE(d.nm_dokter, pg.nama, pr.nip) AS nama, " +
-            "CONCAT(CASE WHEN d.nm_dokter IS NOT NULL THEN 'Dokter' " +
-                        "ELSE COALESCE(j.nama,'Petugas') END,' (Asesmen Awal)') AS profesi, " +
-            "COALESCE(pr.keluhan,'') AS keluhan, " +
-            "COALESCE(pr.pemeriksaan,'') AS pemeriksaan, " +
-            "COALESCE(pr.penilaian,'') AS penilaian, " +
-            "COALESCE(pr.rtl,'') AS rtl, " +
-            "COALESCE(pr.instruksi,'') AS instruksi, " +
-            "COALESCE(pr.evaluasi,'') AS evaluasi, " +
-            "'' AS ttv, '' AS verif " +
-            "FROM pemeriksaan_ralan pr " +
-            "LEFT JOIN dokter d ON d.kd_dokter=pr.nip " +
-            "LEFT JOIN petugas pg ON pg.nip=pr.nip " +
-            "LEFT JOIN jnj_jabatan j ON j.kode=pg.kd_jbtn " +
-            "WHERE pr.no_rawat='" + nr + "' " +
-            "ORDER BY tgl_perawatan, jam_rawat";
-
-        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        Valid.MyReportqry("rptCPPT.jasper", "report",
-            "::[ CPPT — Catatan Perkembangan Pasien Terintegrasi ]::", sql, param);
-        this.setCursor(Cursor.getDefaultCursor());
-    }
-    // ── End CPPT Tab ─────────────────────────────────────────────────────────────
-
     private void tampilKunjungan() {
         Valid.tabelKosong(tabModeRegistrasi);
         try{   
@@ -5098,6 +4752,7 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     menampilkanSkorStewardPascaAnestesi(rs.getString("no_rawat"));
                     menampilkanSkorBromagePascaAnestesi(rs.getString("no_rawat"));
                     menampilkanCatatanPengkajianPaskaOperasi(rs.getString("no_rawat"));
+                    menampilkanCatatanObservasiRuangOperasi(rs.getString("no_rawat"));
                     menampilkanChecklistKriteriaMasukHCU(rs.getString("no_rawat"));
                     menampilkanChecklistKriteriaKeluarHCU(rs.getString("no_rawat"));
                     menampilkanChecklistKriteriaMasukICU(rs.getString("no_rawat"));
@@ -7485,34 +7140,30 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 rs3=koneksi.prepareStatement(
                      "select * from retensi_pasien where no_rkm_medis='"+NoRM.getText().trim()+"' order by tgl_retensi").executeQuery();
                 if(rs3.next()){                                    
-                    htmlContent.append(  
-                      "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'>").append(
-                        "<tr class='isi'>").append(
-                          "<td valign='top' width='2%' align='center' bgcolor='#FFFAF8'>No.</td>").append(
-                          "<td valign='top' width='8%' align='center' bgcolor='#FFFAF8'>Tgl.Retensi</td>").append(
-                          "<td valign='top' width='90%' align='center' bgcolor='#FFFAF8'>File Retensi</td>").append(
-                        "</tr>");
+                    htmlContent.append("<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'>").
+                                    append("<tr class='isi'>").
+                                        append("<td valign='top' width='2%' align='center' bgcolor='#FFFAF8'>No.</td>").
+                                        append("<td valign='top' width='8%' align='center' bgcolor='#FFFAF8'>Tgl.Retensi</td>").
+                                        append("<td valign='top' width='90%' align='center' bgcolor='#FFFAF8'>File Retensi</td>").
+                                    append("</tr>");
                     w=1;
                     do{
-                        htmlContent.append(
-                             "<tr class='isi'>").append(
-                                "<td valign='top' align='center'>").append(w).append("</td>").append(
-                                "<td valign='top'>").append(rs3.getString("tgl_retensi")).append("</td>").append(
-                                "<td valign='top' align='center'><a href='http://").append(koneksiDB.HOSTHYBRIDWEB()).append(":").append(koneksiDB.PORTWEB()).append("/").append(koneksiDB.HYBRIDWEB()).append("/medrec/").append(rs3.getString("lokasi_pdf")).append("'><img alt='Gambar Retensi' src='http://").append(koneksiDB.HOSTHYBRIDWEB()).append(":").append(koneksiDB.PORTWEB()).append("/").append(koneksiDB.HYBRIDWEB()).append("/medrec/").append(rs3.getString("lokasi_pdf")).append("' width='").append((TabRawat.getWidth()-550)).append("' height='").append((TabRawat.getWidth()-550)).append("'/></a></td>").append(
-                             "</tr>"); 
+                        htmlContent.append("<tr class='isi'>").
+                                        append("<td valign='top' align='center'>").append(w).append("</td>").
+                                        append("<td valign='top'>").append(rs3.getString("tgl_retensi")).append("</td>").
+                                        append("<td valign='top' align='center'><a href='http://").append(koneksiDB.HOSTHYBRIDWEB()).append(":").append(koneksiDB.PORTWEB()).append("/").append(koneksiDB.HYBRIDWEB()).append("/medrec/").append(rs3.getString("lokasi_pdf")).append("'><img alt='Gambar Retensi' src='http://").append(koneksiDB.HOSTHYBRIDWEB()).append(":").append(koneksiDB.PORTWEB()).append("/").append(koneksiDB.HYBRIDWEB()).append("/medrec/").append(rs3.getString("lokasi_pdf")).append("' width='").append((TabRawat.getWidth()-550)).append("' height='").append((TabRawat.getWidth()-550)).append("'/></a></td>").
+                                    append("</tr>"); 
                         w++;
                     }while(rs3.next());
-                    htmlContent.append(
-                      "</table>");
+                    htmlContent.append("</table>");
                 } else{
-                    htmlContent.append(  
-                      "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'>").append(
-                        "<tr class='isi'>").append(
-                          "<td valign='top' width='2%' align='center' bgcolor='#FFFAF8'>No.</td>").append(
-                          "<td valign='top' width='8%' align='center' bgcolor='#FFFAF8'>Tgl.Retensi</td>").append(
-                          "<td valign='top' width='90%' align='center' bgcolor='#FFFAF8'>File Retensi</td>").append(
-                        "</tr>").append(
-                      "</table>");
+                    htmlContent.append("<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'>").
+                                    append("<tr class='isi'>").
+                                        append("<td valign='top' width='2%' align='center' bgcolor='#FFFAF8'>No.</td>").
+                                        append("<td valign='top' width='8%' align='center' bgcolor='#FFFAF8'>Tgl.Retensi</td>").
+                                        append("<td valign='top' width='90%' align='center' bgcolor='#FFFAF8'>File Retensi</td>").
+                                    append("</tr>").
+                                append("</table>");
                 }                              
             } catch (Exception e) {
                 System.out.println("Notifikasi : "+e);
@@ -7522,6 +7173,73 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 }
             }
             LoadHTMLRetensi.setText("<html>"+htmlContent.toString()+"</html>");
+            htmlContent=null;
+        }catch(Exception e){
+            System.out.println("Notifikasi : "+e);
+        }
+    }
+    
+    private void tampilWearable() {
+        try{
+            htmlContent = new StringBuilder();
+            try{
+                rs3=koneksi.prepareStatement(
+                     "select pasien_wearable.tanggal,pasien_wearable.item,pasien_wearable.nilai,pasien_wearable.satuan,pasien_wearable.status from pasien_wearable where pasien_wearable.no_rkm_medis='"+NoRM.getText().trim()+"' order by pasien_wearable.tanggal desc limit 100").executeQuery();
+                if(rs3.next()){
+                    htmlContent.append("<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'>").
+                                    append("<tr class='isi'>").
+                                        append("<td valign='top' width='2%' align='center' bgcolor='#FFFAF8'>No.</td>").
+                                        append("<td valign='top' width='15%' align='center' bgcolor='#FFFAF8'>Tanggal</td>").
+                                        append("<td valign='top' width='28%' align='center' bgcolor='#FFFAF8'>Variabel</td>").
+                                        append("<td valign='top' width='10%' align='center' bgcolor='#FFFAF8'>Nilai</td>").
+                                        append("<td valign='top' width='10%' align='center' bgcolor='#FFFAF8'>Satuan</td>").
+                                        append("<td valign='top' width='35%' align='center' bgcolor='#FFFAF8'>Keterangan</td>").
+                                    append("</tr>");
+                    w=1;
+                    do{
+                        String keterangan = rs3.getString("status");
+                        if(keterangan==null){
+                            keterangan="";
+                        }
+                        String ketHtml;
+                        if(keterangan.contains("faskes") || keterangan.contains("konsultasikan") || keterangan.contains("Konsultasikan")){
+                            ketHtml = "<font color='red'><b>"+keterangan+"</b></font>";
+                        }else if(keterangan.equals("")){
+                            ketHtml = "-";
+                        }else{
+                            ketHtml = keterangan;
+                        }
+                        htmlContent.append("<tr class='isi'>").
+                                        append("<td valign='top' align='center'>").append(w).append("</td>").
+                                        append("<td valign='top'>").append(rs3.getString("tanggal")).append("</td>").
+                                        append("<td valign='top'>").append(rs3.getString("item")).append("</td>").
+                                        append("<td valign='top' align='center'>").append(rs3.getString("nilai")).append("</td>").
+                                        append("<td valign='top' align='center'>").append(rs3.getString("satuan")).append("</td>").
+                                        append("<td valign='top'>").append(ketHtml).append("</td>").
+                                    append("</tr>");
+                        w++;
+                    }while(rs3.next());
+                    htmlContent.append("</table>");
+                } else{
+                    htmlContent.append("<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'>").
+                                    append("<tr class='isi'>").
+                                        append("<td valign='top' width='2%' align='center' bgcolor='#FFFAF8'>No.</td>").
+                                        append("<td valign='top' width='15%' align='center' bgcolor='#FFFAF8'>Tanggal</td>").
+                                        append("<td valign='top' width='28%' align='center' bgcolor='#FFFAF8'>Variabel</td>").
+                                        append("<td valign='top' width='10%' align='center' bgcolor='#FFFAF8'>Nilai</td>").
+                                        append("<td valign='top' width='10%' align='center' bgcolor='#FFFAF8'>Satuan</td>").
+                                        append("<td valign='top' width='35%' align='center' bgcolor='#FFFAF8'>Keterangan</td>").
+                                    append("</tr>").
+                                append("</table>");
+                }
+            } catch (Exception e) {
+                System.out.println("Notifikasi : "+e);
+            } finally{
+                if(rs3!=null){
+                    rs3.close();
+                }
+            }
+            LoadHTMLWearable.setText("<html>"+htmlContent.toString()+"</html>");
             htmlContent=null;
         }catch(Exception e){
             System.out.println("Notifikasi : "+e);
@@ -34222,6 +33940,74 @@ private void BtnPasienKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             }
         } catch (Exception e) {
             System.out.println("Notif Catatan Pengkajian Paska Operasi : "+e);
+        }
+    }
+    
+    private void menampilkanCatatanObservasiRuangOperasi(String norawat) {
+        try {
+            if(chkCatatanObservasiRuangOperasi.isSelected()==true){
+                try {
+                    rs2=koneksi.prepareStatement(
+                            "select catatan_observasi_ruang_ok.tgl_perawatan,catatan_observasi_ruang_ok.jam_rawat,catatan_observasi_ruang_ok.gcs,"+
+                            "catatan_observasi_ruang_ok.td,catatan_observasi_ruang_ok.hr,catatan_observasi_ruang_ok.rr,catatan_observasi_ruang_ok.suhu,catatan_observasi_ruang_ok.spo2,"+
+                            "catatan_observasi_ruang_ok.keterangan,catatan_observasi_ruang_ok.nip,petugas.nama from catatan_observasi_ruang_ok inner join petugas on catatan_observasi_ruang_ok.nip=petugas.nip "+
+                            "where catatan_observasi_ruang_ok.no_rawat='"+norawat+"' order by catatan_observasi_ruang_ok.tgl_perawatan,catatan_observasi_ruang_ok.jam_rawat").executeQuery();
+                    if(rs2.next()){
+                        htmlContent.append(
+                          "<tr class='isi'>").append( 
+                            "<td valign='top' width='2%'></td>").append(        
+                            "<td valign='top' width='18%'>Catatan Observasi Ruang Operasi</td>").append(
+                            "<td valign='top' width='1%' align='center'>:</td>").append(
+                            "<td valign='top' width='79%'>").append(
+                              "<table width='100%' border='0' align='center' cellpadding='3px' cellspacing='0' class='tbl_form'>").append(
+                                 "<tr align='center'>").append(
+                                    "<td valign='middle' width='4%' bgcolor='#FFFAF8' rowspan='2'>No.</td>").append(
+                                    "<td valign='middle' width='15%' bgcolor='#FFFAF8' rowspan='2'>Tanggal</td>").append(
+                                    "<td valign='top' width='40%' bgcolor='#FFFAF8' colspan='6'>Monitoring</td>").append(
+                                    "<td valign='middle' width='18%' bgcolor='#FFFAF8' rowspan='2'>Keterangan</td>").append(
+                                    "<td valign='middle' width='23%' bgcolor='#FFFAF8' rowspan='2'>Perawat/Paramedis</td>").append(
+                                 "</tr>").append(
+                                 "<tr align='center'>").append(
+                                    "<td valign='top' bgcolor='#FFFAF8'>GCS(E,V,M)</td>").append(
+                                    "<td valign='top' bgcolor='#FFFAF8'>TD</td>").append(
+                                    "<td valign='top' bgcolor='#FFFAF8'>HR (/menit)</td>").append(
+                                    "<td valign='top' bgcolor='#FFFAF8'>RR (/menit)</td>").append(
+                                    "<td valign='top' bgcolor='#FFFAF8'>Suhu(C)</td>").append(
+                                    "<td valign='top' bgcolor='#FFFAF8'>SpO2(%)</td>").append(
+                                 "</tr>"
+                        );
+                        w=1;
+                        do{
+                            htmlContent.append(
+                                 "<tr>").append(
+                                    "<td valign='top' align='center'>").append(w).append("</td>").append(
+                                    "<td valign='top'>").append(rs2.getString("tgl_perawatan")).append(" ").append(rs2.getString("jam_rawat")).append("</td>").append(
+                                    "<td valign='top' align='center'>").append(rs2.getString("gcs")).append("</td>").append(
+                                    "<td valign='top' align='center'>").append(rs2.getString("td")).append("</td>").append(
+                                    "<td valign='top' align='center'>").append(rs2.getString("hr")).append("</td>").append(
+                                    "<td valign='top' align='center'>").append(rs2.getString("rr")).append("</td>").append(
+                                    "<td valign='top' align='center'>").append(rs2.getString("suhu")).append("</td>").append(
+                                    "<td valign='top' align='center'>").append(rs2.getString("spo2")).append("</td>").append(
+                                    "<td valign='top'>").append(rs2.getString("keterangan")).append("</td>").append(
+                                    "<td valign='top'>").append(rs2.getString("nip")).append(" ").append(rs2.getString("nama")).append("</td>").append(
+                                 "</tr>");                                        
+                            w++;
+                        }while(rs2.next());
+                        htmlContent.append(
+                              "</table>").append(
+                            "</td>").append(
+                          "</tr>");
+                    }
+                } catch (Exception e) {
+                    System.out.println("Notifikasi : "+e);
+                } finally{
+                    if(rs2!=null){
+                        rs2.close();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Notif Catatan Observasi Ruang Operasi : "+e);
         }
     }
     

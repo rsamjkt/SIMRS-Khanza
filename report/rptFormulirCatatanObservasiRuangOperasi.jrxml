@@ -7,7 +7,7 @@
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="localhost"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="lokal"/>
 	<parameter name="namars" class="java.lang.String"/>
 	<parameter name="alamatrs" class="java.lang.String"/>
 	<parameter name="kotars" class="java.lang.String"/>
@@ -15,13 +15,13 @@
 	<parameter name="kontakrs" class="java.lang.String"/>
 	<parameter name="emailrs" class="java.lang.String"/>
 	<parameter name="logo" class="java.io.InputStream"/>
+	<parameter name="dpjp" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[select reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,reg_periksa.umurdaftar,reg_periksa.sttsumur,
-                    pasien.jk,pasien.tgl_lahir,catatan_cek_gds.tgl_perawatan,catatan_cek_gds.jam_rawat,catatan_cek_gds.gdp,
-                    catatan_cek_gds.insulin,catatan_cek_gds.obat_gula,catatan_cek_gds.nip,petugas.nama,reg_periksa.tgl_registrasi,reg_periksa.jam_reg 
-                    from catatan_cek_gds inner join reg_periksa on catatan_cek_gds.no_rawat=reg_periksa.no_rawat 
-                    inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis 
-                    inner join petugas on catatan_cek_gds.nip=petugas.nip]]>
+		<![CDATA[select reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,reg_periksa.umurdaftar,reg_periksa.sttsumur,reg_periksa.tgl_registrasi,reg_periksa.jam_reg,
+pasien.jk,pasien.tgl_lahir,catatan_observasi_ruang_ok.tgl_perawatan,catatan_observasi_ruang_ok.jam_rawat,catatan_observasi_ruang_ok.gcs,
+catatan_observasi_ruang_ok.td,catatan_observasi_ruang_ok.hr,catatan_observasi_ruang_ok.rr,catatan_observasi_ruang_ok.suhu,catatan_observasi_ruang_ok.spo2,
+catatan_observasi_ruang_ok.keterangan,petugas.nama from catatan_observasi_ruang_ok inner join reg_periksa on catatan_observasi_ruang_ok.no_rawat=reg_periksa.no_rawat 
+inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis inner join petugas on catatan_observasi_ruang_ok.nip=petugas.nip]]>
 	</queryString>
 	<field name="no_rawat" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="no_rawat"/>
@@ -48,6 +48,18 @@
 		<property name="com.jaspersoft.studio.field.label" value="sttsumur"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="reg_periksa"/>
 	</field>
+	<field name="tgl_registrasi" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="tgl_registrasi"/>
+		<property name="com.jaspersoft.studio.field.label" value="tgl_registrasi"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="reg_periksa"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="jam_reg" class="java.sql.Time">
+		<property name="com.jaspersoft.studio.field.name" value="jam_reg"/>
+		<property name="com.jaspersoft.studio.field.label" value="jam_reg"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="reg_periksa"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<field name="jk" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="jk"/>
 		<property name="com.jaspersoft.studio.field.label" value="jk"/>
@@ -62,37 +74,55 @@
 	<field name="tgl_perawatan" class="java.sql.Date">
 		<property name="com.jaspersoft.studio.field.name" value="tgl_perawatan"/>
 		<property name="com.jaspersoft.studio.field.label" value="tgl_perawatan"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="catatan_cek_gds"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="catatan_observasi_ruang_ok"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="jam_rawat" class="java.sql.Time">
 		<property name="com.jaspersoft.studio.field.name" value="jam_rawat"/>
 		<property name="com.jaspersoft.studio.field.label" value="jam_rawat"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="catatan_cek_gds"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="catatan_observasi_ruang_ok"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="gdp" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="gdp"/>
-		<property name="com.jaspersoft.studio.field.label" value="gdp"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="catatan_cek_gds"/>
+	<field name="gcs" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="gcs"/>
+		<property name="com.jaspersoft.studio.field.label" value="gcs"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="catatan_observasi_ruang_ok"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="insulin" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="insulin"/>
-		<property name="com.jaspersoft.studio.field.label" value="insulin"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="catatan_cek_gds"/>
+	<field name="td" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="td"/>
+		<property name="com.jaspersoft.studio.field.label" value="td"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="catatan_observasi_ruang_ok"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="obat_gula" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="obat_gula"/>
-		<property name="com.jaspersoft.studio.field.label" value="obat_gula"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="catatan_cek_gds"/>
+	<field name="hr" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="hr"/>
+		<property name="com.jaspersoft.studio.field.label" value="hr"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="catatan_observasi_ruang_ok"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="nip" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="nip"/>
-		<property name="com.jaspersoft.studio.field.label" value="nip"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="catatan_cek_gds"/>
+	<field name="rr" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="rr"/>
+		<property name="com.jaspersoft.studio.field.label" value="rr"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="catatan_observasi_ruang_ok"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="suhu" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="suhu"/>
+		<property name="com.jaspersoft.studio.field.label" value="suhu"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="catatan_observasi_ruang_ok"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="spo2" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="spo2"/>
+		<property name="com.jaspersoft.studio.field.label" value="spo2"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="catatan_observasi_ruang_ok"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="keterangan" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="keterangan"/>
+		<property name="com.jaspersoft.studio.field.label" value="keterangan"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="catatan_observasi_ruang_ok"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="nama" class="java.lang.String">
@@ -100,23 +130,11 @@
 		<property name="com.jaspersoft.studio.field.label" value="nama"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="petugas"/>
 	</field>
-	<field name="tgl_registrasi" class="java.sql.Date">
-		<property name="com.jaspersoft.studio.field.name" value="tgl_registrasi"/>
-		<property name="com.jaspersoft.studio.field.label" value="tgl_registrasi"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="reg_periksa"/>
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="jam_reg" class="java.sql.Time">
-		<property name="com.jaspersoft.studio.field.name" value="jam_reg"/>
-		<property name="com.jaspersoft.studio.field.label" value="jam_reg"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="reg_periksa"/>
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="108" splitType="Stretch">
+		<band height="106" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
 				<reportElement mode="Opaque" x="0" y="61" width="555" height="17" backcolor="#F0F0DC" uuid="5602588e-9425-43d7-ad36-c5e9f7e4a5b7"/>
@@ -124,7 +142,7 @@
 					<font fontName="Tahoma" size="9" isBold="true"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[CATATAN CEK GDS & PEMBERIAN INSULIN / OBAT GULA]]></text>
+				<text><![CDATA[CATATAN OBSERVASI RUANG OPERASI]]></text>
 			</staticText>
 			<rectangle>
 				<reportElement mode="Transparent" x="0" y="61" width="555" height="45" uuid="4d76d7c4-b39b-41bd-99ee-0d26845d2084"/>
@@ -290,6 +308,38 @@
 				</textElement>
 				<text><![CDATA[:]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="435" y="93" width="120" height="11" uuid="dda8f8ab-0ae6-4e1a-b994-1caa2aabd127">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{dpjp}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="428" y="93" width="7" height="11" uuid="b58cce47-4e16-40f6-b24b-ae25917f1e2b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="388" y="93" width="40" height="11" uuid="008a1ef9-d2dc-44ec-a920-bdb787f1ef24">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Dokter]]></text>
+			</staticText>
 			<textField pattern="dd/MM/yyyy">
 				<reportElement x="435" y="81" width="65" height="11" uuid="f6a53e97-0028-4131-b3d7-7bce63f01a72">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -363,12 +413,28 @@
 		<band height="30" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
-				<reportElement mode="Opaque" x="90" y="17" width="60" height="12" forecolor="#000000" backcolor="#F0F0DC" uuid="b1b9fcfd-0623-4bdb-b3de-ccd372f94b03"/>
+				<reportElement mode="Opaque" x="331" y="0" width="93" height="30" forecolor="#000000" backcolor="#F0F0DC" uuid="3268d216-bf47-4b80-810b-88a32f596043"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[GDS]]></text>
+				<text><![CDATA[Keterangan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="300" y="17" width="30" height="12" forecolor="#000000" backcolor="#F0F0DC" uuid="7ce1c3b1-6973-4f45-a5a6-42066509a541"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[SpO2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="90" y="17" width="40" height="12" forecolor="#000000" backcolor="#F0F0DC" uuid="b1b9fcfd-0623-4bdb-b3de-ccd372f94b03"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[GCS]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="0" y="0" width="90" height="29" forecolor="#000000" backcolor="#F0F0DC" uuid="f24b606f-5ee8-4085-89ab-d71ce3951409"/>
@@ -379,12 +445,12 @@
 				<text><![CDATA[Tanggal & Jam]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="90" y="0" width="334" height="16" forecolor="#000000" backcolor="#F0F0DC" uuid="450e4797-8923-4859-afe9-b0a8c3058fb5"/>
+				<reportElement mode="Opaque" x="90" y="0" width="241" height="16" forecolor="#000000" backcolor="#F0F0DC" uuid="450e4797-8923-4859-afe9-b0a8c3058fb5"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[CATATAN]]></text>
+				<text><![CDATA[Monitoring]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="424" y="0" width="130" height="30" forecolor="#000000" backcolor="#F0F0DC" uuid="c887ca08-c481-4a66-9883-b475de60a5cb"/>
@@ -423,7 +489,7 @@
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement positionType="FixRelativeToBottom" x="423" y="0" width="1" height="29" uuid="4bf829b0-8817-459e-8d52-9aff8631884c">
+				<reportElement positionType="FixRelativeToBottom" x="330" y="0" width="1" height="29" uuid="4bf829b0-8817-459e-8d52-9aff8631884c">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<graphicElement>
@@ -439,29 +505,45 @@
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement mode="Opaque" x="150" y="17" width="140" height="12" forecolor="#000000" backcolor="#F0F0DC" uuid="73aa4d35-49ad-46d1-91bf-effcf3d64d3a"/>
+				<reportElement mode="Opaque" x="130" y="17" width="70" height="12" forecolor="#000000" backcolor="#F0F0DC" uuid="73aa4d35-49ad-46d1-91bf-effcf3d64d3a"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[INSULIN]]></text>
+				<text><![CDATA[TD]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="290" y="17" width="133" height="12" forecolor="#000000" backcolor="#F0F0DC" uuid="6b368479-56e5-469f-9bb6-664036dc0d92"/>
+				<reportElement mode="Opaque" x="200" y="17" width="30" height="12" forecolor="#000000" backcolor="#F0F0DC" uuid="6b368479-56e5-469f-9bb6-664036dc0d92"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Tahoma" size="8" isBold="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[OBAT GULA]]></text>
+				<text><![CDATA[HR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="231" y="17" width="29" height="12" forecolor="#000000" backcolor="#F0F0DC" uuid="0a691b44-8e05-4173-bffd-4d0c61c1787a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[RR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="261" y="17" width="38" height="12" forecolor="#000000" backcolor="#F0F0DC" uuid="51e058c3-020c-4479-8d8c-d8444d5b62d6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Suhu]]></text>
 			</staticText>
 			<line>
-				<reportElement x="91" y="16" width="332" height="1" uuid="21fcf7ea-4d5a-47ed-8c7c-69c979959fc4"/>
+				<reportElement x="91" y="16" width="239" height="1" uuid="21fcf7ea-4d5a-47ed-8c7c-69c979959fc4"/>
 				<graphicElement>
 					<pen lineWidth="1.0"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement positionType="FixRelativeToBottom" x="149" y="17" width="1" height="12" uuid="5347be4e-53bf-41ef-bc41-936299d2cf4a">
+				<reportElement positionType="FixRelativeToBottom" x="129" y="17" width="1" height="12" uuid="5347be4e-53bf-41ef-bc41-936299d2cf4a">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<graphicElement>
@@ -469,7 +551,39 @@
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement positionType="FixRelativeToBottom" x="290" y="17" width="1" height="12" uuid="df3c63e0-e742-4483-828f-722db77553cd">
+				<reportElement positionType="FixRelativeToBottom" x="200" y="17" width="1" height="12" uuid="df3c63e0-e742-4483-828f-722db77553cd">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="230" y="17" width="1" height="12" uuid="62b6e97b-df79-4a06-bd6b-1ad859c81502">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="260" y="17" width="1" height="12" uuid="716d882d-4662-4d44-8291-1aa0d3480adf">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="299" y="17" width="1" height="12" uuid="18b14445-0ca4-4f81-85e1-bce716bd9e74">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="423" y="0" width="1" height="29" uuid="23c58113-0c42-40f4-bbca-6e0f271b7f5f">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<graphicElement>
@@ -491,12 +605,20 @@
 				<textFieldExpression><![CDATA[$F{tgl_perawatan}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" x="91" y="1" width="58" height="10" uuid="8ccda384-6ed4-4843-8596-bf675bb62e18"/>
+				<reportElement positionType="Float" x="91" y="1" width="38" height="10" uuid="8ccda384-6ed4-4843-8596-bf675bb62e18"/>
 				<textElement textAlignment="Center">
 					<font fontName="Tahoma" size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{gdp}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{gcs}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="232" y="1" width="28" height="10" uuid="795a99c8-7a8d-4db4-814a-4d0aa1c0dd9d"/>
+				<textElement textAlignment="Center">
+					<font fontName="Tahoma" size="8"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{rr}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="Float" x="425" y="1" width="129" height="10" uuid="a81a96e5-b43b-4fc6-9133-c930b2a533cd"/>
@@ -533,6 +655,14 @@
 				</graphicElement>
 			</line>
 			<line>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="230" y="0" width="1" height="11" uuid="4d0ef31f-b50b-48b6-b611-28679cc15624">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<line>
 				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="554" y="0" width="1" height="11" uuid="556b7791-1090-4673-94d9-efe13381d163">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -542,7 +672,7 @@
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="423" y="0" width="1" height="11" uuid="29bdadbc-2fcb-4469-9fe9-12267a833a8b">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="330" y="0" width="1" height="11" uuid="29bdadbc-2fcb-4469-9fe9-12267a833a8b">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<graphicElement>
@@ -560,7 +690,7 @@
 				<textFieldExpression><![CDATA[$F{jam_rawat}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="149" y="0" width="1" height="11" uuid="cd492e8b-ba82-4992-b65f-bc6e9fcb6920">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="129" y="0" width="1" height="11" uuid="cd492e8b-ba82-4992-b65f-bc6e9fcb6920">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -569,15 +699,15 @@
 				</graphicElement>
 			</line>
 			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" x="150" y="1" width="140" height="10" uuid="85cf41a4-0e14-4a2d-9936-31009f58c570"/>
+				<reportElement positionType="Float" x="130" y="1" width="70" height="10" uuid="85cf41a4-0e14-4a2d-9936-31009f58c570"/>
 				<textElement textAlignment="Center">
 					<font fontName="Tahoma" size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{insulin}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{td}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="290" y="0" width="1" height="11" uuid="09a62f81-05d8-4f3e-b4df-ca41cedd8eb7">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="200" y="0" width="1" height="11" uuid="09a62f81-05d8-4f3e-b4df-ca41cedd8eb7">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -586,13 +716,63 @@
 				</graphicElement>
 			</line>
 			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" x="291" y="1" width="132" height="10" uuid="67de4489-1b5f-4810-9a0b-57de4687fca1"/>
+				<reportElement positionType="Float" x="201" y="1" width="29" height="10" uuid="67de4489-1b5f-4810-9a0b-57de4687fca1"/>
 				<textElement textAlignment="Center">
 					<font fontName="Tahoma" size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{obat_gula}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{hr}]]></textFieldExpression>
 			</textField>
+			<line>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="260" y="0" width="1" height="11" uuid="c27269d6-ca00-4dac-a740-8ee7d21e3627">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="299" y="0" width="1" height="11" uuid="860aec38-313c-4056-a0c1-214e31bbc55e">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="262" y="1" width="37" height="10" uuid="0dbd269a-eefb-4ed1-ab39-a546142f7255"/>
+				<textElement textAlignment="Center">
+					<font fontName="Tahoma" size="8"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{suhu}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="299" y="1" width="31" height="10" uuid="5b0f5209-87ca-46a9-9b5b-085b662ce02c"/>
+				<textElement textAlignment="Center">
+					<font fontName="Tahoma" size="8"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{spo2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="331" y="1" width="91" height="10" uuid="49ef1c96-686a-4c90-b41e-a0fb6d670e58"/>
+				<textElement textAlignment="Center">
+					<font fontName="Tahoma" size="8"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{keterangan}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="423" y="0" width="1" height="11" uuid="ad1024d9-dc60-4e69-a613-47015e747d7b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
 		</band>
 	</detail>
 	<columnFooter>

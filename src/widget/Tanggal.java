@@ -6,7 +6,6 @@
 package widget;
 
 import java.awt.Color;
-import java.util.Date;
 import uz.ncipro.calendar.JDateTimePicker;
 
 /**
@@ -23,16 +22,6 @@ public final class Tanggal extends JDateTimePicker {
         setFont(new java.awt.Font("Tahoma", 0, 11));
         //setBorder(javax.swing.BorderFactory.createLineBorder(new Color(212,212,152)));
         setSize(WIDTH,23);
-    }
-
-    public void setMinDate(Date date) {
-        if(popupEditor!=null){
-            popupEditor.setMinDate(date);
-        }
-    }
-
-    public Date getMinDate() {
-        return popupEditor!=null ? popupEditor.getMinDate() : null;
     }
 
 }

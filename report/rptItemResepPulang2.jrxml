@@ -78,12 +78,6 @@ inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis]]>
 		<property name="com.jaspersoft.studio.field.tree.path" value="kodesatuan"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="expire" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="expire"/>
-		<property name="com.jaspersoft.studio.field.label" value="expire"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="databarang"/>
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
 	<detail>
 		<band height="103" splitType="Stretch">
 			<rectangle>
@@ -160,36 +154,12 @@ inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis]]>
 				</graphicElement>
 			</line>
 			<textField>
-				<reportElement x="3" y="82" width="169" height="11" uuid="69622ccb-f1fe-43bb-a5d1-92154dccc969"/>
+				<reportElement x="3" y="82" width="169" height="20" uuid="69622ccb-f1fe-43bb-a5d1-92154dccc969"/>
 				<textElement textAlignment="Center">
 					<font fontName="Tahoma" size="7"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{dosis}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="3" y="93" width="28" height="9" uuid="c2b3d4e5-f6a7-8901-bc23-de45fa670001"/>
-				<textElement textAlignment="Left" verticalAlignment="Top">
-					<font fontName="Tahoma" size="7"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<text><![CDATA[BUD]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="31" y="93" width="4" height="9" uuid="c2b3d4e5-f6a7-8901-bc23-de45fa670002"/>
-				<textElement textAlignment="Left" verticalAlignment="Top">
-					<font fontName="Tahoma" size="7"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<text><![CDATA[:]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="35" y="93" width="137" height="9" uuid="c2b3d4e5-f6a7-8901-bc23-de45fa670003"/>
-				<textElement textAlignment="Left" verticalAlignment="Top">
-					<font fontName="Tahoma" size="7"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{expire}!=null?$F{expire}:"-"]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="3" y="72" width="132" height="9" uuid="404df43b-cfdf-4067-887a-7252fb8a80f6"/>
