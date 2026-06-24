@@ -115,10 +115,30 @@ public class koneksiDB {
                 );
                 if (firstConnect) {
                     firstConnect = false;
-                    javax.swing.SwingUtilities.invokeLater(() ->
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        javax.swing.ImageIcon logoIcon = null;
+                        try (java.sql.PreparedStatement logoPs = condb().prepareStatement("select logo from setting limit 1");
+                             java.sql.ResultSet logoRs = logoPs.executeQuery()) {
+                            if (logoRs.next()) {
+                                byte[] bytes = logoRs.getBytes(1);
+                                if (bytes != null) {
+                                    java.awt.Image img = new javax.swing.ImageIcon(bytes).getImage()
+                                        .getScaledInstance(64, 64, java.awt.Image.SCALE_SMOOTH);
+                                    logoIcon = new javax.swing.ImageIcon(img);
+                                }
+                            }
+                        } catch (Exception ex) { /* no logo fallback */ }
+
+                        int hour = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY);
+                        String greeting;
+                        if      (hour >= 5  && hour < 12) greeting = "Good Morning!";
+                        else if (hour >= 12 && hour < 18) greeting = "Good Afternoon!";
+                        else if (hour >= 18 && hour < 22) greeting = "Good Evening!";
+                        else                               greeting = "Good Night!";
+
                         javax.swing.JOptionPane.showMessageDialog(null,
                             "<html><div style='text-align:center;padding:8px'>" +
-                            "<b style='font-size:13px'>&#10003;&nbsp; Database Connected Successfully!</b>" +
+                            "<b style='font-size:15px'>" + greeting + "</b>" +
                             "<br><br>" +
                             "<b>" + APP_VERSION + "</b>&nbsp;&bull;&nbsp;<i>Code Name : Atta</i>" +
                             "<br><br>" +
@@ -126,8 +146,9 @@ public class koneksiDB {
                             "<i>For Arunika, with all my love &hearts;</i></small>" +
                             "</div></html>",
                             "Connection Established",
-                            javax.swing.JOptionPane.INFORMATION_MESSAGE)
-                    );
+                            javax.swing.JOptionPane.INFORMATION_MESSAGE,
+                            logoIcon);
+                    });
                 }
                 return;
             } catch (SQLException e) {
