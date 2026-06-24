@@ -120,8 +120,7 @@ public class koneksiDB {
                             "<html><div style='text-align:center;padding:8px'>" +
                             "<b style='font-size:13px'>&#10003;&nbsp; Database Connected Successfully!</b>" +
                             "<br><br>" +
-                            "<b>SIMRS Khanza</b>&nbsp;&mdash;&nbsp;<b>" + APP_VERSION + "</b>" +
-                            "&nbsp;&bull;&nbsp;<i>Codename: Atta</i>" +
+                            "<b>" + APP_VERSION + "</b>&nbsp;&bull;&nbsp;<i>Code Name : Atta</i>" +
                             "<br><br>" +
                             "<small>Lovingly crafted by <b>Randy Mandala</b><br>" +
                             "<i>For Arunika, with all my love &hearts;</i></small>" +
