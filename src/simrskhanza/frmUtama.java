@@ -50380,7 +50380,7 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
         btnSuratPermintaanSecondOpinion.addActionListener(this::btnSuratPermintaanSecondOpinionActionPerformed);
 
         btnCatatanObservasiRuangOperasi = new widget.ButtonBig();
-        btnCatatanObservasiRuangOperasi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/48x48/surgery-room_17774320.png")));
+        btnCatatanObservasiRuangOperasi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/48x48/5859116_hospital_hygiene_masks_medical_surgery_icon.png")));
         btnCatatanObservasiRuangOperasi.setText("Catatan Observasi Ruang Operasi");
         btnCatatanObservasiRuangOperasi.setIconTextGap(0);
         btnCatatanObservasiRuangOperasi.setName("btnCatatanObservasiRuangOperasi");
@@ -50388,7 +50388,7 @@ private void MnGantiPasswordBtnLogActionPerformed(java.awt.event.ActionEvent evt
         btnCatatanObservasiRuangOperasi.addActionListener(this::btnCatatanObservasiRuangOperasiActionPerformed);
 
         btnHasilUSGAbdomen = new widget.ButtonBig();
-        btnHasilUSGAbdomen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/48x48/abs_3500353.png")));
+        btnHasilUSGAbdomen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/48x48/375263_scan_scans_ultra sound_ultrasound_icon.png")));
         btnHasilUSGAbdomen.setText("Hasil USG Abdomen");
         btnHasilUSGAbdomen.setIconTextGap(0);
         btnHasilUSGAbdomen.setName("btnHasilUSGAbdomen");
