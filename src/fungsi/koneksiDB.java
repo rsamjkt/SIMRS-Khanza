@@ -22,6 +22,8 @@ import javax.swing.JOptionPane;
  * @author khanzasoft
  */
 public class koneksiDB {
+    private static final String APP_VERSION = "V.25.06.2026-44";
+    private static volatile boolean firstConnect = true;
     private static String var="";
     private static volatile Connection connection;
     private static final MysqlDataSource dataSource=new MysqlDataSource();
@@ -30,7 +32,7 @@ public class koneksiDB {
     private static final Object LOCK=new Object();
     private static volatile long lastCheck =0;
     private static final long CHECK_INTERVAL =40000;
-    
+
     private koneksiDB(){}
     
     static {
@@ -109,8 +111,25 @@ public class koneksiDB {
                 connection.setAutoCommit(true);
                 connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
                 System.out.println(
-                    "  Koneksi berhasil, bila ada kendala hubungi IT!"
-                );         
+                    "  Connected — SIMRS Khanza " + APP_VERSION + " (Atta) · by Randy Mandala for Arunika, with Love"
+                );
+                if (firstConnect) {
+                    firstConnect = false;
+                    javax.swing.SwingUtilities.invokeLater(() ->
+                        javax.swing.JOptionPane.showMessageDialog(null,
+                            "<html><div style='text-align:center;padding:8px'>" +
+                            "<b style='font-size:13px'>&#10003;&nbsp; Database Connected Successfully!</b>" +
+                            "<br><br>" +
+                            "<b>SIMRS Khanza</b>&nbsp;&mdash;&nbsp;<b>" + APP_VERSION + "</b>" +
+                            "&nbsp;&bull;&nbsp;<i>Codename: Atta</i>" +
+                            "<br><br>" +
+                            "<small>Lovingly crafted by <b>Randy Mandala</b><br>" +
+                            "<i>For Arunika, with all my love &hearts;</i></small>" +
+                            "</div></html>",
+                            "Connection Established",
+                            javax.swing.JOptionPane.INFORMATION_MESSAGE)
+                    );
+                }
                 return;
             } catch (SQLException e) {
                 retries--;
