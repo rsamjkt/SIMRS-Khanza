@@ -1098,6 +1098,7 @@ public final class SuratPernyataanPembiayaanTindakan extends javax.swing.JDialog
             if(tbObat.getSelectedRow()>-1){
                 Sequel.queryu("delete from antripernyataanpembiayaantindakan");
                 Sequel.queryu("insert into antripernyataanpembiayaantindakan values('"+tbObat.getValueAt(tbObat.getSelectedRow(),0).toString()+"','"+tbObat.getValueAt(tbObat.getSelectedRow(),1).toString()+"')");
+                Sequel.queryu("delete from surat_pernyataan_pembiayaan_tindakan_pembuat_pernyataan where no_surat='"+tbObat.getValueAt(tbObat.getSelectedRow(),0).toString()+"'");
             }else{
                 JOptionPane.showMessageDialog(rootPane,"Silahkan anda pilih No.Pernyataan terlebih dahulu..!!");
             }
