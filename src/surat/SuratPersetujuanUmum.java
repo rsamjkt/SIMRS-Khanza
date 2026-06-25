@@ -832,9 +832,9 @@ public final class SuratPersetujuanUmum extends javax.swing.JDialog {
         }else if(NoSurat.getText().trim().equals("")){
             Valid.textKosong(NoSurat,"No.Pernyataan");
         }else{
-            if(Sequel.menyimpantf("surat_persetujuan_umum","?,?,?,?,?,?,?,?,?,?,?,?","Data",12,new String[]{
+            if(Sequel.menyimpantf("surat_persetujuan_umum","?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?","Data",19,new String[]{
                     NoSurat.getText(),TNoRw.getText(),Valid.SetTgl(Tanggal.getSelectedItem()+""),"-","",NamaPJ.getText(),UmurPJ.getText(),NoKTP.getText(),
-                    JKPJ.getSelectedItem().toString().substring(0,1),BertindakAtas.getSelectedItem().toString(),NoTelp.getText(),KdPetugas.getText()
+                    JKPJ.getSelectedItem().toString().substring(0,1),BertindakAtas.getSelectedItem().toString(),NoTelp.getText(),KdPetugas.getText(),"Ya","Ya","","Mengijinkan","","","",
                 })==true){
                 tabMode.addRow(new Object[]{
                     NoSurat.getText(),TNoRw.getText(),TNoRM.getText(),TPasien.getText(),Umur.getText(),JK.getText(),LahirPasien.getText(),
