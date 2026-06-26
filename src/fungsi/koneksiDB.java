@@ -22,7 +22,7 @@ import javax.swing.JOptionPane;
  * @author khanzasoft
  */
 public class koneksiDB {
-    private static final String APP_VERSION = "V.25.06.2026-47";
+    private static final String APP_VERSION = "V.25.06.2026-48";
     private static volatile boolean firstConnect = true;
     private static String var="";
     private static volatile Connection connection;
