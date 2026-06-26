@@ -1551,9 +1551,9 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
             Valid.MyReportqry("rptCetakHasilPemeriksaanUSG.jasper","report","::[ Formulir Hasil Pemeriksaan USG ]::",
                 "select reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,pasien.tgl_lahir,hasil_pemeriksaan_usg.tanggal,"+
                 "hasil_pemeriksaan_usg.kd_dokter,dokter.nm_dokter,hasil_pemeriksaan_usg.diagnosa_klinis,hasil_pemeriksaan_usg.kiriman_dari,"+
-                "hasil_pemeriksaan_usg.hta,hasil_pemeriksaan_usg.kantong_gestasi,hasil_pemeriksaan_usg.ukuran_bokongkepala,"+
-                "hasil_pemeriksaan_usg.jenis_prestasi,hasil_pemeriksaan_usg.diameter_biparietal,hasil_pemeriksaan_usg.panjang_femur,"+
-                "hasil_pemeriksaan_usg.lingkar_abdomen,hasil_pemeriksaan_usg.lingkar_kepala,hasil_pemeriksaan_usg.tafsiran_berat_janin,hasil_pemeriksaan_usg.usia_kehamilan,"+
+                "hasil_pemeriksaan_usg.usiakehamilanhpht as hta,hasil_pemeriksaan_usg.kantong_gestasi,hasil_pemeriksaan_usg.ukuran_bokongkepala,"+
+                "hasil_pemeriksaan_usg.presentasi as jenis_prestasi,hasil_pemeriksaan_usg.diameter_biparietal,hasil_pemeriksaan_usg.panjang_femur,"+
+                "hasil_pemeriksaan_usg.lingkar_abdomen,hasil_pemeriksaan_usg.lingkar_kepala,hasil_pemeriksaan_usg.tafsiran_berat_janin,hasil_pemeriksaan_usg.taksiran_persalinan as usia_kehamilan,"+
                 "hasil_pemeriksaan_usg.plasenta_berimplatansi,hasil_pemeriksaan_usg.derajat_maturitas,hasil_pemeriksaan_usg.jumlah_air_ketuban,"+
                 "hasil_pemeriksaan_usg.indek_cairan_ketuban,hasil_pemeriksaan_usg.kelainan_kongenital,hasil_pemeriksaan_usg.peluang_sex,"+
                 "hasil_pemeriksaan_usg.kesimpulan from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
@@ -1891,9 +1891,9 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
                 ps=koneksi.prepareStatement(
                         "select reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,pasien.tgl_lahir,hasil_pemeriksaan_usg.tanggal,"+
                         "hasil_pemeriksaan_usg.kd_dokter,dokter.nm_dokter,hasil_pemeriksaan_usg.diagnosa_klinis,hasil_pemeriksaan_usg.kiriman_dari,"+
-                        "hasil_pemeriksaan_usg.hta,hasil_pemeriksaan_usg.kantong_gestasi,hasil_pemeriksaan_usg.ukuran_bokongkepala,"+
-                        "hasil_pemeriksaan_usg.jenis_prestasi,hasil_pemeriksaan_usg.diameter_biparietal,hasil_pemeriksaan_usg.panjang_femur,"+
-                        "hasil_pemeriksaan_usg.lingkar_abdomen,hasil_pemeriksaan_usg.lingkar_kepala,hasil_pemeriksaan_usg.tafsiran_berat_janin,hasil_pemeriksaan_usg.usia_kehamilan,"+
+                        "hasil_pemeriksaan_usg.usiakehamilanhpht as hta,hasil_pemeriksaan_usg.kantong_gestasi,hasil_pemeriksaan_usg.ukuran_bokongkepala,"+
+                        "hasil_pemeriksaan_usg.presentasi as jenis_prestasi,hasil_pemeriksaan_usg.diameter_biparietal,hasil_pemeriksaan_usg.panjang_femur,"+
+                        "hasil_pemeriksaan_usg.lingkar_abdomen,hasil_pemeriksaan_usg.lingkar_kepala,hasil_pemeriksaan_usg.tafsiran_berat_janin,hasil_pemeriksaan_usg.taksiran_persalinan as usia_kehamilan,"+
                         "hasil_pemeriksaan_usg.plasenta_berimplatansi,hasil_pemeriksaan_usg.derajat_maturitas,hasil_pemeriksaan_usg.jumlah_air_ketuban,"+
                         "hasil_pemeriksaan_usg.indek_cairan_ketuban,hasil_pemeriksaan_usg.kelainan_kongenital,hasil_pemeriksaan_usg.peluang_sex,"+
                         "hasil_pemeriksaan_usg.kesimpulan from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
@@ -1904,9 +1904,9 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
                 ps=koneksi.prepareStatement(
                         "select reg_periksa.no_rawat,pasien.no_rkm_medis,pasien.nm_pasien,pasien.tgl_lahir,hasil_pemeriksaan_usg.tanggal,"+
                         "hasil_pemeriksaan_usg.kd_dokter,dokter.nm_dokter,hasil_pemeriksaan_usg.diagnosa_klinis,hasil_pemeriksaan_usg.kiriman_dari,"+
-                        "hasil_pemeriksaan_usg.hta,hasil_pemeriksaan_usg.kantong_gestasi,hasil_pemeriksaan_usg.ukuran_bokongkepala,"+
-                        "hasil_pemeriksaan_usg.jenis_prestasi,hasil_pemeriksaan_usg.diameter_biparietal,hasil_pemeriksaan_usg.panjang_femur,"+
-                        "hasil_pemeriksaan_usg.lingkar_abdomen,hasil_pemeriksaan_usg.lingkar_kepala,hasil_pemeriksaan_usg.tafsiran_berat_janin,hasil_pemeriksaan_usg.usia_kehamilan,"+
+                        "hasil_pemeriksaan_usg.usiakehamilanhpht as hta,hasil_pemeriksaan_usg.kantong_gestasi,hasil_pemeriksaan_usg.ukuran_bokongkepala,"+
+                        "hasil_pemeriksaan_usg.presentasi as jenis_prestasi,hasil_pemeriksaan_usg.diameter_biparietal,hasil_pemeriksaan_usg.panjang_femur,"+
+                        "hasil_pemeriksaan_usg.lingkar_abdomen,hasil_pemeriksaan_usg.lingkar_kepala,hasil_pemeriksaan_usg.tafsiran_berat_janin,hasil_pemeriksaan_usg.taksiran_persalinan as usia_kehamilan,"+
                         "hasil_pemeriksaan_usg.plasenta_berimplatansi,hasil_pemeriksaan_usg.derajat_maturitas,hasil_pemeriksaan_usg.jumlah_air_ketuban,"+
                         "hasil_pemeriksaan_usg.indek_cairan_ketuban,hasil_pemeriksaan_usg.kelainan_kongenital,hasil_pemeriksaan_usg.peluang_sex,"+
                         "hasil_pemeriksaan_usg.kesimpulan from reg_periksa inner join pasien on reg_periksa.no_rkm_medis=pasien.no_rkm_medis "+
@@ -2090,8 +2090,8 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
     }
 
     private void ganti() {
-        if(Sequel.mengedittf("hasil_pemeriksaan_usg","no_rawat=?","no_rawat=?,tanggal=?,kd_dokter=?,diagnosa_klinis=?,kiriman_dari=?,hta=?,kantong_gestasi=?,ukuran_bokongkepala=?,"+
-                "jenis_prestasi=?,diameter_biparietal=?,panjang_femur=?,lingkar_abdomen=?,lingkar_kepala=?,tafsiran_berat_janin=?,usia_kehamilan=?,plasenta_berimplatansi=?,derajat_maturitas=?,"+
+        if(Sequel.mengedittf("hasil_pemeriksaan_usg","no_rawat=?","no_rawat=?,tanggal=?,kd_dokter=?,usiakehamilanhpht=?,kantong_gestasi=?,ukuran_bokongkepala=?,"+
+                "presentasi=?,diameter_biparietal=?,panjang_femur=?,lingkar_abdomen=?,lingkar_kepala=?,tafsiran_berat_janin=?,taksiran_persalinan=?,diagnosa_klinis=?,kiriman_dari=?,plasenta_berimplatansi=?,derajat_maturitas=?,"+
                 "jumlah_air_ketuban=?,indek_cairan_ketuban=?,kelainan_kongenital=?,peluang_sex=?,kesimpulan=?",23,new String[]{
                 TNoRw.getText(),Valid.SetTgl(Tanggal.getSelectedItem()+"")+" "+Tanggal.getSelectedItem().toString().substring(11,19),KdDokter.getText(),
                 DiagnosaKlinis.getText(),KirimanDari.getText(),HTA.getText(),UkuranKantong.getText(),UkuranBokong.getText(),JenisPrestasi.getText(),
@@ -2200,12 +2200,13 @@ public final class RMHasilPemeriksaanUSG extends javax.swing.JDialog {
     }
 
     private void simpan() {
-        if(Sequel.menyimpantf("hasil_pemeriksaan_usg","?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?","No.Rawat",22,new String[]{
+        if(Sequel.menyimpantf("hasil_pemeriksaan_usg","?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?","No.Rawat",27,new String[]{
                 TNoRw.getText(),Valid.SetTgl(Tanggal.getSelectedItem()+"")+" "+Tanggal.getSelectedItem().toString().substring(11,19),KdDokter.getText(),
-                DiagnosaKlinis.getText(),KirimanDari.getText(),HTA.getText(),UkuranKantong.getText(),UkuranBokong.getText(),JenisPrestasi.getText(),
+                HTA.getText(),"-","-","-","-","",
+                JenisPrestasi.getText(),UkuranKantong.getText(),UkuranBokong.getText(),
                 DiameterBiparietal.getText(),PanjangFemur.getText(),LingkarAbdomen.getText(),LingkarKepala.getText(),TafsiranBerat.getText(),UsiaKehamilan.getText(),
-                Plasenta.getText(),DerajatMaturitas.getSelectedItem().toString(),JumlahAir.getSelectedItem().toString(),IndexCairan.getText(),
-                Kelainan.getText(),PeluangSex.getSelectedItem().toString(),Kesimpulan.getText()
+                DiagnosaKlinis.getText(),Plasenta.getText(),DerajatMaturitas.getSelectedItem().toString(),JumlahAir.getSelectedItem().toString(),
+                PeluangSex.getSelectedItem().toString(),IndexCairan.getText(),Kelainan.getText(),Kesimpulan.getText(),KirimanDari.getText()
             })==true){
                 tabMode.addRow(new Object[]{
                     TNoRw.getText(),TNoRM.getText(),TPasien.getText(),TglLahir.getText(),KdDokter.getText(),NmDokter.getText(),Valid.SetTgl(Tanggal.getSelectedItem()+"")+" "+Tanggal.getSelectedItem().toString().substring(11,19),
